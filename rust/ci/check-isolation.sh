@@ -22,6 +22,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO="$(cd "$ROOT/.." && pwd)"
 cd "$ROOT"
+# The consumers live outside this directory, where rust-toolchain.toml does
+# not apply; they build with the same pinned toolchain.
+RUSTUP_TOOLCHAIN="$(rustup show active-toolchain | cut -d' ' -f1)"
+export RUSTUP_TOOLCHAIN
 
 # Targets an identifier package is consumed on.
 CLIENT_TARGETS=(
@@ -111,6 +115,9 @@ make_consumer() {
   sed -i.bak "s|@PKG@|$2|g" "$1/Cargo.toml"
   rm "$1/Cargo.toml.bak"
   cp "$ROOT/Cargo.lock" "$1/Cargo.lock"
+  # Every platform's dependencies, so the offline builds and the all-target
+  # dependency tree below resolve without a network.
+  (cd "$1" && cargo fetch --quiet)
 }
 
 check_packages() {
