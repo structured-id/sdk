@@ -13,8 +13,8 @@ fail=0
 cd "$ROOT"
 yarn workspace @structured-id/ids pack --out "$work/ids.tgz"
 
-# The archive holds the build, the schema and the license files, and nothing
-# of the sources, tests or build scripts.
+# The archive holds the build, the schema, the license files and, once
+# released, the changelog; nothing of the sources, tests or build scripts.
 listing="$(tar -tzf "$work/ids.tgz" | sort)"
 for file in dist/index.js dist/index.cjs dist/index.d.ts schema/sid/v1/ids/ids.proto \
   LICENSE NOTICE README.md package.json; do
@@ -25,7 +25,7 @@ for file in dist/index.js dist/index.cjs dist/index.d.ts schema/sid/v1/ids/ids.p
     fail=1
   fi
 done
-unexpected="$(grep -Ev '^package/(dist/|schema/|LICENSE$|NOTICE$|README.md$|package.json$)' <<<"$listing" || true)"
+unexpected="$(grep -Ev '^package/(dist/|schema/|LICENSE$|NOTICE$|README.md$|CHANGELOG.md$|package.json$)' <<<"$listing" || true)"
 if [[ -n "$unexpected" ]]; then
   echo "FAIL archive carries unexpected files:"
   echo "$unexpected" | sed 's/^/    /'
