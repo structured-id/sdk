@@ -26,7 +26,10 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write # crates.io trusted publishing
+      # crates.io trusted publishing (OIDC), configured per crate: structured-id
+      # / sdk / release-rust.yml / environment release. A new crate's first
+      # version is published by hand, then gets its trusted publisher.
+      id-token: write
     steps:
       - name: Generate release token
         id: app-token
@@ -58,5 +61,3 @@ jobs:
           config: rust/release-plz.toml
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          # Empty once crates.io trusted publishing is set up for both crates.
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
