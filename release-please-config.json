@@ -7,7 +7,9 @@
     "typescript/packages/ids": {
       "release-type": "node",
       "package-name": "@structured-id/ids",
-      "component": "typescript-ids"
+      "component": "typescript-ids",
+      "initial-version": "0.1.0",
+      "bump-minor-pre-major": true
     }
   }
 }
