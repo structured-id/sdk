@@ -1,6 +1,6 @@
 {
   "name": "@structured-id/ids",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "description": "StructuredID identifiers: one checked type per identifier kind, the sid.v1.ids wire messages and validated conversions between them.",
   "main": "dist/index.cjs",
