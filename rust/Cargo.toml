@@ -1,0 +1,18 @@
+[workspace]
+resolver = "3"
+members = ["crates/sid-ids", "crates/sid-ids-proto"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/structured-id/sdk"
+authors = ["StructuredID Contributors"]
+
+[workspace.dependencies]
+prost = { version = "0.14", default-features = false }
+prost-reflect = { version = "0.16", features = ["serde"] }
+serde_json = "1"
+sqlx = { version = "0.9", default-features = false, features = ["uuid"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+uuid = { version = "1", default-features = false }

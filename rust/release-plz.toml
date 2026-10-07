@@ -1,0 +1,9 @@
+[workspace]
+# Tags and releases of the Rust packages, disjoint from the TypeScript ones
+# (`typescript-<package>-v<version>`) in the same repository.
+git_tag_name = "rust-{{ package }}-v{{ version }}"
+git_release_name = "rust {{ package }} v{{ version }}"
+pr_branch_prefix = "release-plz-rust-"
+pr_name = "chore(rust): release"
+# Publish only when the release PR is merged, not on every push.
+release_always = false

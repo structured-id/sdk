@@ -1,0 +1,31 @@
+[package]
+name = "sid-ids-proto"
+description = "StructuredID identifier protobuf messages (sid.v1.ids) with validated conversions to sid-ids types"
+readme = "README.md"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+keywords = ["structuredid", "identifier", "protobuf", "uuidv7", "no-std"]
+categories = ["no-std", "encoding"]
+
+[features]
+default = ["std"]
+# `std::error::Error` for the conversion error; the crate itself needs only `alloc`.
+std = ["prost/std", "sid-ids/std"]
+
+[dependencies]
+prost = { workspace = true, features = ["derive"] }
+sid-ids = { path = "../sid-ids", version = "0.1", default-features = false, features = ["alloc"] }
+
+[build-dependencies]
+prost = "0.14"
+prost-build = "0.14"
+protox = "0.9"
+
+[dev-dependencies]
+prost-reflect = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }

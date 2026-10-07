@@ -1,0 +1,12 @@
+sid-ids
+Copyright (C) Dmitry Prudnikov
+
+StructuredID validated identifiers: UUIDv7 newtypes, one type per identifier
+kind, with checked construction, parsing and decoding.
+
+LICENSE
+-------
+This software is distributed under the Apache License, version 2.0. See the
+LICENSE file.
+
+Contact: oss@structured.id

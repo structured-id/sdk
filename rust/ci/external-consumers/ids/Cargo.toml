@@ -1,0 +1,23 @@
+# A consumer of the published identifier crates: sid-ids and sid-ids-proto
+# as `cargo package` produced them, unpacked outside this workspace. No
+# proto checkout, no path into the workspace: what a downstream project gets.
+[package]
+name = "sid-ids-consumer"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+sid-ids = { version = "0.1", default-features = false, features = ["alloc"] }
+sid-ids-proto = { version = "0.1", default-features = false }
+prost = { version = "0.14", default-features = false }
+
+[features]
+std = ["sid-ids/std", "sid-ids-proto/std"]
+
+# The packaged sources stand in for the registry.
+[patch.crates-io]
+sid-ids = { path = "@PKG@/sid-ids" }
+sid-ids-proto = { path = "@PKG@/sid-ids-proto" }
+
+[workspace]

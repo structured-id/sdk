@@ -1,0 +1,14 @@
+sid-ids-proto
+Copyright (C) Dmitry Prudnikov
+
+StructuredID identifier messages (sid.v1.ids) and their checked conversions
+to the sid-ids types. Carries schema/sid/v1/ids/ids.proto from the
+StructuredID proto definitions, also distributed under the Apache License,
+version 2.0.
+
+LICENSE
+-------
+This software is distributed under the Apache License, version 2.0. See the
+LICENSE file.
+
+Contact: oss@structured.id

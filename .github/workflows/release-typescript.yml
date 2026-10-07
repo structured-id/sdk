@@ -1,0 +1,99 @@
+# TypeScript packages of typescript/packages: release-please keeps a release
+# PR with the next versions and changelogs from conventional commits touching
+# each package; merging it tags `typescript-<package>-v<version>` and creates
+# the GitHub release, and the publish job publishes that package to npm. It
+# never touches the Rust packages.
+name: Release (TypeScript)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - typescript/**
+      - release-please-config.json
+      - .release-please-manifest.json
+      - .github/workflows/release-typescript.yml
+  # Publish an existing release again (after a failed publish), by its tag.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish, e.g. typescript-ids-v0.1.0
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  release-please:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs['typescript/packages/ids--release_created'] }}
+      tag: ${{ steps.release.outputs['typescript/packages/ids--tag_name'] }}
+    steps:
+      - name: Generate release token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.RELEASER_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASER_APP_PRIVATE_KEY }}
+      - uses: googleapis/release-please-action@v5
+        id: release
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    needs: release-please
+    if: >-
+      always() && (github.event_name == 'workflow_dispatch'
+      || needs.release-please.outputs.released == 'true')
+    runs-on: ubuntu-latest
+    # npm trusted publishing (OIDC) is bound to this workflow file and the
+    # `release` environment: npmjs.com → @structured-id/ids → Trusted
+    # Publishers: structured-id / sdk / release-typescript.yml / release.
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || needs.release-please.outputs.tag }}
+    defaults:
+      run:
+        working-directory: typescript
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.TAG }}
+          submodules: recursive
+          persist-credentials: false
+      - run: corepack enable
+      # The registry is configured and no NODE_AUTH_TOKEN is set, so npm
+      # authenticates by exchanging the job's OIDC token. No package cache in
+      # a publish job.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - run: corepack install
+      - run: yarn install --immutable
+      - run: yarn test
+      - name: Publish to npm
+        working-directory: typescript/packages/ids
+        env:
+          NPM_CONFIG_LOGLEVEL: verbose
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          PV="$(node -p "require('./package.json').version")"
+          if [ "${TAG}" != "typescript-ids-v${PV}" ]; then
+            echo "Release tag ${TAG} does not name ${NAME} ${PV}."
+            exit 1
+          fi
+          if npm view "${NAME}@${PV}" version >/dev/null 2>&1; then
+            echo "${NAME}@${PV} is already published; nothing to do."
+            exit 0
+          fi
+          yarn build
+          npm publish --access public --provenance

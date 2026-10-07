@@ -1,0 +1,62 @@
+# Rust packages of rust/: release-plz keeps a release PR with the next
+# versions and changelogs from conventional commits touching each crate;
+# merging it tags `rust-<crate>-v<version>`, creates the GitHub releases and
+# publishes those crates to crates.io. It never touches the TypeScript
+# packages.
+name: Release (Rust)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - rust/**
+      - .github/workflows/release-rust.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-rust
+  cancel-in-progress: false
+
+jobs:
+  release-plz:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write # crates.io trusted publishing
+    steps:
+      - name: Generate release token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.RELEASER_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASER_APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Toolchain (rust-toolchain.toml)
+        working-directory: rust
+        run: rustup show
+      - name: Release PR
+        uses: release-plz/action@v0.5
+        with:
+          command: release-pr
+          manifest_path: rust/Cargo.toml
+          config: rust/release-plz.toml
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+      - name: Release
+        uses: release-plz/action@v0.5
+        with:
+          command: release
+          manifest_path: rust/Cargo.toml
+          config: rust/release-plz.toml
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Empty once crates.io trusted publishing is set up for both crates.
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

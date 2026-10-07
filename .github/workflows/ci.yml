@@ -1,0 +1,85 @@
+# Both language implementations run against the same pinned schema and
+# corpus (the `proto` submodule) whenever either implementation, the pinned
+# revision or this workflow changes.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths: &paths
+      - rust/**
+      - typescript/**
+      - proto
+      - .gitmodules
+      - .github/workflows/ci.yml
+  pull_request:
+    paths: *paths
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust
+    services:
+      # The PostgreSQL the opt-in database decoding tests use.
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: sid
+          POSTGRES_PASSWORD: sid_dev
+          POSTGRES_DB: sid
+        ports:
+          - 54399:5432
+        options: >-
+          --health-cmd "pg_isready -U sid" --health-interval 2s --health-timeout 5s --health-retries 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Toolchain (rust-toolchain.toml) and the no_std target
+        run: rustup show && rustup target add thumbv7em-none-eabihf
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+      - run: cargo fmt --all --check
+      - run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - run: cargo nextest run --locked --workspace --all-features
+      - run: cargo test --locked --doc --workspace --all-features
+      - name: no_std + alloc
+        run: |
+          cargo check --locked -p sid-ids --target thumbv7em-none-eabihf --no-default-features --features alloc
+          cargo check --locked -p sid-ids-proto --target thumbv7em-none-eabihf --no-default-features
+      - name: Dependency isolation, packages and checkouts without symbolic links
+        run: ci/check-isolation.sh all
+
+  typescript:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: typescript
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: corepack install
+      - run: yarn install --immutable
+      - run: yarn format:check
+      - run: yarn lint
+      - run: yarn typecheck
+      - run: yarn test
+      - name: Packed package in a clean consumer
+        run: ci/check-package.sh

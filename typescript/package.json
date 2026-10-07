@@ -1,0 +1,15 @@
+{
+  "name": "structured-id-sdk-typescript",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach -At run build",
+    "test": "yarn workspaces foreach -At run test",
+    "lint": "yarn workspaces foreach -At run lint",
+    "typecheck": "yarn workspaces foreach -At run typecheck",
+    "format:check": "yarn workspaces foreach -At run format:check"
+  },
+  "packageManager": "yarn@4.14.1"
+}

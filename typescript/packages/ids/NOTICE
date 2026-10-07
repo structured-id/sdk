@@ -1,0 +1,14 @@
+@structured-id/ids
+Copyright (C) Dmitry Prudnikov
+
+StructuredID identifiers: checked identifier types, the sid.v1.ids wire
+messages and validated conversions between them. Carries
+schema/sid/v1/ids/ids.proto from the StructuredID proto definitions, also
+distributed under the Apache License, version 2.0.
+
+LICENSE
+-------
+This software is distributed under the Apache License, version 2.0. See the
+LICENSE file.
+
+Contact: oss@structured.id
