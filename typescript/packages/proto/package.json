@@ -1,0 +1,79 @@
+{
+  "name": "@structured-id/proto",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "StructuredID public sid.v1 API for TypeScript: generated messages and clients, and the browser gRPC-web / WebTransport transport.",
+  "exports": {
+    "./transport": {
+      "types": "./dist/transport/index.d.ts",
+      "default": "./dist/transport/index.js"
+    },
+    "./sid/v1/*": {
+      "types": "./dist/generated/sid/v1/*.d.ts",
+      "default": "./dist/generated/sid/v1/*.js"
+    },
+    "./google/*": {
+      "types": "./dist/generated/google/*.d.ts",
+      "default": "./dist/generated/google/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "generate": "buf generate && node scripts/finish.mjs",
+    "build": "yarn generate && node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
+    "test": "yarn generate && vitest run",
+    "lint": "yarn generate && eslint src/ tests/",
+    "typecheck": "yarn generate && tsc --noEmit",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"scripts/**/*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" \"scripts/**/*.mjs\"",
+    "prepack": "yarn build"
+  },
+  "keywords": [
+    "structuredid",
+    "grpc-web",
+    "webtransport",
+    "protobuf"
+  ],
+  "author": "StructuredID <oss@structured.id>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/structured-id/sdk.git",
+    "directory": "typescript/packages/proto"
+  },
+  "bugs": {
+    "url": "https://github.com/structured-id/sdk/issues"
+  },
+  "homepage": "https://github.com/structured-id/sdk/tree/main/typescript/packages/proto#readme",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "dependencies": {
+    "@protobuf-ts/grpcweb-transport": "^2.11.1",
+    "@protobuf-ts/runtime": "^2.11.1",
+    "@protobuf-ts/runtime-rpc": "^2.11.1",
+    "@structured-id/ids": "workspace:^"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "^1.73.0",
+    "@eslint/js": "^10.0.1",
+    "@protobuf-ts/plugin": "^2.11.1",
+    "@types/node": "^26.6.3",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^8",
+    "vitest": "^5.0.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

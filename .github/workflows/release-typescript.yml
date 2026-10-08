@@ -1,6 +1,6 @@
 # TypeScript packages of typescript/packages: release-please keeps a release
-# PR with the next versions and changelogs from conventional commits touching
-# each package; merging it tags `typescript-<package>-v<version>` and creates
+# PR per package with the next version and changelog from conventional commits
+# touching it; merging one tags `typescript-<package>-v<version>` and creates
 # the GitHub release, and the publish job publishes that package to npm. It
 # never touches the Rust packages.
 name: Release (TypeScript)
@@ -28,8 +28,7 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
-      released: ${{ steps.release.outputs['typescript/packages/ids--release_created'] }}
-      tag: ${{ steps.release.outputs['typescript/packages/ids--tag_name'] }}
+      tags: ${{ steps.released.outputs.tags }}
     steps:
       - name: Generate release token
         id: app-token
@@ -43,22 +42,39 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+      # The tags of the packages released by this run, in name order, so a
+      # package is published before the packages that depend on it (ids
+      # before proto).
+      - name: Released tags
+        id: released
+        env:
+          OUTPUTS: ${{ toJSON(steps.release.outputs) }}
+        run: |
+          tags="$(jq -c '. as $out | [to_entries[]
+            | select((.key | endswith("--release_created")) and (.value | tostring) == "true")
+            | $out[(.key | rtrimstr("--release_created")) + "--tag_name"]] | sort' <<<"$OUTPUTS")"
+          echo "tags=${tags}" >>"$GITHUB_OUTPUT"
 
   publish:
     needs: release-please
     if: >-
       always() && (github.event_name == 'workflow_dispatch'
-      || needs.release-please.outputs.released == 'true')
+      || (needs.release-please.outputs.tags != '' && needs.release-please.outputs.tags != '[]'))
     runs-on: ubuntu-latest
+    strategy:
+      # One package at a time, in the order above.
+      max-parallel: 1
+      matrix:
+        tag: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('["{0}"]', inputs.tag) || needs.release-please.outputs.tags) }}
     # npm trusted publishing (OIDC) is bound to this workflow file and the
-    # `release` environment: npmjs.com → @structured-id/ids → Trusted
+    # `release` environment: npmjs.com → @structured-id/<package> → Trusted
     # Publishers: structured-id / sdk / release-typescript.yml / release.
     environment: release
     permissions:
       contents: read
       id-token: write
     env:
-      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || needs.release-please.outputs.tag }}
+      TAG: ${{ matrix.tag }}
     defaults:
       run:
         working-directory: typescript
@@ -79,15 +95,24 @@ jobs:
           package-manager-cache: false
       - run: corepack install
       - run: yarn install --immutable
+      - run: yarn build
       - run: yarn test
+      # `yarn pack` replaces the workspace: ranges with the released versions;
+      # npm then publishes that archive with provenance.
       - name: Publish to npm
-        working-directory: typescript/packages/ids
         env:
           NPM_CONFIG_LOGLEVEL: verbose
         run: |
-          NAME="$(node -p "require('./package.json').name")"
-          PV="$(node -p "require('./package.json').version")"
-          if [ "${TAG}" != "typescript-ids-v${PV}" ]; then
+          PACKAGE="${TAG#typescript-}"
+          PACKAGE="${PACKAGE%-v*}"
+          DIR="packages/${PACKAGE}"
+          if [ ! -f "${DIR}/package.json" ]; then
+            echo "Release tag ${TAG} names no package under typescript/packages."
+            exit 1
+          fi
+          NAME="$(node -p "require('./${DIR}/package.json').name")"
+          PV="$(node -p "require('./${DIR}/package.json').version")"
+          if [ "${TAG}" != "typescript-${PACKAGE}-v${PV}" ]; then
             echo "Release tag ${TAG} does not name ${NAME} ${PV}."
             exit 1
           fi
@@ -95,5 +120,5 @@ jobs:
             echo "${NAME}@${PV} is already published; nothing to do."
             exit 0
           fi
-          yarn build
-          npm publish --access public --provenance
+          yarn workspace "${NAME}" pack --out "${RUNNER_TEMP}/package.tgz"
+          npm publish "${RUNNER_TEMP}/package.tgz" --access public --provenance

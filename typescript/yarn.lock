@@ -503,6 +503,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@protobuf-ts/grpcweb-transport@npm:^2.11.1":
+  version: 2.11.1
+  resolution: "@protobuf-ts/grpcweb-transport@npm:2.11.1"
+  dependencies:
+    "@protobuf-ts/runtime": "npm:^2.11.1"
+    "@protobuf-ts/runtime-rpc": "npm:^2.11.1"
+  checksum: 10c0/5d3d23cab51cf1572dfe2bc787981903254c71420943a2b2bdce9d5417291d7001b8ec64fbde7c93448382bb0909ebbf511712fb4bcd92074ce8240d669e23e3
+  languageName: node
+  linkType: hard
+
 "@protobuf-ts/plugin@npm:^2.11.1":
   version: 2.11.1
   resolution: "@protobuf-ts/plugin@npm:2.11.1"
@@ -832,7 +842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@structured-id/ids@workspace:packages/ids":
+"@structured-id/ids@workspace:^, @structured-id/ids@workspace:packages/ids":
   version: 0.0.0-use.local
   resolution: "@structured-id/ids@workspace:packages/ids"
   dependencies:
@@ -844,6 +854,27 @@ __metadata:
     eslint: "npm:^10.11.0"
     prettier: "npm:^3.9.9"
     tsup: "npm:^8.5.1"
+    typescript: "npm:^6.0.3"
+    typescript-eslint: "npm:^8.71.0"
+    vite: "npm:^8"
+    vitest: "npm:^5.0.2"
+  languageName: unknown
+  linkType: soft
+
+"@structured-id/proto@workspace:packages/proto":
+  version: 0.0.0-use.local
+  resolution: "@structured-id/proto@workspace:packages/proto"
+  dependencies:
+    "@bufbuild/buf": "npm:^1.73.0"
+    "@eslint/js": "npm:^10.0.1"
+    "@protobuf-ts/grpcweb-transport": "npm:^2.11.1"
+    "@protobuf-ts/plugin": "npm:^2.11.1"
+    "@protobuf-ts/runtime": "npm:^2.11.1"
+    "@protobuf-ts/runtime-rpc": "npm:^2.11.1"
+    "@structured-id/ids": "workspace:^"
+    "@types/node": "npm:^26.6.3"
+    eslint: "npm:^10.11.0"
+    prettier: "npm:^3.9.9"
     typescript: "npm:^6.0.3"
     typescript-eslint: "npm:^8.71.0"
     vite: "npm:^8"
