@@ -1,19 +1,20 @@
 # Both language implementations run against the same pinned schema and
-# corpus (the `proto` submodule) whenever either implementation, the pinned
-# revision or this workflow changes.
+# corpus (the `proto` submodule). On main they run whenever either
+# implementation, the pinned revision or this workflow changes. Every pull
+# request runs them: `rust` and `typescript` are required checks, and a
+# required check that never reports keeps the pull request from merging.
 name: CI
 
 on:
   push:
     branches: [main]
-    paths: &paths
+    paths:
       - rust/**
       - typescript/**
       - proto
       - .gitmodules
       - .github/workflows/ci.yml
   pull_request:
-    paths: *paths
 
 permissions:
   contents: read
