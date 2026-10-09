@@ -40,7 +40,7 @@ let mockWtTransportInstance: RpcTransport;
 
 vi.mock("../../src/transport/webtransport.js", () => ({
   WebTransportConnection: vi.fn().mockImplementation(function () {
-    return { connect: mockWtConnect, close: mockWtClose };
+    return { connect: mockWtConnect, close: mockWtClose, connected: true };
   }),
   WebTransportRpcTransport: vi.fn().mockImplementation(function () {
     return mockWtTransportInstance;
@@ -402,6 +402,48 @@ describe("AdaptiveRpcTransport", () => {
   });
 
   describe("close()", () => {
+    // An old RPC may fail while its connection is being replaced or afterward.
+    // It still gets fallback, but must not retire the replacement session.
+    it.each([true, false])("ignores stale failures (during reconnect=%s)", async (during) => {
+      const adaptive = await adaptiveWithWebTransport({ reconnectDelay: 1000 });
+      const response = new Deferred<MockMsg>();
+      unaryOf(mockWtTransportInstance)
+        .mockReturnValueOnce(
+          rejectedUnaryCall(method, input, new TransportFailure("first connection lost")),
+        )
+        .mockReturnValueOnce(
+          new UnaryCall(
+            method,
+            {},
+            input,
+            Promise.resolve({}),
+            response.promise,
+            Promise.resolve({ code: "OK", detail: "" }),
+            Promise.resolve({}),
+          ),
+        );
+      unaryOf(getGrpcWebTransport(adaptive)).mockImplementation(() =>
+        resolvedUnaryCall(method, input, { value: "fallback" }),
+      );
+      const first = adaptive.unary(method, input, options);
+      const second = adaptive.unary(method, input, options);
+      await first.response;
+      const ready = new Deferred<void>();
+      mockWtConnect.mockReturnValueOnce(ready.promise);
+      vi.advanceTimersByTime(1000);
+      if (!during) {
+        ready.resolve();
+        await vi.advanceTimersByTimeAsync(0);
+      }
+      response.reject(new TransportFailure("late failure from old session"));
+      await second.response;
+      if (during) ready.resolve();
+      await vi.advanceTimersByTimeAsync(0);
+      expect(adaptive.activeTransport).toBe("webtransport");
+      expect(vi.getTimerCount()).toBe(0);
+      expect(mockWtConnect).toHaveBeenCalledTimes(2);
+      adaptive.close();
+    });
     // Closing after a reconnect starts prohibits both revival and rescheduling.
     it.each([true, false])("stops an in-flight reconnect (success=%s)", async (success) => {
       const adaptive = await adaptiveWithWebTransport({ reconnectDelay: 1000 });

@@ -42,9 +42,8 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-      # The tags of the packages released by this run, in name order, so a
-      # package is published before the packages that depend on it (ids
-      # before proto).
+      # The tags released by this run. The publish script orders dependencies
+      # within one job, rather than relying on matrix scheduling.
       - name: Released tags
         id: released
         env:
@@ -52,7 +51,7 @@ jobs:
         run: |
           tags="$(jq -c '. as $out | [to_entries[]
             | select((.key | endswith("--release_created")) and (.value | tostring) == "true")
-            | $out[(.key | rtrimstr("--release_created")) + "--tag_name"]] | sort' <<<"$OUTPUTS")"
+            | $out[(.key | rtrimstr("--release_created")) + "--tag_name"]]' <<<"$OUTPUTS")"
           echo "tags=${tags}" >>"$GITHUB_OUTPUT"
 
   publish:
@@ -61,11 +60,6 @@ jobs:
       always() && (github.event_name == 'workflow_dispatch'
       || (needs.release-please.outputs.tags != '' && needs.release-please.outputs.tags != '[]'))
     runs-on: ubuntu-latest
-    strategy:
-      # One package at a time, in the order above.
-      max-parallel: 1
-      matrix:
-        tag: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('["{0}"]', inputs.tag) || needs.release-please.outputs.tags) }}
     # npm trusted publishing (OIDC) is bound to this workflow file and the
     # `release` environment: npmjs.com → @structured-id/<package> → Trusted
     # Publishers: structured-id / sdk / release-typescript.yml / release.
@@ -74,14 +68,16 @@ jobs:
       contents: read
       id-token: write
     env:
-      TAG: ${{ matrix.tag }}
+      TAGS: ${{ needs.release-please.outputs.tags }}
+      DISPATCH_TAG: ${{ inputs.tag }}
     defaults:
       run:
         working-directory: typescript
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: refs/tags/${{ env.TAG }}
+          ref: ${{ github.sha }}
+          fetch-depth: 0
           submodules: recursive
           persist-credentials: false
       - run: corepack enable
@@ -93,36 +89,9 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
-      - run: corepack install
-      - run: yarn install --immutable
-      - run: yarn build
-      - run: yarn test
       # `yarn pack` replaces the workspace: ranges with the released versions;
       # npm then publishes that archive with provenance.
       - name: Publish to npm
         env:
           NPM_CONFIG_LOGLEVEL: verbose
-        run: |
-          PACKAGE="${TAG#typescript-}"
-          PACKAGE="${PACKAGE%-v*}"
-          DIR="packages/${PACKAGE}"
-          if [ ! -f "${DIR}/package.json" ]; then
-            echo "Release tag ${TAG} names no package under typescript/packages."
-            exit 1
-          fi
-          NAME="$(node -p "require('./${DIR}/package.json').name")"
-          PV="$(node -p "require('./${DIR}/package.json').version")"
-          if [ "${TAG}" != "typescript-${PACKAGE}-v${PV}" ]; then
-            echo "Release tag ${TAG} does not name ${NAME} ${PV}."
-            exit 1
-          fi
-          if npm view "${NAME}@${PV}" version >/dev/null 2>&1; then
-            echo "${NAME}@${PV} is already published; nothing to do."
-            exit 0
-          fi
-          yarn workspace "${NAME}" pack --out "${RUNNER_TEMP}/package.tgz"
-          # max-parallel only orders this run. Check the packed dependency
-          # ranges in npm even when separate release runs overlap. A missing
-          # dependency fails before publish; rerun after its release succeeds.
-          node ci/check-publish-dependencies.mjs "${RUNNER_TEMP}/package.tgz"
-          npm publish "${RUNNER_TEMP}/package.tgz" --access public --provenance
+        run: bash ci/publish-typescript.sh

@@ -57,6 +57,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
   private readonly onTransportChange: ((transport: TransportType) => void) | undefined;
 
   private primaryAvailable = false;
+  private primaryGeneration = 0;
   private closed = false;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -74,6 +75,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
       this.wtConnection = new WebTransportConnection({
         url: opts.webTransportUrl,
         certHash: opts.webTransportCertHash,
+        onDisconnect: () => this.markPrimaryUnavailable(),
       });
       this.wtTransport = new WebTransportRpcTransport(this.wtConnection);
     } else {
@@ -101,6 +103,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
     try {
       await this.wtConnection.connect();
       if (this.closed) return;
+      if (!this.wtConnection.connected) throw new TransportFailure("Connection closed during init");
       this.primaryAvailable = true;
       this.notifyTransport("webtransport");
     } catch {
@@ -214,6 +217,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
     defStatus: Deferred<RpcStatus>,
     defTrailer: Deferred<RpcMetadata>,
   ): Promise<void> {
+    const generation = this.primaryGeneration;
     try {
       // Attempt primary (WebTransport)
       const primaryCall = primary.unary(method, input, options);
@@ -231,9 +235,8 @@ export class AdaptiveRpcTransport implements RpcTransport {
     } catch (err) {
       // Transport-level failure — failover to gRPC-web
       if (!this.closed && !options.abort?.aborted && err instanceof TransportFailure) {
-        this.primaryAvailable = false;
-        this.notifyTransport("grpc-web");
-        this.scheduleReconnect();
+        // An old call may finish after its connection has been replaced.
+        if (generation === this.primaryGeneration) this.markPrimaryUnavailable();
 
         try {
           const fallbackCall = this.fallback.unary(method, input, options);
@@ -259,6 +262,14 @@ export class AdaptiveRpcTransport implements RpcTransport {
     }
   }
 
+  private markPrimaryUnavailable(): void {
+    if (this.closed || !this.primaryAvailable) return;
+    this.primaryAvailable = false;
+    ++this.primaryGeneration;
+    this.notifyTransport("grpc-web");
+    this.scheduleReconnect();
+  }
+
   private scheduleReconnect(): void {
     const connection = this.wtConnection;
     if (this.closed || this.reconnectTimer || !connection) return;
@@ -269,6 +280,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
         connection.close();
         await connection.connect();
         if (this.closed) return;
+        if (!connection.connected) throw new TransportFailure("Connection closed during reconnect");
         this.primaryAvailable = true;
         this.notifyTransport("webtransport");
       } catch {

@@ -165,6 +165,14 @@ describe("WebTransportConnection", () => {
   });
 
   // W3C WebTransport §6.6: rejection of closed also disconnects the session.
+  it("does not revive a session already closed when readiness is observed", async () => {
+    mockWt.closed = Promise.resolve();
+    const conn = new WebTransportConnection({ url: "https://wt.sid.example.com" });
+    await expect(conn.connect()).rejects.toMatchObject({ code: "UNAVAILABLE" });
+    expect(conn.connected).toBe(false);
+  });
+
+  // W3C WebTransport §6.6: rejection of closed also disconnects the session.
   it("disconnects on rejected closed", async () => {
     const closed = new Deferred<void>();
     mockWt.closed = closed.promise;

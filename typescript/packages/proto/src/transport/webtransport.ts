@@ -33,6 +33,8 @@ export interface WebTransportConnectOptions {
    * Required for connecting to servers with self-signed certificates.
    */
   certHash?: string | undefined;
+  /** Observer of remote closure of the currently established connection. */
+  onDisconnect?: (() => void) | undefined;
 }
 
 /**
@@ -88,15 +90,24 @@ export class WebTransportConnection {
     try {
       const wt = new WebTransport(this.opts.url, initOpts);
       this.pending = wt;
+      let remotelyClosed = false;
       // W3C WebTransport §6.6: closed rejects on abnormal termination.
       const disconnected = () => {
-        if (this.transport === wt) this.transport = null;
+        remotelyClosed = true;
+        if (this.transport !== wt) return;
+        this.transport = null;
+        try {
+          this.opts.onDisconnect?.();
+        } catch {
+          // Observers cannot change the connection's lifecycle.
+        }
       };
       void wt.closed.then(disconnected, disconnected);
       await wt.ready;
       if (generation !== this.generation) {
         throw new RpcError("Connection attempt was closed", "CANCELLED");
       }
+      if (remotelyClosed) throw new TransportFailure("Connection closed during establishment");
       this.transport = wt;
       return wt;
     } finally {

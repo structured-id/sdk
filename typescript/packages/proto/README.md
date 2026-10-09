@@ -59,6 +59,8 @@ gRPC-web. Without a `webTransportUrl`, or where the runtime has no
 that cancelled call. `close()` stops background reconnects, including an
 attempt already in progress. Transport-change callbacks are observers: an
 exception in one cannot change connection health or the call's result.
+Remote closure also switches to gRPC-web and starts recovery when no RPC is
+active. A late failure from a retired connection cannot disable its replacement.
 
 `WebTransportRpcTransport`, `WebTransportConnection` and the frame helpers are
 exported for applications that manage the connection themselves.
@@ -84,6 +86,50 @@ const id = required(ResourceId, target.id); // throws on a missing or invalid id
 ES modules only. Node loads them from CommonJS through `require` (Node 20.19
 and later).
 
+### Other TypeScript protobuf clients
+
+There is no message-key rewriting layer. The protobuf-ts generator uses its
+standard lowerCamelCase local field names and numeric TypeScript enums. On
+binary transports, fields are identified by number, `bytes` remain `Uint8Array`,
+64-bit integers remain `bigint`, and timestamps retain `{ seconds: bigint,
+nanos: number }`. The finishing script only reuses the identifier message
+objects and adds `.js` to relative module imports.
+
+Use message `toJson`/`fromJson` for ProtoJSON, rather than `JSON.stringify`
+on a message object. ProtoJSON uses decimal strings for 64-bit integers,
+base64 for bytes, full schema names for enums, and RFC 3339 timestamps.
+Explicit schema `json_name` is honored: `UserInfo.givenName` becomes
+`given_name` at the OIDC JSON boundary; ordinary fields use lowerCamelCase.
+
+For independent [ts-proto](https://github.com/stephenh/ts-proto) clients, this
+tested generator profile preserves binary values without Date conversion:
+
+```text
+forceLong=bigint,useDate=false,snakeToCamel=keys_json,useJsonName=false,stringEnums=false
+```
+
+`useDate=false` gives the matching seconds/nanos structure. In ts-proto
+2.13.0, that option's default JSON conversion goes through `Date` and loses
+sub-millisecond precision; it is not a lossless Timestamp ProtoJSON bridge.
+The `string-nano` alternative tested with nano-date 4.1.0 also failed
+pre-epoch and calendar-boundary round trips. Keep timestamps structured on
+binary transports, and use the SDK's standard Timestamp ProtoJSON codec when
+exact JSON interchange is needed. `useJsonTimestamp=raw` emits an object
+instead of the standard RFC 3339 string and is not an equivalent REST contract.
+JavaScript `Date` should only be a display conversion when that precision is
+not needed.
+
+Local enum constant names can differ between generators; use named constants
+from your own generated module. Both codecs preserve unknown enum numbers in
+binary protobuf. ts-proto 2.13.0's generated JSON enum helpers map unknown
+values to `UNRECOGNIZED`; that path does not preserve future numeric values.
+The interop suite checks both codecs against the actual SID schema, in both
+directions for binary values and for JSON scalars, including 64-bit boundaries,
+nanosecond calendar boundaries, optional zero/false values and explicit OIDC
+JSON field names. Timestamp JSON precision is checked against the SDK codec;
+the ts-proto limitations above are not declared compatible. The independent
+codec is test-only, outside this package's runtime closure.
+
 ## Verify
 
 From the `typescript/` directory of the SDK repository, with its `proto`
@@ -101,6 +147,9 @@ archive** against npm before publishing. Missing dependencies or registry
 errors fail the job before a registry write; rerun the existing release's
 publish job after the dependency is available. This applies even when different
 package releases execute in concurrent workflows.
+Within a run, one publish job processes release tags sequentially, with `ids`
+before `proto`; a failed publication stops the sequence. Each package is built
+from its own immutable release tag.
 
 The registry bootstrap already published `0.1.0`. The first automated release
 starts at `0.1.1`, so it publishes the reviewed implementation rather than
