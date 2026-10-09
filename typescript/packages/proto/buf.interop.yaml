@@ -1,0 +1,22 @@
+# Test-only independent codec. Never shipped in the SDK or its dependency tree.
+version: v2
+clean: true
+plugins:
+  - local: protoc-gen-ts_proto
+    out: schema/ts-proto
+    opt:
+      - forceLong=bigint
+      - useDate=false
+      - snakeToCamel=keys_json
+      - useJsonName=false
+      - stringEnums=false
+      - outputServices=false
+      - importSuffix=.js
+      - esModuleInterop=true
+inputs:
+  - directory: ../../../proto
+    paths:
+      - ../../../proto/sid/v1/events/event_stream.proto
+      - ../../../proto/sid/v1/common/errors.proto
+      - ../../../proto/sid/v1/authn/issuer.proto
+      - ../../../proto/sid/v1/authn/auth.proto

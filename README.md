@@ -9,6 +9,7 @@ installing one does not install the rest.
 | [`sid-ids`](rust/crates/sid-ids) | Rust | crates.io | Validated identifier types, `no_std` with `alloc` |
 | [`sid-ids-proto`](rust/crates/sid-ids-proto) | Rust | crates.io | The `sid.v1.ids` wire messages and checked conversions to `sid-ids` |
 | [`@structured-id/ids`](typescript/packages/ids) | TypeScript | npm | Checked identifier types, the `sid.v1.ids` wire messages and conversions |
+| [`@structured-id/proto`](typescript/packages/proto) | TypeScript | npm | The public `sid.v1` messages and clients, the `google.rpc` error model and the gRPC-web / WebTransport browser transport |
 
 ## Schema and corpus
 
@@ -27,7 +28,7 @@ git clone --recurse-submodules https://github.com/structured-id/sdk.git
 
 ```sh
 cd rust && cargo nextest run --workspace       # Rust packages
-cd typescript && yarn install && yarn test     # TypeScript packages
+cd typescript && yarn install && yarn build && yarn test     # TypeScript packages
 ```
 
 Releases are automated from conventional commits: Rust packages through

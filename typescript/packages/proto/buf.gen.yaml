@@ -1,0 +1,23 @@
+version: v2
+clean: true
+plugins:
+  - local: protoc-gen-ts
+    out: src/generated
+    opt:
+      - client_generic
+      - generate_dependencies
+      # The generated code predates this package's stricter compiler flags
+      # (noImplicitOverride, noUncheckedIndexedAccess); its types are still
+      # checked where hand-written code uses them.
+      - ts_nocheck
+inputs:
+  # The public sid.v1 schema; its sid/v1/ids messages are replaced by the
+  # @structured-id/ids objects after generation (scripts/finish.mjs).
+  - directory: ../../../proto
+  # The error model every refusal carries (google.rpc.Status in the
+  # grpc-status-details-bin trailer). Pinned to the googleapis commit of
+  # proto/buf.lock.
+  - module: buf.build/googleapis/googleapis:536964a08a534d51b8f30f2d6751f1f9
+    paths:
+      - google/rpc/status.proto
+      - google/rpc/error_details.proto

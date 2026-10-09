@@ -78,6 +78,9 @@ jobs:
           node-version: 24
       - run: corepack install
       - run: yarn install --immutable
+      # Packages import each other's build (proto imports ids), so the
+      # workspace is built in dependency order before it is checked.
+      - run: yarn build
       - run: yarn format:check
       - run: yarn lint
       - run: yarn typecheck
