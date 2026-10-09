@@ -337,6 +337,43 @@ describe("AdaptiveRpcTransport", () => {
   });
 
   describe("onTransportChange callback", () => {
+    // Observer exceptions must not change connection health or strand calls.
+    it("isolates throwing observers during init and failover", async () => {
+      const observer = vi.fn(() => {
+        throw new Error("observer bug");
+      });
+      const adaptive = await adaptiveWithWebTransport({ onTransportChange: observer });
+      expect(adaptive.activeTransport).toBe("webtransport");
+      expect(observer).toHaveBeenCalledTimes(1);
+      unaryOf(mockWtTransportInstance).mockReturnValue(
+        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+      );
+      unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
+        resolvedUnaryCall(method, input, { value: "ok" }),
+      );
+      await expect(adaptive.unary(method, input, options).response).resolves.toEqual({
+        value: "ok",
+      });
+      await vi.advanceTimersByTimeAsync(5000);
+      expect(adaptive.activeTransport).toBe("webtransport");
+      expect(observer).toHaveBeenCalledTimes(3);
+      adaptive.close();
+    });
+
+    // Caller cancellation prohibits a fresh HTTP fallback attempt.
+    it("does not fail over a caller-aborted call", async () => {
+      const adaptive = await adaptiveWithWebTransport();
+      const abort = new AbortController();
+      abort.abort();
+      unaryOf(mockWtTransportInstance).mockReturnValue(
+        rejectedUnaryCall(method, input, new RpcError("aborted", "CANCELLED")),
+      );
+      await expect(
+        adaptive.unary(method, input, { abort: abort.signal }).response,
+      ).rejects.toMatchObject({ code: "CANCELLED" });
+      expect(getGrpcWebTransport(adaptive).unary).not.toHaveBeenCalled();
+      adaptive.close();
+    });
     it("fires when transport changes during failover", async () => {
       const onChange = vi.fn();
       const adaptive = await adaptiveWithWebTransport({
@@ -364,6 +401,26 @@ describe("AdaptiveRpcTransport", () => {
   });
 
   describe("close()", () => {
+    // Closing after a reconnect starts prohibits both revival and rescheduling.
+    it.each([true, false])("stops an in-flight reconnect (success=%s)", async (success) => {
+      const adaptive = await adaptiveWithWebTransport({ reconnectDelay: 1000 });
+      unaryOf(mockWtTransportInstance).mockReturnValue(
+        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+      );
+      unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
+        resolvedUnaryCall(method, input, { value: "ok" }),
+      );
+      await adaptive.unary(method, input, options).response;
+      const pending = new Deferred<void>();
+      mockWtConnect.mockReturnValueOnce(pending.promise);
+      vi.advanceTimersByTime(1000);
+      adaptive.close();
+      if (success) pending.resolve();
+      else pending.reject(new Error("down"));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(adaptive.activeTransport).toBe("grpc-web");
+      expect(vi.getTimerCount()).toBe(0);
+    });
     it("cancels pending reconnect timer", async () => {
       const adaptive = await adaptiveWithWebTransport({ reconnectDelay: 5000 });
 

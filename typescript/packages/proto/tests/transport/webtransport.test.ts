@@ -1,7 +1,7 @@
 // WebTransport connection lifecycle and the unary call over one bidirectional
 // stream: request header, metadata, deadlines, status mapping and failures.
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { RpcError } from "@protobuf-ts/runtime-rpc";
+import { Deferred, RpcError } from "@protobuf-ts/runtime-rpc";
 import type { MethodInfo, RpcOptions } from "@protobuf-ts/runtime-rpc";
 import { RequestHeader, ResponseHeader } from "../../src/generated/sid/v1/common/transport.js";
 import {
@@ -164,6 +164,33 @@ describe("WebTransportConnection", () => {
     expect(conn.connected).toBe(true);
   });
 
+  // W3C WebTransport §6.6: rejection of closed also disconnects the session.
+  it("disconnects on rejected closed", async () => {
+    const closed = new Deferred<void>();
+    mockWt.closed = closed.promise;
+    const conn = new WebTransportConnection({ url: "https://wt.sid.example.com" });
+    await conn.connect();
+    closed.reject(new Error("network lost"));
+    await Promise.resolve();
+    expect(conn.connected).toBe(false);
+  });
+
+  // Stale readiness must never replace a newer, explicitly opened session.
+  it("closes an in-progress connection and rejects stale readiness", async () => {
+    const ready = new Deferred<void>();
+    mockWt.ready = ready.promise;
+    const old = mockWt;
+    const conn = new WebTransportConnection({ url: "https://wt.sid.example.com" });
+    const rejected = expect(conn.connect()).rejects.toMatchObject({ code: "CANCELLED" });
+    conn.close();
+    expect(old.close).toHaveBeenCalledOnce();
+    mockWt = { ...old, ready: Promise.resolve(), close: vi.fn() };
+    const current = await conn.connect();
+    ready.resolve();
+    await rejected;
+    expect(await conn.connect()).toBe(current);
+  });
+
   it("connect() is idempotent — does not open second connection", async () => {
     const conn = new WebTransportConnection({
       url: "https://wt.sid.example.com",
@@ -173,6 +200,18 @@ describe("WebTransportConnection", () => {
     await conn.connect();
 
     expect((globalThis as Record<string, unknown>).WebTransport).toHaveBeenCalledTimes(1);
+  });
+
+  // A constructor rejection occurs before the first await; it must not leave
+  // a cached rejected connecting promise that prevents future attempts.
+  it("retries after a synchronous WebTransport constructor failure", async () => {
+    const ctor = globalThis.WebTransport as unknown as ReturnType<typeof vi.fn>;
+    ctor.mockImplementationOnce(function () {
+      throw new Error("invalid session");
+    });
+    const conn = new WebTransportConnection({ url: "https://wt.sid.example.com" });
+    await expect(conn.connect()).rejects.toThrow("invalid session");
+    await expect(conn.connect()).resolves.toBe(mockWt);
   });
 
   it("close() disconnects and allows reconnect", async () => {
@@ -375,10 +414,16 @@ describe("WebTransportRpcTransport", () => {
     mockWt.createBidirectionalStream.mockResolvedValue(stream);
 
     const transport = new WebTransportRpcTransport(conn);
+    // Calls without a cancellation signal must not allocate cancellation races
+    // at each stream boundary on the normal request path.
+    const race = vi.spyOn(Promise, "race");
     const call = transport.unary(method, input, options);
     const response = await call.response;
+    const raceCalls = race.mock.calls.length;
+    race.mockRestore();
 
     expect(response).toEqual({ value: "world" });
+    expect(raceCalls).toBe(0);
 
     // Verify RequestHeader was sent correctly
     const sent = concat(writtenChunks);
@@ -650,7 +695,8 @@ describe("WebTransportRpcTransport", () => {
     expect((err as RpcError).code).toBe("UNAVAILABLE");
   });
 
-  it("throws INTERNAL on stream error (non-RpcError)", async () => {
+  // Stream creation failure must retain its transport classification.
+  it("throws UNAVAILABLE on stream error (non-RpcError)", async () => {
     await conn.connect();
     mockWt.createBidirectionalStream.mockRejectedValue(new Error("stream creation failed"));
 
@@ -659,7 +705,7 @@ describe("WebTransportRpcTransport", () => {
 
     const err = await call.response.catch((e: unknown) => e);
     expect(err).toBeInstanceOf(RpcError);
-    expect((err as RpcError).code).toBe("INTERNAL");
+    expect((err as RpcError).code).toBe("UNAVAILABLE");
     expect((err as RpcError).message).toBe("stream creation failed");
   });
 
@@ -673,13 +719,80 @@ describe("WebTransportRpcTransport", () => {
 
     const err = await call.response.catch((e: unknown) => e);
     expect(err).toBeInstanceOf(RpcError);
-    expect((err as RpcError).code).toBe("INTERNAL");
+    expect((err as RpcError).code).toBe("UNAVAILABLE");
     expect((err as RpcError).message).toBe("stream aborted");
   });
 
   it("serverStreaming throws RpcError", () => {
     const transport = new WebTransportRpcTransport(conn);
     expect(() => transport.serverStreaming(method, input, options)).toThrow(RpcError);
+  });
+
+  // google.rpc.Status metadata belongs to the error, not only the headers promise.
+  it("attaches response metadata to a refusal", async () => {
+    await conn.connect();
+    const meta = { "grpc-status-details-bin": "CAc=" };
+    const { stream } = makeMockBidiStream([
+      buildResponseFrame({
+        statusCode: 7,
+        statusMessage: "denied",
+        metadata: meta,
+      }),
+    ]);
+    mockWt.createBidirectionalStream.mockResolvedValue(stream);
+    const call = new WebTransportRpcTransport(conn).unary(method, input, options);
+    await expect(call.response).rejects.toMatchObject({ code: "PERMISSION_DENIED", meta });
+    expect(await call.headers).toEqual(meta);
+  });
+
+  // A server waiting for request FIN must be able to finish the RPC.
+  it("closes the request writable before reading the response", async () => {
+    await conn.connect();
+    const finished = new Deferred<void>();
+    mockWt.createBidirectionalStream.mockResolvedValue({
+      writable: new WritableStream<Uint8Array>({ close: () => finished.resolve() }),
+      readable: new ReadableStream<Uint8Array>({
+        async start(controller) {
+          await finished.promise;
+          controller.enqueue(
+            buildResponseFrame({ statusCode: 0, statusMessage: "", metadata: {} }),
+          );
+          controller.enqueue(buildBodyFrame(new TextEncoder().encode('{"value":"ok"}')));
+          controller.close();
+        },
+      }),
+    });
+    await expect(
+      new WebTransportRpcTransport(conn).unary(method, input, options).response,
+    ).resolves.toEqual({ value: "ok" });
+  });
+
+  // Cancellation before submission prevents all server-side effects.
+  it("does not open a stream for an already aborted call", async () => {
+    await conn.connect();
+    const abort = new AbortController();
+    abort.abort();
+    await expect(
+      new WebTransportRpcTransport(conn).unary(method, input, { abort: abort.signal }).response,
+    ).rejects.toMatchObject({ code: "CANCELLED" });
+    expect(mockWt.createBidirectionalStream).not.toHaveBeenCalled();
+  });
+
+  // An aborted read must settle the call and cancel the stream without more bytes.
+  it("cancels an in-flight read", async () => {
+    await conn.connect();
+    const cancelled = vi.fn();
+    const finished = new Deferred<void>();
+    mockWt.createBidirectionalStream.mockResolvedValue({
+      readable: new ReadableStream<Uint8Array>({ cancel: cancelled }),
+      writable: new WritableStream<Uint8Array>({ close: () => finished.resolve() }),
+    });
+    const abort = new AbortController();
+    const call = new WebTransportRpcTransport(conn).unary(method, input, { abort: abort.signal });
+    await finished.promise;
+    abort.abort();
+    await expect(call.response).rejects.toMatchObject({ code: "CANCELLED" });
+    expect(cancelled).toHaveBeenCalledOnce();
   });
 
   it("clientStreaming throws RpcError", () => {

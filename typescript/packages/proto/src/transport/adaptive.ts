@@ -56,6 +56,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
   private readonly onTransportChange: ((transport: TransportType) => void) | undefined;
 
   private primaryAvailable = false;
+  private closed = false;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(opts: AdaptiveTransportOptions, defaultOptions?: RpcOptions) {
@@ -90,6 +91,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
    * Call this during app boot — non-blocking, falls back silently.
    */
   async init(): Promise<void> {
+    if (this.closed) return;
     if (!this.wtConnection) {
       this.notifyTransport("grpc-web");
       return;
@@ -97,9 +99,11 @@ export class AdaptiveRpcTransport implements RpcTransport {
 
     try {
       await this.wtConnection.connect();
+      if (this.closed) return;
       this.primaryAvailable = true;
       this.notifyTransport("webtransport");
     } catch {
+      if (this.closed) return;
       this.primaryAvailable = false;
       this.notifyTransport("grpc-web");
       this.scheduleReconnect();
@@ -108,6 +112,8 @@ export class AdaptiveRpcTransport implements RpcTransport {
 
   /** Shut down all connections. */
   close(): void {
+    this.closed = true;
+    this.primaryAvailable = false;
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
@@ -223,7 +229,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
       defTrailer.resolve(trailer);
     } catch (err) {
       // Transport-level failure — failover to gRPC-web
-      if (isTransportError(err)) {
+      if (!this.closed && !options.abort?.aborted && isTransportError(err)) {
         this.primaryAvailable = false;
         this.notifyTransport("grpc-web");
         this.scheduleReconnect();
@@ -254,13 +260,14 @@ export class AdaptiveRpcTransport implements RpcTransport {
 
   private scheduleReconnect(): void {
     const connection = this.wtConnection;
-    if (this.reconnectTimer || !connection) return;
+    if (this.closed || this.reconnectTimer || !connection) return;
 
     this.reconnectTimer = setTimeout(async () => {
       this.reconnectTimer = null;
       try {
         connection.close();
         await connection.connect();
+        if (this.closed) return;
         this.primaryAvailable = true;
         this.notifyTransport("webtransport");
       } catch {
@@ -271,7 +278,12 @@ export class AdaptiveRpcTransport implements RpcTransport {
   }
 
   private notifyTransport(type: TransportType): void {
-    this.onTransportChange?.(type);
+    // This is an observer, not part of connection health or RPC completion.
+    try {
+      this.onTransportChange?.(type);
+    } catch {
+      // A failed UI observer must not fail a healthy transport or strand a call.
+    }
   }
 }
 

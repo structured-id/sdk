@@ -121,4 +121,8 @@ jobs:
             exit 0
           fi
           yarn workspace "${NAME}" pack --out "${RUNNER_TEMP}/package.tgz"
+          # max-parallel only orders this run. Check the packed dependency
+          # ranges in npm even when separate release runs overlap. A missing
+          # dependency fails before publish; rerun after its release succeeds.
+          node ci/check-publish-dependencies.mjs "${RUNNER_TEMP}/package.tgz"
           npm publish "${RUNNER_TEMP}/package.tgz" --access public --provenance

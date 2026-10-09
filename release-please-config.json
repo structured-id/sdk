@@ -16,7 +16,7 @@
       "release-type": "node",
       "package-name": "@structured-id/proto",
       "component": "typescript-proto",
-      "initial-version": "0.1.0",
+      "initial-version": "0.1.1",
       "bump-minor-pre-major": true
     }
   }

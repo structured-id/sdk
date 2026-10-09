@@ -51,6 +51,11 @@ WebTransport in the background; an application error (`NOT_FOUND`,
 gRPC-web. Without a `webTransportUrl`, or where the runtime has no
 `WebTransport`, it is plain gRPC-web.
 
+`RpcOptions.abort` cancels an active stream and prevents a fallback attempt for
+that cancelled call. `close()` stops background reconnects, including an
+attempt already in progress. Transport-change callbacks are observers: an
+exception in one cannot change connection health or the call's result.
+
 `WebTransportRpcTransport`, `WebTransportConnection` and the frame helpers are
 exported for applications that manage the connection themselves.
 
@@ -86,6 +91,16 @@ yarn build
 yarn test
 ci/check-package.sh
 ```
+
+The release workflow checks every runtime dependency range in the **packed
+archive** against npm before publishing. Missing dependencies or registry
+errors fail the job before a registry write; rerun the existing release's
+publish job after the dependency is available. This applies even when different
+package releases execute in concurrent workflows.
+
+The registry bootstrap already published `0.1.0`. The first automated release
+starts at `0.1.1`, so it publishes the reviewed implementation rather than
+skipping an immutable version that already exists in npm.
 
 ## License
 

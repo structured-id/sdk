@@ -39,6 +39,8 @@ export interface WebTransportConnectOptions {
 export class WebTransportConnection {
   private transport: WebTransport | null = null;
   private connecting: Promise<WebTransport> | null = null;
+  private pending: WebTransport | null = null;
+  private generation = 0;
   private readonly opts: WebTransportConnectOptions;
 
   constructor(opts: WebTransportConnectOptions) {
@@ -53,11 +55,19 @@ export class WebTransportConnection {
     if (this.transport) return this.transport;
     if (this.connecting) return this.connecting;
 
-    this.connecting = this.doConnect();
-    return this.connecting;
+    const attempt = this.doConnect(++this.generation);
+    this.connecting = attempt;
+    try {
+      return await attempt;
+    } finally {
+      if (this.connecting === attempt) this.connecting = null;
+    }
   }
 
   close(): void {
+    ++this.generation;
+    this.pending?.close();
+    this.pending = null;
     if (this.transport) {
       this.transport.close();
       this.transport = null;
@@ -65,7 +75,7 @@ export class WebTransportConnection {
     this.connecting = null;
   }
 
-  private async doConnect(): Promise<WebTransport> {
+  private async doConnect(generation: number): Promise<WebTransport> {
     const initOpts: WebTransportOptions = {};
 
     if (this.opts.certHash) {
@@ -75,23 +85,22 @@ export class WebTransportConnection {
 
     try {
       const wt = new WebTransport(this.opts.url, initOpts);
+      this.pending = wt;
+      // W3C WebTransport §6.6: closed rejects on abnormal termination.
+      const disconnected = () => {
+        if (this.transport === wt) this.transport = null;
+      };
+      void wt.closed.then(disconnected, disconnected);
       await wt.ready;
-
+      if (generation !== this.generation) {
+        throw new RpcError("Connection attempt was closed", "CANCELLED");
+      }
       this.transport = wt;
-      this.connecting = null;
-
-      void wt.closed.then(() => {
-        if (this.transport === wt) {
-          this.transport = null;
-        }
-      });
-
       return wt;
-    } catch (err) {
-      // Reset so that subsequent connect() calls retry rather than returning
-      // the stale rejected promise.
-      this.connecting = null;
-      throw err;
+    } finally {
+      if (generation === this.generation) {
+        this.pending = null;
+      }
     }
   }
 }
@@ -170,15 +179,41 @@ export class WebTransportRpcTransport implements RpcTransport {
     defStatus: Deferred<RpcStatus>,
     defTrailer: Deferred<RpcMetadata>,
   ): Promise<void> {
+    let writer: WritableStreamDefaultWriter<Uint8Array> | undefined;
+    let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+    let wait = uncancelled;
+    let abort: (() => void) | undefined;
+    if (options.abort) {
+      const cancelled = new Deferred<never>();
+      abort = () => {
+        const error = new RpcError("Call cancelled", "CANCELLED");
+        // Cancel both halves. Cleanup rejection cannot replace the RPC outcome.
+        void writer?.abort(error).catch(() => {});
+        void reader?.cancel(error).catch(() => {});
+        cancelled.rejectPending(error);
+      };
+      wait = <T>(work: Promise<T>): Promise<T> => Promise.race([work, cancelled.promise]);
+      options.abort.addEventListener("abort", abort, { once: true });
+    }
     try {
+      if (options.abort?.aborted) throw new RpcError("Call cancelled", "CANCELLED");
       if (!this.connection.connected) {
         throw new RpcError("WebTransport connection not established", "UNAVAILABLE");
       }
 
-      const wt = await this.connection.connect();
-      const stream = await wt.createBidirectionalStream();
-      const writer = stream.writable.getWriter();
-      const reader = stream.readable.getReader();
+      const wt = await wait(this.connection.connect());
+      const opening = wt.createBidirectionalStream().then((stream) => {
+        // A stream can arrive after the call's cancellation has already won.
+        if (options.abort?.aborted) {
+          void stream.writable.abort().catch(() => {});
+          void stream.readable.cancel().catch(() => {});
+          throw new RpcError("Call cancelled", "CANCELLED");
+        }
+        return stream;
+      });
+      const stream = await wait(opening);
+      writer = stream.writable.getWriter();
+      reader = stream.readable.getReader();
 
       try {
         // Build RequestHeader
@@ -210,35 +245,42 @@ export class WebTransportRpcTransport implements RpcTransport {
 
         // Send RequestHeader + request body
         const headerBytes = RequestHeader.toBinary(reqHeader);
-        await writeFrame(writer, headerBytes);
+        await wait(writeFrame(writer, headerBytes));
 
         const bodyBytes = method.I.toBinary(input, options.binaryOptions);
-        await writeFrame(writer, bodyBytes);
+        await wait(writeFrame(writer, bodyBytes));
+        // W3C WebTransport §13: closing sends FIN; releaseLock does not.
+        await wait(writer.close());
 
         // Read ResponseHeader + response body via FrameReader so that excess
         // bytes from one read() are not lost when reading the next frame.
         const frameReader = new FrameReader(reader);
-        const respHeaderBytes = await frameReader.readFrame();
+        const respHeaderBytes = await wait(frameReader.readFrame());
         const respHeader = ResponseHeader.fromBinary(respHeaderBytes);
 
-        const responseHeaders: RpcMetadata = { ...respHeader.metadata };
+        const responseHeaders: RpcMetadata = respHeader.metadata;
         defHeader.resolve(responseHeaders);
 
         if (respHeader.statusCode !== 0) {
           throw new RpcError(
             respHeader.statusMessage || "RPC error",
             grpcCodeName(respHeader.statusCode),
+            responseHeaders,
           );
         }
 
         // Read response body
-        const respBodyBytes = await frameReader.readFrame();
+        const respBodyBytes = await wait(frameReader.readFrame());
         const message = method.O.fromBinary(respBodyBytes, options.binaryOptions);
 
         defMessage.resolve(message);
         defStatus.resolve({ code: "OK", detail: "" });
         defTrailer.resolve({});
       } finally {
+        // Stop any incomplete half on failure; a completed writable's abort is
+        // a no-op. Releasing a lock alone does not close a QUIC stream.
+        void writer.abort().catch(() => {});
+        void reader.cancel().catch(() => {});
         writer.releaseLock();
         reader.releaseLock();
       }
@@ -246,13 +288,19 @@ export class WebTransportRpcTransport implements RpcTransport {
       const rpcErr =
         err instanceof RpcError
           ? err
-          : new RpcError(err instanceof Error ? err.message : String(err), "INTERNAL");
+          : new RpcError(err instanceof Error ? err.message : String(err), "UNAVAILABLE");
       defHeader.rejectPending(rpcErr);
       defMessage.rejectPending(rpcErr);
       defStatus.rejectPending(rpcErr);
       defTrailer.rejectPending(rpcErr);
+    } finally {
+      if (abort) options.abort?.removeEventListener("abort", abort);
     }
   }
+}
+
+function uncancelled<T>(work: Promise<T>): Promise<T> {
+  return work;
 }
 
 /** Convert hex string to Uint8Array. */
