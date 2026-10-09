@@ -742,7 +742,22 @@ describe("WebTransportRpcTransport", () => {
     mockWt.createBidirectionalStream.mockResolvedValue(stream);
     const call = new WebTransportRpcTransport(conn).unary(method, input, options);
     await expect(call.response).rejects.toMatchObject({ code: "PERMISSION_DENIED", meta });
-    expect(await call.headers).toEqual(meta);
+    await expect(call.headers).rejects.toMatchObject({ code: "PERMISSION_DENIED", meta });
+    await expect(call.status).rejects.toMatchObject({ code: "PERMISSION_DENIED", meta });
+    await expect(call.trailers).rejects.toMatchObject({ code: "PERMISSION_DENIED", meta });
+  });
+
+  // A complete response with incompatible bytes must not replay a mutation.
+  it("reports malformed response bytes as DATA_LOSS rather than I/O failure", async () => {
+    await conn.connect();
+    const { stream } = makeMockBidiStream([
+      buildResponseFrame({ statusCode: 0, statusMessage: "", metadata: {} }),
+      buildBodyFrame(new Uint8Array([0xff])),
+    ]);
+    mockWt.createBidirectionalStream.mockResolvedValue(stream);
+    const call = new WebTransportRpcTransport(conn).unary(method, input, options);
+    await expect(call.response).rejects.toMatchObject({ code: "DATA_LOSS" });
+    expect(conn.connected).toBe(true);
   });
 
   // A server waiting for request FIN must be able to finish the RPC.

@@ -22,6 +22,8 @@ import type {
 } from "@protobuf-ts/runtime-rpc";
 import { RequestHeader, ResponseHeader } from "../generated/sid/v1/common/transport.js";
 import { FrameReader, writeFrame } from "./framing.js";
+import { TransportFailure, transportIO } from "./transport-failure.js";
+import type { IMessageType, BinaryReadOptions } from "@protobuf-ts/runtime";
 
 export interface WebTransportConnectOptions {
   /** WebTransport server URL, e.g. "https://localhost:4433" */
@@ -181,7 +183,7 @@ export class WebTransportRpcTransport implements RpcTransport {
   ): Promise<void> {
     let writer: WritableStreamDefaultWriter<Uint8Array> | undefined;
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
-    let wait = uncancelled;
+    let wait = transportIO;
     let abort: (() => void) | undefined;
     if (options.abort) {
       const cancelled = new Deferred<never>();
@@ -192,13 +194,14 @@ export class WebTransportRpcTransport implements RpcTransport {
         void reader?.cancel(error).catch(() => {});
         cancelled.rejectPending(error);
       };
-      wait = <T>(work: Promise<T>): Promise<T> => Promise.race([work, cancelled.promise]);
+      wait = <T>(work: Promise<T>): Promise<T> =>
+        Promise.race([transportIO(work), cancelled.promise]);
       options.abort.addEventListener("abort", abort, { once: true });
     }
     try {
       if (options.abort?.aborted) throw new RpcError("Call cancelled", "CANCELLED");
       if (!this.connection.connected) {
-        throw new RpcError("WebTransport connection not established", "UNAVAILABLE");
+        throw new TransportFailure("WebTransport connection not established");
       }
 
       const wt = await wait(this.connection.connect());
@@ -256,10 +259,9 @@ export class WebTransportRpcTransport implements RpcTransport {
         // bytes from one read() are not lost when reading the next frame.
         const frameReader = new FrameReader(reader);
         const respHeaderBytes = await wait(frameReader.readFrame());
-        const respHeader = ResponseHeader.fromBinary(respHeaderBytes);
+        const respHeader = decodeResponse(ResponseHeader, respHeaderBytes);
 
         const responseHeaders: RpcMetadata = respHeader.metadata;
-        defHeader.resolve(responseHeaders);
 
         if (respHeader.statusCode !== 0) {
           throw new RpcError(
@@ -268,10 +270,11 @@ export class WebTransportRpcTransport implements RpcTransport {
             responseHeaders,
           );
         }
+        defHeader.resolve(responseHeaders);
 
         // Read response body
         const respBodyBytes = await wait(frameReader.readFrame());
-        const message = method.O.fromBinary(respBodyBytes, options.binaryOptions);
+        const message = decodeResponse(method.O, respBodyBytes, options.binaryOptions);
 
         defMessage.resolve(message);
         defStatus.resolve({ code: "OK", detail: "" });
@@ -288,7 +291,7 @@ export class WebTransportRpcTransport implements RpcTransport {
       const rpcErr =
         err instanceof RpcError
           ? err
-          : new RpcError(err instanceof Error ? err.message : String(err), "UNAVAILABLE");
+          : new RpcError(err instanceof Error ? err.message : String(err), "INTERNAL");
       defHeader.rejectPending(rpcErr);
       defMessage.rejectPending(rpcErr);
       defStatus.rejectPending(rpcErr);
@@ -299,8 +302,16 @@ export class WebTransportRpcTransport implements RpcTransport {
   }
 }
 
-function uncancelled<T>(work: Promise<T>): Promise<T> {
-  return work;
+function decodeResponse<T extends object>(
+  type: IMessageType<T>,
+  bytes: Uint8Array,
+  options?: Partial<BinaryReadOptions>,
+): T {
+  try {
+    return type.fromBinary(bytes, options);
+  } catch (error) {
+    throw new RpcError(error instanceof Error ? error.message : String(error), "DATA_LOSS");
+  }
 }
 
 /** Convert hex string to Uint8Array. */

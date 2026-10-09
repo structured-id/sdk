@@ -44,10 +44,14 @@ message text.
 ### Transport
 
 `AdaptiveRpcTransport` sends every unary call over WebTransport while the
-connection is up. A transport-level failure (`UNAVAILABLE`, `CANCELLED`,
-`UNKNOWN` or a stream error) retries that call over gRPC-web and reconnects
-WebTransport in the background; an application error (`NOT_FOUND`,
-`PERMISSION_DENIED`, ...) is returned as is. Server streaming always goes over
+connection is up. A locally observed connection or stream I/O failure retries
+that call over gRPC-web and reconnects WebTransport in the background. Server
+statuses, including `UNAVAILABLE`, `CANCELLED` and `UNKNOWN`, are returned as is:
+a status code alone is not evidence of a failed connection. Malformed protobuf
+responses report `DATA_LOSS`; local encoding errors report `INTERNAL`. Neither
+triggers failover. A server error status rejects the call's headers, response,
+status and trailers promises, preserving its metadata on `RpcError`.
+Server streaming always goes over
 gRPC-web. Without a `webTransportUrl`, or where the runtime has no
 `WebTransport`, it is plain gRPC-web.
 

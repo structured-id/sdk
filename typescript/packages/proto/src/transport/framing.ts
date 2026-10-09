@@ -4,6 +4,8 @@
  * Wire format (per frame): [4 bytes big-endian length][payload]
  */
 
+import { RpcError } from "@protobuf-ts/runtime-rpc";
+
 const MAX_FRAME_SIZE = 4 * 1024 * 1024; // 4 MiB
 
 /**
@@ -29,7 +31,7 @@ export class FrameReader {
     const len = view.getUint32(0, false); // big-endian
 
     if (len > MAX_FRAME_SIZE) {
-      throw new Error(`Frame too large: ${len} bytes (max ${MAX_FRAME_SIZE})`);
+      throw new RpcError(`Frame too large: ${len} bytes (max ${MAX_FRAME_SIZE})`, "DATA_LOSS");
     }
 
     return this.readExact(len);

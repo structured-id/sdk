@@ -50,6 +50,7 @@ vi.mock("../../src/transport/webtransport.js", () => ({
 // Now import the module under test (AFTER vi.mock calls)
 import { AdaptiveRpcTransport } from "../../src/transport/adaptive.js";
 import type { AdaptiveTransportOptions } from "../../src/transport/adaptive.js";
+import { TransportFailure } from "../../src/transport/transport-failure.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -218,7 +219,7 @@ describe("AdaptiveRpcTransport", () => {
 
     it("fails over to gRPC-web on transport error (UNAVAILABLE)", async () => {
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("connection lost", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("connection lost")),
       );
       const fallback = getGrpcWebTransport(adaptive);
       unaryOf(fallback).mockReturnValue(resolvedUnaryCall(method, input, { value: "fallback-ok" }));
@@ -251,7 +252,7 @@ describe("AdaptiveRpcTransport", () => {
 
     it("schedules reconnect after failover", async () => {
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("connection lost", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("connection lost")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -272,7 +273,7 @@ describe("AdaptiveRpcTransport", () => {
 
     it("retries reconnect if reconnect attempt fails", async () => {
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("connection lost", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("connection lost")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -346,7 +347,7 @@ describe("AdaptiveRpcTransport", () => {
       expect(adaptive.activeTransport).toBe("webtransport");
       expect(observer).toHaveBeenCalledTimes(1);
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -386,7 +387,7 @@ describe("AdaptiveRpcTransport", () => {
 
       // Trigger failover
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -405,7 +406,7 @@ describe("AdaptiveRpcTransport", () => {
     it.each([true, false])("stops an in-flight reconnect (success=%s)", async (success) => {
       const adaptive = await adaptiveWithWebTransport({ reconnectDelay: 1000 });
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -426,7 +427,7 @@ describe("AdaptiveRpcTransport", () => {
 
       // Trigger failover to schedule reconnect
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -457,8 +458,9 @@ describe("AdaptiveRpcTransport", () => {
     });
   });
 
-  describe("failover triggers (all transport error codes)", () => {
-    it.each(["CANCELLED", "UNKNOWN"])("fails over on %s", async (code) => {
+  describe("failover preserves error provenance", () => {
+    // A server status describes a completed RPC, not a broken connection.
+    it.each(["CANCELLED", "UNKNOWN", "UNAVAILABLE"])("preserves server %s", async (code) => {
       const adaptive = await adaptiveWithWebTransport();
 
       unaryOf(mockWtTransportInstance).mockReturnValue(
@@ -468,17 +470,17 @@ describe("AdaptiveRpcTransport", () => {
         resolvedUnaryCall(method, input, { value: "ok" }),
       );
 
-      await adaptive.unary(method, input, options).response;
-      expect(adaptive.activeTransport).toBe("grpc-web");
+      await expect(adaptive.unary(method, input, options).response).rejects.toMatchObject({ code });
+      expect(unaryOf(getGrpcWebTransport(adaptive))).not.toHaveBeenCalled();
+      expect(adaptive.activeTransport).toBe("webtransport");
 
       adaptive.close();
     });
 
-    it("fails over on non-RpcError (plain Error from stream failure)", async () => {
+    it("does not treat an unclassified implementation error as a broken stream", async () => {
       const adaptive = await adaptiveWithWebTransport();
 
-      // A plain Error (not RpcError) from the primary transport, as when the
-      // WebTransport stream throws a non-gRPC error.
+      // An unclassified error is not evidence of an I/O failure.
       unaryOf(mockWtTransportInstance).mockReturnValue(
         rejectedUnaryCall(method, input, new Error("stream aborted")),
       );
@@ -486,9 +488,11 @@ describe("AdaptiveRpcTransport", () => {
         resolvedUnaryCall(method, input, { value: "fallback-ok" }),
       );
 
-      const response = await adaptive.unary(method, input, options).response;
-      expect(response).toEqual({ value: "fallback-ok" });
-      expect(adaptive.activeTransport).toBe("grpc-web");
+      await expect(adaptive.unary(method, input, options).response).rejects.toMatchObject({
+        code: "INTERNAL",
+      });
+      expect(unaryOf(getGrpcWebTransport(adaptive))).not.toHaveBeenCalled();
+      expect(adaptive.activeTransport).toBe("webtransport");
 
       adaptive.close();
     });
@@ -497,7 +501,7 @@ describe("AdaptiveRpcTransport", () => {
       const adaptive = await adaptiveWithWebTransport();
 
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("primary down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("primary down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         rejectedUnaryCall(method, input, new RpcError("fallback down", "UNAVAILABLE")),
@@ -516,7 +520,7 @@ describe("AdaptiveRpcTransport", () => {
 
       // Two concurrent unary calls both fail with UNAVAILABLE
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),
@@ -548,7 +552,7 @@ describe("AdaptiveRpcTransport", () => {
 
       // Trigger failover
       unaryOf(mockWtTransportInstance).mockReturnValue(
-        rejectedUnaryCall(method, input, new RpcError("down", "UNAVAILABLE")),
+        rejectedUnaryCall(method, input, new TransportFailure("down")),
       );
       unaryOf(getGrpcWebTransport(adaptive)).mockReturnValue(
         resolvedUnaryCall(method, input, { value: "ok" }),

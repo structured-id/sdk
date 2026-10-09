@@ -3,7 +3,7 @@
  *
  * Strategy:
  * 1. Try primary (WebTransport) for every call
- * 2. On transport-level failure (UNAVAILABLE), immediately retry on fallback (gRPC-web)
+ * 2. On a locally observed transport failure, immediately retry on fallback (gRPC-web)
  * 3. Background reconnect to primary after failover
  * 4. Once primary is back — switch future calls to primary again
  *
@@ -23,6 +23,7 @@ import type {
 } from "@protobuf-ts/runtime-rpc";
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { WebTransportConnection, WebTransportRpcTransport } from "./webtransport.js";
+import { TransportFailure } from "./transport-failure.js";
 
 export type TransportType = "webtransport" | "grpc-web";
 
@@ -229,7 +230,7 @@ export class AdaptiveRpcTransport implements RpcTransport {
       defTrailer.resolve(trailer);
     } catch (err) {
       // Transport-level failure — failover to gRPC-web
-      if (!this.closed && !options.abort?.aborted && isTransportError(err)) {
+      if (!this.closed && !options.abort?.aborted && err instanceof TransportFailure) {
         this.primaryAvailable = false;
         this.notifyTransport("grpc-web");
         this.scheduleReconnect();
@@ -285,21 +286,6 @@ export class AdaptiveRpcTransport implements RpcTransport {
       // A failed UI observer must not fail a healthy transport or strand a call.
     }
   }
-}
-
-/**
- * Check if the error is a transport-level failure (connection lost,
- * stream reset, etc.) vs an application-level gRPC error.
- *
- * Transport errors trigger failover. Application errors do not.
- */
-function isTransportError(err: unknown): boolean {
-  if (!(err instanceof RpcError)) return true;
-
-  // gRPC UNAVAILABLE = server unreachable (transport issue)
-  // gRPC CANCELLED = connection dropped mid-call
-  const transportCodes = ["UNAVAILABLE", "CANCELLED", "UNKNOWN"];
-  return transportCodes.includes(err.code);
 }
 
 function rejectAll(err: unknown, ...deferreds: Deferred<unknown>[]): void {
