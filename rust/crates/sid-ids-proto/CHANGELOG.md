@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.0...rust-sid-ids-proto-v0.1.1) - 2026-10-15
+
+### Other
+
+- *(deps)* bump the cargo group in /rust with 2 updates ([#13](https://github.com/structured-id/sdk/pull/13))
+
 ## [0.1.0](https://github.com/structured-id/sdk/releases/tag/rust-sid-ids-proto-v0.1.0) - 2026-10-07
 
 ### Added
