@@ -23,7 +23,7 @@ sid-ids = { path = "../sid-ids", version = "0.1", default-features = false, feat
 [build-dependencies]
 prost = "0.14"
 prost-build = "0.14"
-protox = "0.9"
+protox = "0.10"
 
 [dev-dependencies]
 prost-reflect = { workspace = true }
