@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.2.0...typescript-proto-v0.3.0) (2026-10-16)
+
+
+### Features
+
+* **proto:** report whether a local administrator claim exists ([#17](https://github.com/structured-id/sdk/issues/17)) ([0b78d08](https://github.com/structured-id/sdk/commit/0b78d08932ab95e72042d6a429762e41c2a3f53a)), closes [#16](https://github.com/structured-id/sdk/issues/16)
+
 ## [0.2.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.1.1...typescript-proto-v0.2.0) (2026-10-10)
 
 
