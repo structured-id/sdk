@@ -2,8 +2,7 @@
 Copyright (C) Dmitry Prudnikov
 
 StructuredID public sid.v1 API for TypeScript: messages and clients generated
-from the StructuredID proto definitions, and the browser gRPC-web /
-WebTransport transport.
+from the StructuredID proto definitions.
 
 LICENSE
 -------

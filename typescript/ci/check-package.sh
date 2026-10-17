@@ -43,7 +43,6 @@ check_archive "$work/ids.tgz" 'dist/|schema/' \
 # The generated tree is checked by the consumer's imports below; .ts sources
 # and tests must not ship.
 check_archive "$work/proto.tgz" 'dist/.*\.(js|js\.map|d\.ts)$' \
-  dist/transport/index.js dist/transport/index.d.ts \
   dist/generated/sid/v1/ids/ids.js dist/generated/google/rpc/status.js
 
 # consume <name> <expected closure>...: installs the packed packages into a
@@ -78,7 +77,7 @@ consume proto
 # under permissive licenses only (every SPDX identifier of each expression).
 cd "$work/proto-consumer"
 closure="$(npm ls --all --omit=dev --json | jq -r '.. | .dependencies? // empty | keys[]' | sort -u)"
-expected="$(printf '%s\n' "@protobuf-ts/grpcweb-transport" "@protobuf-ts/runtime" "@protobuf-ts/runtime-rpc" \
+expected="$(printf '%s\n' "@protobuf-ts/runtime" "@protobuf-ts/runtime-rpc" \
   "@structured-id/ids" "@structured-id/proto")"
 if [[ "$closure" == "$expected" ]]; then
   echo "ok   runtime closure: $(tr '\n' ' ' <<<"$closure")"
