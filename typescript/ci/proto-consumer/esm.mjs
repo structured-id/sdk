@@ -4,7 +4,6 @@ import { ResourceId, required } from "@structured-id/ids";
 import { ProtectedResourceTarget } from "@structured-id/proto/sid/v1/authn/issuer";
 import { IdentityServiceClient } from "@structured-id/proto/sid/v1/identity/identity.client";
 import { Status } from "@structured-id/proto/google/rpc/status";
-import { AdaptiveRpcTransport } from "@structured-id/proto/transport";
 
 // A message carrying an identifier decodes into the checked type of
 // @structured-id/ids.
@@ -16,10 +15,8 @@ assert.equal(required(ResourceId, decoded.id).toString(), text);
 // The error model every refusal carries.
 assert.equal(Status.fromBinary(Status.toBinary(Status.create({ code: 7, message: "denied" }))).code, 7);
 
-// Node has no WebTransport: the transport serves gRPC-web only.
-const transport = new AdaptiveRpcTransport({ grpcWebUrl: "https://sid.example.com" });
-await transport.init();
-assert.equal(transport.activeTransport, "grpc-web");
+// A generated client runs on the transport the application supplies
+// (gRPC-web in a browser, gRPC on a server).
+const transport = { mergeOptions: (options) => options ?? {} };
 assert.equal(typeof new IdentityServiceClient(transport).getProfile, "function");
-transport.close();
 console.log("esm ok");

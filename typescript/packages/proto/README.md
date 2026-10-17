@@ -2,9 +2,9 @@
 
 The public StructuredID `sid.v1` API for TypeScript: the messages and service
 clients generated from the [proto definitions](https://github.com/structured-id/proto)
-with [protobuf-ts](https://github.com/timostamm/protobuf-ts), the
-`google.rpc` error model, and a browser transport that speaks gRPC-web and,
-where the server offers it, WebTransport.
+with [protobuf-ts](https://github.com/timostamm/protobuf-ts) and the
+`google.rpc` error model. The clients run on any protobuf-ts transport:
+gRPC-web in a browser, gRPC on a server.
 
 It carries no UI code and no framework dependency: a Vue, React or plain
 TypeScript application, a worker or a Node script use the same modules.
@@ -12,25 +12,22 @@ TypeScript application, a worker or a Node script use the same modules.
 ## Use
 
 ```sh
-npm install @structured-id/proto
+npm install @structured-id/proto @protobuf-ts/grpcweb-transport
 ```
 
 Every schema file is its own module, under the path of the `.proto` file:
 
 ```ts
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { IdentityServiceClient } from "@structured-id/proto/sid/v1/identity/identity.client";
 import { GetCurrentProfileRequest } from "@structured-id/proto/sid/v1/identity/identity";
 import { Status } from "@structured-id/proto/google/rpc/status";
-import { AdaptiveRpcTransport } from "@structured-id/proto/transport";
 
-const transport = new AdaptiveRpcTransport({
-  grpcWebUrl: "https://sid.example.com",
-  // Optional: WebTransport (HTTP/3) with per-call fallback to gRPC-web.
-  webTransportUrl: "https://sid.example.com:4433",
+const transport = new GrpcWebFetchTransport({
+  baseUrl: "https://sid.example.com",
   // Send the session cookie of a backend-for-frontend.
   fetchInit: { credentials: "include" },
 });
-await transport.init();
 
 const identity = new IdentityServiceClient(transport);
 const { response } = await identity.getCurrentProfile(GetCurrentProfileRequest.create());
@@ -40,33 +37,6 @@ A refusal arrives as an `RpcError` whose `grpc-status-details-bin` metadata
 holds a `google.rpc.Status`; decode it with `Status.fromBinary` and branch on
 the `google.rpc.ErrorInfo` reason and domain in its details, never on the
 message text.
-
-### Transport
-
-`AdaptiveRpcTransport` sends every unary call over WebTransport while the
-connection is up. A locally observed connection or stream I/O failure retries
-that call over gRPC-web and reconnects WebTransport in the background. Server
-statuses, including `UNAVAILABLE`, `CANCELLED` and `UNKNOWN`, are returned as is:
-a status code alone is not evidence of a failed connection. Malformed protobuf
-responses report `DATA_LOSS`; local encoding errors report `INTERNAL`. Neither
-triggers failover. A server error status rejects the call's headers, response,
-status and trailers promises, preserving its metadata on `RpcError`.
-Server streaming always goes over
-gRPC-web. Without a `webTransportUrl`, or where the runtime has no
-`WebTransport`, it is plain gRPC-web.
-
-`RpcOptions.abort` cancels an active stream and prevents a fallback attempt for
-that cancelled call. `close()` stops background reconnects, including an
-attempt already in progress. Transport-change callbacks are observers: an
-exception in one cannot change connection health or the call's result.
-Remote closure also switches to gRPC-web and starts recovery when no RPC is
-active. A late failure from a retired connection cannot disable its replacement.
-
-`WebTransportRpcTransport`, `WebTransportConnection` and the frame helpers are
-exported for applications that manage the connection themselves.
-
-The declarations use the DOM types (`WebTransport`, streams, `RequestInit`):
-a TypeScript project compiling against them includes the `DOM` library.
 
 ### Identifiers
 
