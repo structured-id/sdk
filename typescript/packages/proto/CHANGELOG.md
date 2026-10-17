@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.3.0...typescript-proto-v0.4.0) (2026-10-17)
+
+
+### Features
+
+* **proto:** remove the WebTransport browser transport ([#20](https://github.com/structured-id/sdk/issues/20)) ([05e5ba9](https://github.com/structured-id/sdk/commit/05e5ba90151a68814deb467cd6e1fdc464b546cc)), closes [#19](https://github.com/structured-id/sdk/issues/19)
+
 ## [0.3.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.2.0...typescript-proto-v0.3.0) (2026-10-16)
 
 
