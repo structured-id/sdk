@@ -56,17 +56,17 @@
     "@structured-id/ids": "workspace:^"
   },
   "devDependencies": {
-    "@bufbuild/buf": "^1.73.0",
+    "@bufbuild/buf": "^1.74.0",
     "@eslint/js": "^10.0.1",
     "@protobuf-ts/plugin": "^2.11.1",
     "@types/node": "^26.6.5",
-    "eslint": "^10.11.0",
+    "eslint": "^10.13.0",
     "prettier": "^3.9.10",
-    "ts-proto": "^2.15.0",
+    "ts-proto": "^2.18.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.0",
+    "typescript-eslint": "^8.71.2",
     "vite": "^8",
-    "vitest": "^5.0.4"
+    "vitest": "^5.0.5"
   },
   "publishConfig": {
     "access": "public",
