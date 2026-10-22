@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/structured-id/sdk/compare/typescript-proto-v0.4.0...typescript-proto-v0.4.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* **proto:** take the registration results without a Profile id ([#25](https://github.com/structured-id/sdk/issues/25)) ([a67ac4e](https://github.com/structured-id/sdk/commit/a67ac4e69313c8d0bba6095b7fa1165b0437b2fe)), closes [#24](https://github.com/structured-id/sdk/issues/24)
+
 ## [0.4.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.3.0...typescript-proto-v0.4.0) (2026-10-17)
 
 
