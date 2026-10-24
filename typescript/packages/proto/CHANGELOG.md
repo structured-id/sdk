@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.4.1...typescript-proto-v0.5.0) (2026-10-24)
+
+
+### Features
+
+* **proto:** application session service ([#28](https://github.com/structured-id/sdk/issues/28)) ([dfe8b01](https://github.com/structured-id/sdk/commit/dfe8b010c37a2099966ca0e2dc21703c6d36acf8)), closes [#27](https://github.com/structured-id/sdk/issues/27)
+
 ## [0.4.1](https://github.com/structured-id/sdk/compare/typescript-proto-v0.4.0...typescript-proto-v0.4.1) (2026-10-22)
 
 
