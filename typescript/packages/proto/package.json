@@ -1,6 +1,6 @@
 {
   "name": "@structured-id/proto",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
   "description": "StructuredID public sid.v1 API for TypeScript: generated messages and clients for gRPC and gRPC-web.",
   "exports": {
