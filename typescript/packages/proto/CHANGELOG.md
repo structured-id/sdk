@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.5.0...typescript-proto-v0.6.0) (2026-10-25)
+
+
+### Features
+
+* **proto:** the sign-in context of an authorization request ([#31](https://github.com/structured-id/sdk/issues/31)) ([fa737a3](https://github.com/structured-id/sdk/commit/fa737a3098814505ee476f39c11bf1c48be188ee)), closes [#30](https://github.com/structured-id/sdk/issues/30)
+
 ## [0.5.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.4.1...typescript-proto-v0.5.0) (2026-10-24)
 
 
