@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.6.0...typescript-proto-v0.7.0) (2026-10-28)
+
+
+### Features
+
+* **proto:** the second factor a sign-in owes ([#34](https://github.com/structured-id/sdk/issues/34)) ([4805514](https://github.com/structured-id/sdk/commit/480551474e62be3e2526ead6680c3cb2eec47fa1)), closes [#33](https://github.com/structured-id/sdk/issues/33)
+
 ## [0.6.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.5.0...typescript-proto-v0.6.0) (2026-10-25)
 
 
