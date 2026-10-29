@@ -56,15 +56,15 @@
     "@structured-id/ids": "workspace:^"
   },
   "devDependencies": {
-    "@bufbuild/buf": "^1.74.0",
+    "@bufbuild/buf": "^1.75.0",
     "@eslint/js": "^10.0.1",
     "@protobuf-ts/plugin": "^2.11.1",
     "@types/node": "^26.6.5",
     "eslint": "^10.13.0",
     "prettier": "^3.9.10",
-    "ts-proto": "^2.18.0",
+    "ts-proto": "^2.18.3",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.2",
+    "typescript-eslint": "^8.72.0",
     "vite": "^8",
     "vitest": "^5.0.5"
   },
