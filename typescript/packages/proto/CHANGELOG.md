@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.7.0...typescript-proto-v0.8.0) (2026-11-02)
+
+
+### Features
+
+* **proto:** the closed registration reason and setting ([#38](https://github.com/structured-id/sdk/issues/38)) ([87862e1](https://github.com/structured-id/sdk/commit/87862e1db8b1e3dacc7092d6322bd62954e98793)), closes [#37](https://github.com/structured-id/sdk/issues/37)
+
 ## [0.7.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.6.0...typescript-proto-v0.7.0) (2026-10-28)
 
 
