@@ -2,7 +2,7 @@
 name = "sid-ids-proto"
 description = "StructuredID identifier protobuf messages (sid.v1.ids) with validated conversions to sid-ids types"
 readme = "README.md"
-version = "0.1.0"
+version = "0.1.1"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
