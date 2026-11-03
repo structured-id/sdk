@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.8.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.7.0...typescript-proto-v0.8.0) (2026-11-02)
+
+
+### Features
+
+* **proto:** the closed registration reason and setting ([#38](https://github.com/structured-id/sdk/issues/38)) ([87862e1](https://github.com/structured-id/sdk/commit/87862e1db8b1e3dacc7092d6322bd62954e98793)), closes [#37](https://github.com/structured-id/sdk/issues/37)
+
+## [0.7.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.6.0...typescript-proto-v0.7.0) (2026-10-28)
+
+
+### Features
+
+* **proto:** the second factor a sign-in owes ([#34](https://github.com/structured-id/sdk/issues/34)) ([4805514](https://github.com/structured-id/sdk/commit/480551474e62be3e2526ead6680c3cb2eec47fa1)), closes [#33](https://github.com/structured-id/sdk/issues/33)
+
+## [0.6.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.5.0...typescript-proto-v0.6.0) (2026-10-25)
+
+
+### Features
+
+* **proto:** the sign-in context of an authorization request ([#31](https://github.com/structured-id/sdk/issues/31)) ([fa737a3](https://github.com/structured-id/sdk/commit/fa737a3098814505ee476f39c11bf1c48be188ee)), closes [#30](https://github.com/structured-id/sdk/issues/30)
+
+## [0.5.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.4.1...typescript-proto-v0.5.0) (2026-10-24)
+
+
+### Features
+
+* **proto:** application session service ([#28](https://github.com/structured-id/sdk/issues/28)) ([dfe8b01](https://github.com/structured-id/sdk/commit/dfe8b010c37a2099966ca0e2dc21703c6d36acf8)), closes [#27](https://github.com/structured-id/sdk/issues/27)
+
+## [0.4.1](https://github.com/structured-id/sdk/compare/typescript-proto-v0.4.0...typescript-proto-v0.4.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* **proto:** take the registration results without a Profile id ([#25](https://github.com/structured-id/sdk/issues/25)) ([a67ac4e](https://github.com/structured-id/sdk/commit/a67ac4e69313c8d0bba6095b7fa1165b0437b2fe)), closes [#24](https://github.com/structured-id/sdk/issues/24)
+
 ## [0.4.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.3.0...typescript-proto-v0.4.0) (2026-10-17)
 
 
