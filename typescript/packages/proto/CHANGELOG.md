@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.8.0...typescript-proto-v0.9.0) (2026-11-03)
+
+
+### Features
+
+* **proto:** the retry rule option and the period service ([#41](https://github.com/structured-id/sdk/issues/41)) ([8bf65f9](https://github.com/structured-id/sdk/commit/8bf65f9e899b174346a95854a7d988d60f3823a3)), closes [#40](https://github.com/structured-id/sdk/issues/40)
+
 ## [0.8.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.7.0...typescript-proto-v0.8.0) (2026-11-02)
 
 
