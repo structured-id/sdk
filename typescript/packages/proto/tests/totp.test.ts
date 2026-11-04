@@ -46,11 +46,11 @@ describe("TOTP enrollment presentation", () => {
   });
 
   // Regression guard: an issuer or account holding a reserved character
-  // (`:`, `?`, `&`, `+`, `#`, a space) cannot split the label or add a
+  // (`?`, `&`, `+`, `#`, `=`, a space) cannot split the label or add a
   // parameter; it round-trips through the URI.
   it("percent-encodes issuer and account so they cannot change the URI", () => {
-    const issuer = "Acme: Ops & Co #1";
-    const account = "a+b:c?d=e&f g@sid.example.com";
+    const issuer = "Acme Ops & Co #1";
+    const account = "a+b?d=e&f g@sid.example.com";
     const uri = new URL(otpauthUri(challenge({ issuer, accountName: account })));
     expect(uri.protocol).toBe("otpauth:");
     expect(decodeURIComponent(uri.pathname.slice(1))).toBe(`${issuer}:${account}`);
@@ -67,12 +67,20 @@ describe("TOTP enrollment presentation", () => {
   // The same URI as the Rust client builds for the same challenge.
   it("encodes exactly as the Rust client", () => {
     expect(
-      otpauthUri(challenge({ issuer: "Acme: Ops & Co #1", accountName: "a+b:c?d=e&f g(x)!" })),
+      otpauthUri(challenge({ issuer: "Acme Ops & Co #1", accountName: "a+b?d=e&f g(x)!" })),
     ).toBe(
-      "otpauth://totp/Acme%3A%20Ops%20%26%20Co%20%231:a%2Bb%3Ac%3Fd%3De%26f%20g%28x%29%21" +
-        "?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&issuer=Acme%3A%20Ops%20%26%20Co%20%231" +
+      "otpauth://totp/Acme%20Ops%20%26%20Co%20%231:a%2Bb%3Fd%3De%26f%20g%28x%29%21" +
+        "?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&issuer=Acme%20Ops%20%26%20Co%20%231" +
         "&algorithm=SHA1&digits=6&period=30",
     );
+  });
+
+  // The Key URI Format separates issuer and account with a colon, encoded or
+  // not, so neither may hold one: such a label is refused, not encoded.
+  it("refuses an issuer or account holding a colon", () => {
+    for (const fields of [{ issuer: "Acme: Ops" }, { accountName: "a:b@sid.example.com" }]) {
+      expect(() => otpauthUri(challenge(fields))).toThrow(/colon/);
+    }
   });
 
   it("names the algorithm the server selected", () => {

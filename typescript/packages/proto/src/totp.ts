@@ -47,7 +47,8 @@ const ALGORITHMS: Partial<Record<TotpAlgorithm, string>> = {
  * The `otpauth://totp/<issuer>:<account>` URI of `challenge` (Key URI
  * Format), with issuer and account percent-encoded so neither can split the
  * label or add a parameter. Throws when the challenge lacks the secret or a
- * parameter the app needs: a guess would enroll codes the server refuses.
+ * parameter the app needs (a guess would enroll codes the server refuses),
+ * or when issuer or account holds the colon the label separates them with.
  */
 export function otpauthUri(challenge: TotpEnrollmentChallenge): string {
   const algorithm = ALGORITHMS[challenge.algorithm];
@@ -58,6 +59,11 @@ export function otpauthUri(challenge: TotpEnrollmentChallenge): string {
     challenge.sharedSecret.length === 0
   ) {
     throw new Error("the TOTP enrollment names no secret, algorithm, digits or period");
+  }
+  // Key URI Format, Label: the colon separates issuer and account, literal
+  // or %3A, so neither may contain one.
+  if (challenge.issuer.includes(":") || challenge.accountName.includes(":")) {
+    throw new Error("a TOTP issuer or account cannot contain a colon");
   }
   const issuer = component(challenge.issuer);
   const label = `${issuer}:${component(challenge.accountName)}`;

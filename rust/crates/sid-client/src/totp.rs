@@ -7,11 +7,17 @@ use crate::proto::sid::v1::authn::{TotpAlgorithm, TotpEnrollmentChallenge};
 
 const ALPHABET: &[u8; 32] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
-/// A challenge an authenticator app cannot be given faithfully: it lacks the
-/// secret, the algorithm, the digits or the period.
+/// A challenge an authenticator app cannot be given faithfully.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, thiserror::Error)]
-#[error("the TOTP enrollment names no secret, algorithm, digits or period")]
-pub struct IncompleteChallenge;
+pub enum TotpUriError {
+    /// It lacks the secret, the algorithm, the digits or the period.
+    #[error("the TOTP enrollment names no secret, algorithm, digits or period")]
+    Incomplete,
+    /// Its issuer or account holds the colon the label separates them with
+    /// (Key URI Format, Label: neither may contain one, literal or `%3A`).
+    #[error("a TOTP issuer or account cannot contain a colon")]
+    ColonInLabel,
+}
 
 /// `bytes` in Base32 (RFC 4648 §6), without padding.
 pub fn base32(bytes: &[u8]) -> String {
@@ -51,16 +57,19 @@ fn component(text: &str) -> String {
 
 /// The `otpauth://totp/<issuer>:<account>` URI of `challenge`, with issuer and
 /// account percent-encoded so neither can split the label or add a parameter.
-pub fn otpauth_uri(challenge: &TotpEnrollmentChallenge) -> Result<String, IncompleteChallenge> {
+pub fn otpauth_uri(challenge: &TotpEnrollmentChallenge) -> Result<String, TotpUriError> {
     let algorithm = match TotpAlgorithm::try_from(challenge.algorithm) {
         Ok(TotpAlgorithm::Sha1) => "SHA1",
         Ok(TotpAlgorithm::Sha256) => "SHA256",
         Ok(TotpAlgorithm::Sha512) => "SHA512",
-        Ok(TotpAlgorithm::Unspecified) | Err(_) => return Err(IncompleteChallenge),
+        Ok(TotpAlgorithm::Unspecified) | Err(_) => return Err(TotpUriError::Incomplete),
     };
     if challenge.digits == 0 || challenge.period_seconds == 0 || challenge.shared_secret.is_empty()
     {
-        return Err(IncompleteChallenge);
+        return Err(TotpUriError::Incomplete);
+    }
+    if challenge.issuer.contains(':') || challenge.account_name.contains(':') {
+        return Err(TotpUriError::ColonInLabel);
     }
     let issuer = component(&challenge.issuer);
     Ok(format!(

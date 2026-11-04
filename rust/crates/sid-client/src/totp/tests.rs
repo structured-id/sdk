@@ -45,15 +45,28 @@ fn the_uri_carries_the_secret_and_the_servers_parameters() {
 #[test]
 fn issuer_and_account_are_percent_encoded() {
     let mut odd = challenge();
-    odd.issuer = "Acme: Ops & Co #1".into();
-    odd.account_name = "a+b:c?d=e&f g(x)!".into();
+    odd.issuer = "Acme Ops & Co #1".into();
+    odd.account_name = "a+b?d=e&f g(x)!".into();
     let uri = otpauth_uri(&odd).unwrap();
     assert_eq!(
         uri,
-        "otpauth://totp/Acme%3A%20Ops%20%26%20Co%20%231:a%2Bb%3Ac%3Fd%3De%26f%20g%28x%29%21\
-         ?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&issuer=Acme%3A%20Ops%20%26%20Co%20%231\
+        "otpauth://totp/Acme%20Ops%20%26%20Co%20%231:a%2Bb%3Fd%3De%26f%20g%28x%29%21\
+         ?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ&issuer=Acme%20Ops%20%26%20Co%20%231\
          &algorithm=SHA1&digits=6&period=30"
     );
+}
+
+/// The Key URI Format separates issuer and account with a colon, encoded or
+/// not, so neither may hold one: such a label is refused, not encoded.
+#[test]
+fn a_colon_in_issuer_or_account_is_refused() {
+    let mut issuer = challenge();
+    issuer.issuer = "Acme: Ops".into();
+    let mut account = challenge();
+    account.account_name = "a:b@sid.example.com".into();
+    for c in [issuer, account] {
+        assert_eq!(otpauth_uri(&c), Err(TotpUriError::ColonInLabel));
+    }
 }
 
 /// A challenge without its secret or a parameter is refused, never guessed.
@@ -76,6 +89,6 @@ fn an_incomplete_challenge_is_refused() {
     c.shared_secret.clear();
     cases.push(c);
     for c in cases {
-        assert!(otpauth_uri(&c).is_err(), "{c:?}");
+        assert_eq!(otpauth_uri(&c), Err(TotpUriError::Incomplete), "{c:?}");
     }
 }
