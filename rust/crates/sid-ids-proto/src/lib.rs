@@ -32,7 +32,7 @@ pub mod sid {
 }
 
 pub use sid::v1::ids::{
-    BindingId, MachineUserId, PasswordOperationId, ProvisioningConnectorId,
+    BindingId, MachineUserId, OpaqueLoginId, PasswordOperationId, ProvisioningConnectorId,
     ProvisioningCredentialId, ResourceId,
 };
 
@@ -128,6 +128,7 @@ macro_rules! wire_id {
 
 wire_id!(BindingId, sid_ids::BindingId);
 wire_id!(MachineUserId, sid_ids::MachineUserId);
+wire_id!(OpaqueLoginId, sid_ids::OpaqueLoginId);
 wire_id!(PasswordOperationId, sid_ids::PasswordOperationId);
 wire_id!(ProvisioningConnectorId, sid_ids::ProvisioningConnectorId);
 wire_id!(ProvisioningCredentialId, sid_ids::ProvisioningCredentialId);

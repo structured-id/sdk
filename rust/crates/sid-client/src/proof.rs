@@ -69,7 +69,7 @@ impl Exchange {
 #[derive(Debug, Clone, Copy)]
 pub enum ProofBinding<'a> {
     /// A ceremony completion echoing `reference`, as its method documents
-    /// it (for OpaqueLoginFinish the request's `server_login_state`).
+    /// it (for OpaqueLoginFinish the 16 bytes of the request's `login_id`).
     Ceremony { reference: &'a [u8] },
     /// A refresh presenting `credential` in `exchange`.
     Refresh {

@@ -7,9 +7,9 @@ use core::str::FromStr;
 use uuid::{Builder, Uuid, Variant, Version};
 
 use crate::{
-    ApplicationId, BindingId, DeviceId, IdErrorCause, IdKind, IssuerId, MachineUserId, OrgId,
-    PasswordOperationId, ProfileId, ProvisioningConnectorId, ProvisioningCredentialId, ResourceId,
-    SessionId,
+    ApplicationId, BindingId, DeviceId, IdErrorCause, IdKind, IssuerId, MachineUserId,
+    OpaqueLoginId, OrgId, PasswordOperationId, ProfileId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResourceId, SessionId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -183,6 +183,25 @@ fn error_kind_follows_the_type_that_validated() {
     assert_eq!(
         IdKind::ProvisioningCredential.type_name(),
         "ProvisioningCredentialId"
+    );
+    assert_eq!(
+        OpaqueLoginId::parse(V4).unwrap_err().kind(),
+        IdKind::OpaqueLogin
+    );
+    assert_eq!(IdKind::OpaqueLogin.type_name(), "OpaqueLoginId");
+}
+
+#[test]
+fn an_opaque_login_id_round_trips_through_its_binary_form() {
+    // Bug prevented: a login finish naming another login than the one it
+    // started, or bytes no login was started with being accepted.
+    let login = OpaqueLoginId::generate();
+    assert_eq!(OpaqueLoginId::from_slice(login.as_bytes()).unwrap(), login);
+    assert_eq!(
+        OpaqueLoginId::from_slice(&login.as_bytes()[..15])
+            .unwrap_err()
+            .cause(),
+        IdErrorCause::Length(15)
     );
 }
 

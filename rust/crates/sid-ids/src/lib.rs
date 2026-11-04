@@ -32,8 +32,9 @@ mod sqlx_impl;
 
 pub use error::{IdError, IdErrorCause, IdKind};
 pub use ids::{
-    ApplicationId, BindingId, DeviceId, IssuerId, MachineUserId, OrgId, PasswordOperationId,
-    ProfileId, ProvisioningConnectorId, ProvisioningCredentialId, ResourceId, SessionId,
+    ApplicationId, BindingId, DeviceId, IssuerId, MachineUserId, OpaqueLoginId, OrgId,
+    PasswordOperationId, ProfileId, ProvisioningConnectorId, ProvisioningCredentialId, ResourceId,
+    SessionId,
 };
 pub use uuid::Uuid;
 
