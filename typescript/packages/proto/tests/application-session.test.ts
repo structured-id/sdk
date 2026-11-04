@@ -1,6 +1,7 @@
 // An application's UI reads its session and signs out through typed calls of
-// its own UI host; the generated client names exactly those calls, and the
-// messages the page reads survive the wire.
+// its own UI host, which also receives its issuer's back-channel logout; the
+// generated client names exactly those calls, and the messages the page reads
+// survive the wire.
 import { describe, it, expect } from "vitest";
 import {
   ApplicationSession,
@@ -10,13 +11,14 @@ import {
 import { ApplicationSessionServiceClient } from "../src/generated/sid/v1/authn/application_session.client.js";
 
 describe("sid.v1.authn.ApplicationSessionService", () => {
-  it("offers the sign-in navigations, the session read and sign-out", () => {
+  it("offers the sign-in navigations, the session read, sign-out and the issuer's logout", () => {
     const methods = new ApplicationSessionServiceClient({} as never).methods.map((m) => m.name);
     expect(methods).toEqual([
       "StartSignIn",
       "CompleteSignIn",
       "GetApplicationSession",
       "EndApplicationSession",
+      "ReceiveBackChannelLogout",
     ]);
   });
 
