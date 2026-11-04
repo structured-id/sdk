@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.9.0...typescript-proto-v0.10.0) (2026-11-04)
+
+
+### Features
+
+* **ids:** add OpaqueLoginId and TOTP enrollment helpers ([#48](https://github.com/structured-id/sdk/issues/48)) ([da0e0ac](https://github.com/structured-id/sdk/commit/da0e0ac3dbcf07bbe6cc8b29d16fc15a2ade09ff)), closes [#45](https://github.com/structured-id/sdk/issues/45)
+* **sid-client:** add native session renewal client ([#44](https://github.com/structured-id/sdk/issues/44)) ([c9ee907](https://github.com/structured-id/sdk/commit/c9ee907d27ceff6c2060839490b02d717f07e0e6)), closes [#43](https://github.com/structured-id/sdk/issues/43)
+
 ## [0.9.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.8.0...typescript-proto-v0.9.0) (2026-11-03)
 
 
