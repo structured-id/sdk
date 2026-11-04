@@ -42,6 +42,17 @@ CLIENT_TARGETS=(
 # Crates that belong to a server, its storage or its infrastructure.
 SERVER_ONLY='^(sqlx|sqlx-core|sqlx-postgres|sqlx-sqlite|sqlx-macros|sqlx-macros-core|libsqlite3-sys|tokio|async-nats|fred|tonic|sid-[a-z-]*server|sid-storage|sid-authn|sid-infra|coordinode[a-z0-9_-]*) '
 
+# What the native client must never pull in: a server, its storage, its
+# broker or its authentication engine. The generated gRPC client (tonic
+# without its transport) and tokio's synchronization are its own layer.
+CLIENT_SDK_FORBIDDEN='^(sqlx|sqlx-core|sqlx-postgres|sqlx-sqlite|sqlx-macros|sqlx-macros-core|libsqlite3-sys|async-nats|fred|axum|sid-[a-z-]*server|sid-storage|sid-authn|sid-infra|sid-core|sid-plugin|coordinode[a-z0-9_-]*) '
+
+# The native client's supported feature sets ("pkg|flags").
+CLIENT_SDK_SETS=(
+  "sid-client|"
+  "sid-client|--no-default-features"
+)
+
 # Packages and their supported identifier-only feature sets ("pkg|flags").
 CLIENT_SETS=(
   "sid-ids|"
@@ -62,10 +73,12 @@ COMBOS=(
   "sid-ids|--features sqlx-sqlite"
   "sid-ids-proto|"
   "sid-ids-proto|--no-default-features"
+  "sid-client|"
+  "sid-client|--no-default-features"
 )
 
 # Packages published on their own and the no_std target they must build for.
-PUBLISHED=(sid-ids sid-ids-proto)
+PUBLISHED=(sid-client sid-ids sid-ids-proto)
 NO_STD_TARGET=thumbv7em-none-eabihf
 
 fail=0
@@ -79,6 +92,22 @@ check_closure() {
       # shellcheck disable=SC2086
       found="$(cargo tree --locked -p "$pkg" $flags -e normal --target "$target" \
         --prefix none -f '{p}' | grep -E "$SERVER_ONLY" | sort -u || true)"
+      if [[ -n "$found" ]]; then
+        echo "FAIL closure $pkg [$flags] on $target pulls server-only crates:"
+        echo "$found" | sed 's/^/    /'
+        fail=1
+      else
+        echo "ok   closure $pkg [$flags] on $target"
+      fi
+    done
+  done
+  for entry in "${CLIENT_SDK_SETS[@]}"; do
+    pkg="${entry%%|*}"
+    flags="${entry#*|}"
+    for target in "${CLIENT_TARGETS[@]}"; do
+      # shellcheck disable=SC2086
+      found="$(cargo tree --locked -p "$pkg" $flags -e normal --target "$target" \
+        --prefix none -f '{p}' | grep -E "$CLIENT_SDK_FORBIDDEN" | sort -u || true)"
       if [[ -n "$found" ]]; then
         echo "FAIL closure $pkg [$flags] on $target pulls server-only crates:"
         echo "$found" | sed 's/^/    /'
@@ -163,6 +192,14 @@ check_packages() {
     echo "FAIL packages: sid-ids-proto does not carry its schema"
     fail=1
   fi
+  for file in sid/v1/authn/auth.proto sid/v1/authn/native_session.proto google/api/http.proto; do
+    if [[ -f "$work/src/sid-client/schema/$file" && ! -L "$work/src/sid-client/schema/$file" ]]; then
+      echo "ok   packages: sid-client carries $file"
+    else
+      echo "FAIL packages: sid-client does not carry $file"
+      fail=1
+    fi
+  done
   make_consumer "$work/consumer" "$work/src"
   (
     cd "$work/consumer"

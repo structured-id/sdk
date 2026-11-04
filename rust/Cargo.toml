@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/sid-ids", "crates/sid-ids-proto"]
+members = ["crates/sid-client", "crates/sid-ids", "crates/sid-ids-proto"]
 
 [workspace.package]
 edition = "2024"

@@ -1,0 +1,44 @@
+[package]
+name = "sid-client"
+description = "StructuredID native client: renewable sessions bound to the application key, without an identity provider runtime"
+readme = "README.md"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+keywords = ["structuredid", "authentication", "native", "session", "client"]
+categories = ["authentication", "network-programming"]
+
+[features]
+default = ["software-key"]
+# An application key held in process memory (P-256). A platform key store
+# implements `ApplicationKey` instead.
+software-key = ["dep:p256"]
+
+[dependencies]
+async-trait = "0.1"
+base64 = "0.23"
+p256 = { version = "0.14", default-features = false, features = ["ecdsa", "pkcs8", "std"], optional = true }
+prost = { workspace = true, features = ["std", "derive"] }
+prost-types = "0.14"
+rand = "0.10"
+secrecy = "0.10"
+serde = { version = "1", features = ["derive"] }
+serde_json = { workspace = true }
+sha2 = "0.11"
+sid-ids-proto = { path = "../sid-ids-proto", version = "0.1" }
+thiserror = "2"
+tokio = { version = "1", default-features = false, features = ["sync"] }
+tonic = { version = "0.14", default-features = false, features = ["codegen"] }
+tonic-prost = "0.14"
+zeroize = "1"
+
+[build-dependencies]
+prost = "0.14"
+protox = "0.10"
+tonic-prost-build = "0.14"
+
+[dev-dependencies]
+tokio = { workspace = true }

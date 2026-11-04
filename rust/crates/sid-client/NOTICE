@@ -1,0 +1,15 @@
+sid-client
+Copyright (C) Dmitry Prudnikov
+
+StructuredID native client. Carries, under schema/, the AuthService
+definitions and their imports from the StructuredID proto definitions (also
+distributed under the Apache License, version 2.0) and google/api/http.proto
+and google/api/annotations.proto from Google's API definitions (Apache License,
+version 2.0, Copyright Google LLC).
+
+LICENSE
+-------
+This software is distributed under the Apache License, version 2.0. See the
+LICENSE file.
+
+Contact: oss@structured.id
