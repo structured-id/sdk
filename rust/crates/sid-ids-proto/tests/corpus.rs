@@ -15,8 +15,8 @@ use prost_reflect::{DescriptorPool, DynamicMessage};
 use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
-    BindingId, FILE_DESCRIPTOR_SET, MachineUserId, PasswordOperationId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResourceId, WireId,
+    BindingId, FILE_DESCRIPTOR_SET, MachineUserId, OpaqueLoginId, PasswordOperationId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResourceId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.
@@ -150,6 +150,11 @@ fn corpus() -> Value {
     cases.extend(kind_cases(
         "MachineUserId",
         |value| MachineUserId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "OpaqueLoginId",
+        |value| OpaqueLoginId { value },
         &pool,
     ));
     cases.extend(kind_cases(
@@ -307,5 +312,5 @@ fn corpus_covers_every_refusal_and_kind() {
             "no case expects {expect}"
         );
     }
-    assert_eq!(cases.len(), 6 * self::cases().len());
+    assert_eq!(cases.len(), 7 * self::cases().len());
 }

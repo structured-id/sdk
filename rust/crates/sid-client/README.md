@@ -21,7 +21,7 @@ use sid_client::proof::{native_proof, ProofBinding, ProofTarget};
 let proof = native_proof(
     &key,
     &ProofTarget::grpc("https://sid.example.com", "OpaqueLoginFinish"),
-    ProofBinding::Ceremony { reference: finish.server_login_state.as_bytes() },
+    ProofBinding::Ceremony { reference: &login_id.value },
 )
 .await?;
 // send `proof` as `sid-native-proof` with the finish request

@@ -110,6 +110,40 @@ export class MachineUserId extends Identifier {
 }
 
 /**
+ * One OPAQUE login (RFC 9807 §6) from its start to its finish: the reference
+ * to the login state the server keeps between the two steps, never a part of
+ * that state.
+ */
+export class OpaqueLoginId extends Identifier {
+  static readonly kind = "OpaqueLoginId";
+  readonly kind = "OpaqueLoginId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): OpaqueLoginId {
+    return new OpaqueLoginId(validate(bytes, OpaqueLoginId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): OpaqueLoginId {
+    return OpaqueLoginId.fromBytes(parseText(text, OpaqueLoginId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.OpaqueLoginId): OpaqueLoginId {
+    return OpaqueLoginId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.OpaqueLoginId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
  * One password-installing operation (a registration, change or authorized
  * reset) from its preparation to its commit. Every retry carries it, so a lost
  * response resolves to the operation's one outcome.

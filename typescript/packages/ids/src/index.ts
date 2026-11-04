@@ -11,6 +11,7 @@ export { IdError, MissingIdError, type IdErrorReason, type IdKind } from "./erro
 export {
   BindingId,
   MachineUserId,
+  OpaqueLoginId,
   PasswordOperationId,
   ProvisioningConnectorId,
   ProvisioningCredentialId,

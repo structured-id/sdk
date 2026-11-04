@@ -2,6 +2,7 @@
 export type IdKind =
   | "BindingId"
   | "MachineUserId"
+  | "OpaqueLoginId"
   | "PasswordOperationId"
   | "ProvisioningConnectorId"
   | "ProvisioningCredentialId"

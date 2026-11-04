@@ -1,7 +1,7 @@
 # @structured-id/ids
 
 StructuredID identifiers for TypeScript: one class per identifier kind
-(`BindingId`, `MachineUserId`, `PasswordOperationId`,
+(`BindingId`, `MachineUserId`, `OpaqueLoginId`, `PasswordOperationId`,
 `ProvisioningConnectorId`, `ProvisioningCredentialId`, `ResourceId`), the
 `sid.v1.ids` wire messages and checked conversions between them.
 

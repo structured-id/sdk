@@ -31,6 +31,8 @@ pub enum IdKind {
     ProvisioningConnector,
     /// One credential of a provisioning connector.
     ProvisioningCredential,
+    /// One OPAQUE login from its start to its finish.
+    OpaqueLogin,
 }
 
 impl IdKind {
@@ -49,6 +51,7 @@ impl IdKind {
             Self::PasswordOperation => "PasswordOperationId",
             Self::ProvisioningConnector => "ProvisioningConnectorId",
             Self::ProvisioningCredential => "ProvisioningCredentialId",
+            Self::OpaqueLogin => "OpaqueLoginId",
         }
     }
 }

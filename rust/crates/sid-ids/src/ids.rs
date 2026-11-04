@@ -242,3 +242,10 @@ define_id! {
     /// rotations, revocations and audit records name. Never the secret.
     ProvisioningCredentialId, IdKind::ProvisioningCredential
 }
+
+define_id! {
+    /// One OPAQUE login (RFC 9807 §6) from its start to its finish: the
+    /// reference to the login state the server keeps between the two steps,
+    /// never a part of that state.
+    OpaqueLoginId, IdKind::OpaqueLogin
+}

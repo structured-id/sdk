@@ -14,6 +14,7 @@
 pub mod key;
 pub mod native;
 pub mod proof;
+pub mod totp;
 
 /// The generated AuthService client and messages (client only: no server
 /// stubs), for the requests a native client sends.

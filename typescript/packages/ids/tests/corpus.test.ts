@@ -10,6 +10,7 @@ import {
   IdError,
   MachineUserId,
   MissingIdError,
+  OpaqueLoginId,
   PasswordOperationId,
   PROTO_PATH,
   ProvisioningConnectorId,
@@ -51,6 +52,7 @@ type Message = { value: Uint8Array };
 const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageType<Message> }> = {
   BindingId: { type: BindingId, message: wire.BindingId },
   MachineUserId: { type: MachineUserId, message: wire.MachineUserId },
+  OpaqueLoginId: { type: OpaqueLoginId, message: wire.OpaqueLoginId },
   PasswordOperationId: { type: PasswordOperationId, message: wire.PasswordOperationId },
   ProvisioningConnectorId: {
     type: ProvisioningConnectorId,
