@@ -8,8 +8,10 @@ edition = "2024"
 publish = false
 
 [dependencies]
-sid-ids = { version = "0.1", default-features = false, features = ["alloc"] }
-sid-ids-proto = { version = "0.1", default-features = false }
+# Any version: the patch below must apply to whatever version the workspace is
+# about to publish, or the registry release is resolved beside it.
+sid-ids = { version = "*", default-features = false, features = ["alloc"] }
+sid-ids-proto = { version = "*", default-features = false }
 prost = { version = "0.14", default-features = false }
 
 [features]
