@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.12.0...typescript-proto-v0.13.0) (2026-11-05)
+
+
+### Features
+
+* **ids:** organization, issuer and application conversions ([#64](https://github.com/structured-id/sdk/issues/64)) ([834093c](https://github.com/structured-id/sdk/commit/834093cee0d0e11eb093283cbd1739e30090e33f)), closes [#63](https://github.com/structured-id/sdk/issues/63)
+
 ## [0.12.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.11.0...typescript-proto-v0.12.0) (2026-11-05)
 
 
