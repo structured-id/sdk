@@ -24,12 +24,35 @@ export function checkV7(bytes: Uint8Array): IdErrorReason | undefined {
   return undefined;
 }
 
+/** Whether 16 bytes are all zero except the last, which is not. */
+function isBuiltinRole(bytes: Uint8Array): boolean {
+  if (bytes.length !== 16) return false;
+  for (let i = 0; i < 15; i++) if (bytes[i] !== 0x00) return false;
+  return bytes[15] !== 0x00;
+}
+
+/** A project: `checkV7`, or the nil UUID of the system project. */
+export function checkProject(bytes: Uint8Array): IdErrorReason | undefined {
+  if (bytes.length === 16 && bytes.every((byte) => byte === 0x00)) return undefined;
+  return checkV7(bytes);
+}
+
+/** A role: `checkV7`, or a built-in role (15 zero bytes, a nonzero last one). */
+export function checkRole(bytes: Uint8Array): IdErrorReason | undefined {
+  if (isBuiltinRole(bytes)) return undefined;
+  return checkV7(bytes);
+}
+
 /**
- * The only accepted shape, refused as `kind`. Returns a copy, so later
- * changes to the input cannot reach it.
+ * `kind`'s shape (`checkV7` unless the kind keeps fixed values), refused as
+ * `kind`. Returns a copy, so later changes to the input cannot reach it.
  */
-export function validate(bytes: Uint8Array, kind: IdKind): Uint8Array {
-  const refused = checkV7(bytes);
+export function validate(
+  bytes: Uint8Array,
+  kind: IdKind,
+  check: (bytes: Uint8Array) => IdErrorReason | undefined = checkV7,
+): Uint8Array {
+  const refused = check(bytes);
   if (refused) throw new IdError(kind, refused);
   return bytes.slice();
 }

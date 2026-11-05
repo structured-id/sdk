@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
-//! Database encoding and decoding. Decoding validates: a stored value that is
-//! not a UUIDv7 of the expected kind is a decode error, never a default.
+//! Database encoding and decoding. Decoding validates: a stored value without
+//! the expected kind's shape is a decode error, never a default.
 //!
 //! PostgreSQL stores identifiers as native `uuid`. SQLite stores them as the
 //! hyphenated text the schema already uses.
@@ -8,9 +8,10 @@
 use sqlx::error::BoxDynError;
 
 use crate::{
-    ApplicationId, BindingId, CredentialId, DeviceId, IssuerId, MachineUserId, MagicLinkId, OrgId,
-    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
-    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
+    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
+    IssuerId, MachineUserId, MagicLinkId, OrgId, OtpSessionId, PasswordOperationId, PrincipalId,
+    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
 };
 
 macro_rules! sqlx_id {
@@ -103,3 +104,9 @@ sqlx_id!(ResetSessionId);
 sqlx_id!(PrincipalId);
 sqlx_id!(ProfileEmailId);
 sqlx_id!(ProfilePhoneId);
+sqlx_id!(ProjectId);
+sqlx_id!(RoleId);
+sqlx_id!(GroupId);
+sqlx_id!(RoleAssignmentId);
+sqlx_id!(CedarPolicyId);
+sqlx_id!(AccessRequestId);

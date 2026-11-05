@@ -6,10 +6,13 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { IMessageType, JsonValue } from "@protobuf-ts/runtime";
 import {
+  AccessRequestId,
   ApplicationId,
   BindingId,
+  CedarPolicyId,
   CredentialId,
   DeviceId,
+  GroupId,
   IdError,
   ImportedPasswordUpgradeId,
   IssuerId,
@@ -24,11 +27,14 @@ import {
   ProfileEmailId,
   ProfileId,
   ProfilePhoneId,
+  ProjectId,
   PROTO_PATH,
   ProvisioningConnectorId,
   ProvisioningCredentialId,
   ResetSessionId,
   ResourceId,
+  RoleAssignmentId,
+  RoleId,
   SessionId,
   StepUpChallengeId,
   required,
@@ -96,6 +102,12 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   OrgId: { type: OrgId, message: wire.OrgId },
   IssuerId: { type: IssuerId, message: wire.IssuerId },
   ApplicationId: { type: ApplicationId, message: wire.ApplicationId },
+  ProjectId: { type: ProjectId, message: wire.ProjectId },
+  RoleId: { type: RoleId, message: wire.RoleId },
+  GroupId: { type: GroupId, message: wire.GroupId },
+  RoleAssignmentId: { type: RoleAssignmentId, message: wire.RoleAssignmentId },
+  CedarPolicyId: { type: CedarPolicyId, message: wire.CedarPolicyId },
+  AccessRequestId: { type: AccessRequestId, message: wire.AccessRequestId },
 };
 
 function fromHex(hex: string): Uint8Array {
