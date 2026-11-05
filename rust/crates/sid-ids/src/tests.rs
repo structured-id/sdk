@@ -9,8 +9,9 @@ use uuid::{Builder, Uuid, Variant, Version};
 use crate::{
     ApplicationId, BindingId, CredentialId, DeviceId, IdErrorCause, IdKind,
     ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
-    OtpSessionId, PasswordOperationId, ProfileId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
+    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
+    StepUpChallengeId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -223,6 +224,21 @@ fn error_kind_follows_the_type_that_validated() {
         IdKind::ImportedPasswordUpgrade.type_name(),
         "ImportedPasswordUpgradeId"
     );
+    assert_eq!(
+        PrincipalId::parse(V4).unwrap_err().kind(),
+        IdKind::Principal
+    );
+    assert_eq!(IdKind::Principal.type_name(), "PrincipalId");
+    assert_eq!(
+        ProfileEmailId::parse(V4).unwrap_err().kind(),
+        IdKind::ProfileEmail
+    );
+    assert_eq!(IdKind::ProfileEmail.type_name(), "ProfileEmailId");
+    assert_eq!(
+        ProfilePhoneId::parse(V4).unwrap_err().kind(),
+        IdKind::ProfilePhone
+    );
+    assert_eq!(IdKind::ProfilePhone.type_name(), "ProfilePhoneId");
 }
 
 #[test]

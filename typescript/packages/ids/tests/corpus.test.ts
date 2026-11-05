@@ -8,6 +8,7 @@ import type { IMessageType, JsonValue } from "@protobuf-ts/runtime";
 import {
   BindingId,
   CredentialId,
+  DeviceId,
   IdError,
   ImportedPasswordUpgradeId,
   MachineUserId,
@@ -16,6 +17,10 @@ import {
   OpaqueLoginId,
   OtpSessionId,
   PasswordOperationId,
+  PrincipalId,
+  ProfileEmailId,
+  ProfileId,
+  ProfilePhoneId,
   PROTO_PATH,
   ProvisioningConnectorId,
   ProvisioningCredentialId,
@@ -80,6 +85,11 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
     type: ImportedPasswordUpgradeId,
     message: wire.ImportedPasswordUpgradeId,
   },
+  ProfileId: { type: ProfileId, message: wire.ProfileId },
+  PrincipalId: { type: PrincipalId, message: wire.PrincipalId },
+  ProfileEmailId: { type: ProfileEmailId, message: wire.ProfileEmailId },
+  ProfilePhoneId: { type: ProfilePhoneId, message: wire.ProfilePhoneId },
+  DeviceId: { type: DeviceId, message: wire.DeviceId },
 };
 
 function fromHex(hex: string): Uint8Array {

@@ -287,3 +287,21 @@ define_id! {
     /// finish: the reference to the upgrade state kept between the two steps.
     ImportedPasswordUpgradeId, IdKind::ImportedPasswordUpgrade
 }
+
+define_id! {
+    /// One login handle of a Profile (an email, phone or username it signs in
+    /// with): the reference its management names. Not the handle's value.
+    PrincipalId, IdKind::Principal
+}
+
+define_id! {
+    /// One email address recorded for a Profile, a contact that may or may
+    /// not be a login handle: the reference its management names.
+    ProfileEmailId, IdKind::ProfileEmail
+}
+
+define_id! {
+    /// One phone number recorded for a Profile, a contact that may or may
+    /// not be a login handle: the reference its management names.
+    ProfilePhoneId, IdKind::ProfilePhone
+}

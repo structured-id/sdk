@@ -9,8 +9,8 @@ use sqlx::error::BoxDynError;
 
 use crate::{
     ApplicationId, BindingId, CredentialId, DeviceId, IssuerId, MachineUserId, MagicLinkId, OrgId,
-    OtpSessionId, PasswordOperationId, ProfileId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
+    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
 };
 
 macro_rules! sqlx_id {
@@ -100,3 +100,6 @@ sqlx_id!(CredentialId);
 sqlx_id!(OtpSessionId);
 sqlx_id!(MagicLinkId);
 sqlx_id!(ResetSessionId);
+sqlx_id!(PrincipalId);
+sqlx_id!(ProfileEmailId);
+sqlx_id!(ProfilePhoneId);
