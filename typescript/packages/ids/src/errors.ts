@@ -63,13 +63,15 @@ function describe(reason: IdErrorReason): string {
 
 /**
  * A value that is not a valid identifier of the requested kind. Carries the
- * kind and the reason, never the value, so it can be logged freely.
+ * kind and the reason, never the value, so it can be logged freely. `K` is
+ * the kind's name: one of this package's kinds, or a kind another package
+ * defines on `Identifier`.
  */
-export class IdError extends Error {
+export class IdError<K extends string = IdKind> extends Error {
   override readonly name = "IdError";
 
   constructor(
-    readonly kind: IdKind,
+    readonly kind: K,
     readonly reason: IdErrorReason,
   ) {
     super(`invalid ${kind}: ${describe(reason)}`);
@@ -77,10 +79,10 @@ export class IdError extends Error {
 }
 
 /** A required identifier message was absent. Absence is never a default. */
-export class MissingIdError extends Error {
+export class MissingIdError<K extends string = IdKind> extends Error {
   override readonly name = "MissingIdError";
 
-  constructor(readonly kind: IdKind) {
+  constructor(readonly kind: K) {
     super(`missing ${kind}`);
   }
 }

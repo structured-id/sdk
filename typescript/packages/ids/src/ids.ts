@@ -12,11 +12,17 @@ import { checkProject, checkRole, formatUuid, parseText, validate } from "./vali
  *
  * A valid identifier proves only its shape. It does not prove that the entity
  * exists, whom it belongs to, or that the caller may act on it.
+ *
+ * Another package defines its own kinds on this base: a class per kind with
+ * a literal `kind` that names no kind of this package, built only through
+ * `validate` (whose copy it passes in) and `parseText`. Values of its kinds
+ * then compare, print and copy exactly as these do and stay distinct types.
  */
-abstract class Identifier {
-  abstract readonly kind: IdKind;
+export abstract class Identifier<K extends string = IdKind> {
+  abstract readonly kind: K;
   readonly #bytes: Uint8Array;
 
+  /** `bytes` must be the copy `validate` returned for this kind. */
   protected constructor(bytes: Uint8Array) {
     this.#bytes = bytes;
   }
@@ -982,9 +988,12 @@ export class AccessRequestId extends Identifier {
   }
 }
 
-/** An identifier class: its kind and its checked wire conversion. */
-export interface IdType<T, W> {
-  readonly kind: IdKind;
+/**
+ * An identifier class: its kind and its checked wire conversion. `K` is the
+ * kind's name, as for `Identifier`.
+ */
+export interface IdType<T, W, K extends string = IdKind> {
+  readonly kind: K;
   fromWire(message: W): T;
 }
 
@@ -992,7 +1001,7 @@ export interface IdType<T, W> {
  * The identifier in a required message field: absence throws
  * `MissingIdError`, an invalid value throws `IdError`.
  */
-export function required<T, W>(type: IdType<T, W>, message: W | undefined): T {
+export function required<T, W, K extends string>(type: IdType<T, W, K>, message: W | undefined): T {
   if (message === undefined) throw new MissingIdError(type.kind);
   return type.fromWire(message);
 }
@@ -1002,6 +1011,9 @@ export function required<T, W>(type: IdType<T, W>, message: W | undefined): T {
  * present but invalid value throws `IdError` (an empty message is invalid,
  * not absent).
  */
-export function optional<T, W>(type: IdType<T, W>, message: W | undefined): T | undefined {
+export function optional<T, W, K extends string>(
+  type: IdType<T, W, K>,
+  message: W | undefined,
+): T | undefined {
   return message === undefined ? undefined : type.fromWire(message);
 }

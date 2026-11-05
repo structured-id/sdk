@@ -47,9 +47,9 @@ export function checkRole(bytes: Uint8Array): IdErrorReason | undefined {
  * `kind`'s shape (`checkV7` unless the kind keeps fixed values), refused as
  * `kind`. Returns a copy, so later changes to the input cannot reach it.
  */
-export function validate(
+export function validate<K extends string = IdKind>(
   bytes: Uint8Array,
-  kind: IdKind,
+  kind: K,
   check: (bytes: Uint8Array) => IdErrorReason | undefined = checkV7,
 ): Uint8Array {
   const refused = check(bytes);
@@ -97,7 +97,7 @@ export function parseUuidText(text: string): Uint8Array | undefined {
 }
 
 /** The bytes of a textual UUID, refused as `kind` when it is not one. */
-export function parseText(text: string, kind: IdKind): Uint8Array {
+export function parseText<K extends string = IdKind>(text: string, kind: K): Uint8Array {
   const bytes = parseUuidText(text);
   if (!bytes) throw new IdError(kind, { type: "malformed" });
   return bytes;

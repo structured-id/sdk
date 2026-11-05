@@ -3,14 +3,17 @@ import { describe, expect, it } from "vitest";
 import {
   BindingId,
   IdError,
+  Identifier,
   MachineUserId,
   MissingIdError,
   ResourceId,
   checkV7,
   formatUuid,
   optional,
+  parseText,
   parseUuidText,
   required,
+  validate,
   wire,
 } from "../src/index";
 
@@ -29,6 +32,64 @@ function reasonOf(f: () => unknown): unknown {
   }
   throw new Error("accepted");
 }
+
+/** A kind another package owns, defined on the shared base as it would be. */
+class OwnedId extends Identifier<"OwnedId"> {
+  static readonly kind = "OwnedId";
+  readonly kind = "OwnedId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  static fromBytes(bytes: Uint8Array): OwnedId {
+    return new OwnedId(validate(bytes, OwnedId.kind));
+  }
+
+  static parse(text: string): OwnedId {
+    return OwnedId.fromBytes(parseText(text, OwnedId.kind));
+  }
+
+  static fromWire(message: { value: Uint8Array }): OwnedId {
+    return OwnedId.fromBytes(message.value);
+  }
+}
+
+// Bug prevented: each private package carrying its own copy of the base, its
+// errors and its copy rule, drifting from this one. A kind defined on the
+// shared base keeps its own name and stays distinct from every kind here.
+describe("a kind defined outside this package", () => {
+  it("is checked, copied and kept apart as these kinds are", () => {
+    const input = V7.slice();
+    const owned = OwnedId.fromBytes(input);
+    input[0] = 0xff;
+    expect(owned.toString()).toBe(TEXT);
+    const copy = owned.toBytes();
+    copy[1] = 0xff;
+    expect(owned.toBytes()).toEqual(V7);
+
+    expect(owned.equals(OwnedId.parse(TEXT))).toBe(true);
+    expect(owned.equals(BindingId.fromBytes(V7))).toBe(false);
+    expect(BindingId.fromBytes(V7).equals(owned)).toBe(false);
+  });
+
+  it("is refused under its own name", () => {
+    const refused = (() => {
+      try {
+        OwnedId.fromBytes(new Uint8Array(16));
+      } catch (error) {
+        return error;
+      }
+    })();
+    expect(refused).toBeInstanceOf(IdError);
+    expect((refused as IdError<"OwnedId">).kind).toBe("OwnedId");
+    expect((refused as IdError<"OwnedId">).message).toBe("invalid OwnedId: the nil UUID");
+    expect(() => OwnedId.parse("not a uuid")).toThrow("invalid OwnedId: not a UUID");
+    expect(() => required(OwnedId, undefined)).toThrow(MissingIdError);
+    expect(() => required(OwnedId, undefined)).toThrow("missing OwnedId");
+    expect(optional(OwnedId, undefined)).toBeUndefined();
+  });
+});
 
 // Kinds defined outside this package validate with the same rule, so a value
 // one accepts is never one another refuses.
