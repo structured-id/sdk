@@ -7,15 +7,22 @@ import { describe, expect, it } from "vitest";
 import type { IMessageType, JsonValue } from "@protobuf-ts/runtime";
 import {
   BindingId,
+  CredentialId,
   IdError,
+  ImportedPasswordUpgradeId,
   MachineUserId,
+  MagicLinkId,
   MissingIdError,
   OpaqueLoginId,
+  OtpSessionId,
   PasswordOperationId,
   PROTO_PATH,
   ProvisioningConnectorId,
   ProvisioningCredentialId,
+  ResetSessionId,
   ResourceId,
+  SessionId,
+  StepUpChallengeId,
   required,
   wire,
   type IdErrorReason,
@@ -63,6 +70,16 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
     message: wire.ProvisioningCredentialId,
   },
   ResourceId: { type: ResourceId, message: wire.ResourceId },
+  SessionId: { type: SessionId, message: wire.SessionId },
+  CredentialId: { type: CredentialId, message: wire.CredentialId },
+  OtpSessionId: { type: OtpSessionId, message: wire.OtpSessionId },
+  MagicLinkId: { type: MagicLinkId, message: wire.MagicLinkId },
+  StepUpChallengeId: { type: StepUpChallengeId, message: wire.StepUpChallengeId },
+  ResetSessionId: { type: ResetSessionId, message: wire.ResetSessionId },
+  ImportedPasswordUpgradeId: {
+    type: ImportedPasswordUpgradeId,
+    message: wire.ImportedPasswordUpgradeId,
+  },
 };
 
 function fromHex(hex: string): Uint8Array {

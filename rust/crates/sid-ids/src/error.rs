@@ -33,6 +33,18 @@ pub enum IdKind {
     ProvisioningCredential,
     /// One OPAQUE login from its start to its finish.
     OpaqueLogin,
+    /// One authentication credential of a Profile.
+    Credential,
+    /// One emailed one-time code from its request to its verification.
+    OtpSession,
+    /// One magic link from its request to its verification.
+    MagicLink,
+    /// One two-phase step-up from its challenge to its completion.
+    StepUpChallenge,
+    /// One password reset from its emailed link to its completion.
+    ResetSession,
+    /// One upgrade of an imported password to OPAQUE.
+    ImportedPasswordUpgrade,
 }
 
 impl IdKind {
@@ -52,6 +64,12 @@ impl IdKind {
             Self::ProvisioningConnector => "ProvisioningConnectorId",
             Self::ProvisioningCredential => "ProvisioningCredentialId",
             Self::OpaqueLogin => "OpaqueLoginId",
+            Self::Credential => "CredentialId",
+            Self::OtpSession => "OtpSessionId",
+            Self::MagicLink => "MagicLinkId",
+            Self::StepUpChallenge => "StepUpChallengeId",
+            Self::ResetSession => "ResetSessionId",
+            Self::ImportedPasswordUpgrade => "ImportedPasswordUpgradeId",
         }
     }
 }

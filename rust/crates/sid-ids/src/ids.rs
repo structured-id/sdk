@@ -249,3 +249,41 @@ define_id! {
     /// never a part of that state.
     OpaqueLoginId, IdKind::OpaqueLogin
 }
+
+define_id! {
+    /// One authentication credential of a Profile (a password, passkey, TOTP
+    /// or recovery code set): the reference management and change operations
+    /// name. Never the secret, nor an authenticator's WebAuthn credential ID.
+    CredentialId, IdKind::Credential
+}
+
+define_id! {
+    /// One emailed one-time code from its request to its verification: the
+    /// reference verify and resend carry, never a part of the code.
+    OtpSessionId, IdKind::OtpSession
+}
+
+define_id! {
+    /// One magic link from its request to its verification: the reference
+    /// the link carries beside its secret token, which alone authorizes.
+    MagicLinkId, IdKind::MagicLink
+}
+
+define_id! {
+    /// One two-phase step-up of a session from its challenge to its
+    /// completion: the reference to the challenge kept for that session.
+    StepUpChallengeId, IdKind::StepUpChallenge
+}
+
+define_id! {
+    /// One password reset from its emailed link to its completion: the
+    /// reference the link carries beside its secret token, which alone
+    /// authorizes.
+    ResetSessionId, IdKind::ResetSession
+}
+
+define_id! {
+    /// One upgrade of an imported password to OPAQUE from its start to its
+    /// finish: the reference to the upgrade state kept between the two steps.
+    ImportedPasswordUpgradeId, IdKind::ImportedPasswordUpgrade
+}

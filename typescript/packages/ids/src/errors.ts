@@ -1,12 +1,19 @@
 /** The identifier kinds this package delivers: one per `sid.v1.ids` message. */
 export type IdKind =
   | "BindingId"
+  | "CredentialId"
+  | "ImportedPasswordUpgradeId"
   | "MachineUserId"
+  | "MagicLinkId"
   | "OpaqueLoginId"
+  | "OtpSessionId"
   | "PasswordOperationId"
   | "ProvisioningConnectorId"
   | "ProvisioningCredentialId"
-  | "ResourceId";
+  | "ResetSessionId"
+  | "ResourceId"
+  | "SessionId"
+  | "StepUpChallengeId";
 
 /** Why a value is not a valid identifier. */
 export type IdErrorReason =
