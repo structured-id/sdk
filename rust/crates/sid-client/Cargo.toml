@@ -28,7 +28,7 @@ secrecy = "0.10"
 serde = { version = "1", features = ["derive"] }
 serde_json = { workspace = true }
 sha2 = "0.11"
-sid-ids = { path = "../sid-ids", version = "0.2", features = ["std"] }
+sid-ids = { path = "../sid-ids", version = "0.3", features = ["std"] }
 sid-ids-proto = { path = "../sid-ids-proto", version = "0.1" }
 thiserror = "2"
 tokio = { version = "1", default-features = false, features = ["sync"] }
