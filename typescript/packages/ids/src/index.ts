@@ -9,13 +9,16 @@
  */
 export { IdError, MissingIdError, type IdErrorReason, type IdKind } from "./errors";
 export {
+  ApplicationId,
   BindingId,
   CredentialId,
   DeviceId,
   ImportedPasswordUpgradeId,
+  IssuerId,
   MachineUserId,
   MagicLinkId,
   OpaqueLoginId,
+  OrgId,
   OtpSessionId,
   PasswordOperationId,
   PrincipalId,
@@ -32,6 +35,7 @@ export {
   required,
   type IdType,
 } from "./ids";
+export { checkV7, formatUuid, parseUuidText } from "./validate";
 export * as wire from "./generated/sid/v1/ids/ids";
 
 /** The include-relative path of the identifier schema this package carries. */

@@ -6,15 +6,18 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import type { IMessageType, JsonValue } from "@protobuf-ts/runtime";
 import {
+  ApplicationId,
   BindingId,
   CredentialId,
   DeviceId,
   IdError,
   ImportedPasswordUpgradeId,
+  IssuerId,
   MachineUserId,
   MagicLinkId,
   MissingIdError,
   OpaqueLoginId,
+  OrgId,
   OtpSessionId,
   PasswordOperationId,
   PrincipalId,
@@ -90,6 +93,9 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   ProfileEmailId: { type: ProfileEmailId, message: wire.ProfileEmailId },
   ProfilePhoneId: { type: ProfilePhoneId, message: wire.ProfilePhoneId },
   DeviceId: { type: DeviceId, message: wire.DeviceId },
+  OrgId: { type: OrgId, message: wire.OrgId },
+  IssuerId: { type: IssuerId, message: wire.IssuerId },
+  ApplicationId: { type: ApplicationId, message: wire.ApplicationId },
 };
 
 function fromHex(hex: string): Uint8Array {

@@ -15,10 +15,11 @@ use prost_reflect::{DescriptorPool, DynamicMessage};
 use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
-    BindingId, CredentialId, DeviceId, FILE_DESCRIPTOR_SET, ImportedPasswordUpgradeId,
-    MachineUserId, MagicLinkId, OpaqueLoginId, OtpSessionId, PasswordOperationId, PrincipalId,
-    ProfileEmailId, ProfileId, ProfilePhoneId, ProvisioningConnectorId, ProvisioningCredentialId,
-    ResetSessionId, ResourceId, SessionId, StepUpChallengeId, WireId,
+    ApplicationId, BindingId, CredentialId, DeviceId, FILE_DESCRIPTOR_SET,
+    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
+    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
+    StepUpChallengeId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.
@@ -227,6 +228,13 @@ fn corpus() -> Value {
         &pool,
     ));
     cases.extend(kind_cases("DeviceId", |value| DeviceId { value }, &pool));
+    cases.extend(kind_cases("OrgId", |value| OrgId { value }, &pool));
+    cases.extend(kind_cases("IssuerId", |value| IssuerId { value }, &pool));
+    cases.extend(kind_cases(
+        "ApplicationId",
+        |value| ApplicationId { value },
+        &pool,
+    ));
     // A consumer's own wrapper `message SidBinding { bytes binding_id = 1; }`
     // replaced at the same outer field by sid.v1.ids.BindingId: the inner
     // field is number 1 of type bytes in both, so the encoding is identical.
@@ -362,5 +370,5 @@ fn corpus_covers_every_refusal_and_kind() {
             "no case expects {expect}"
         );
     }
-    assert_eq!(cases.len(), 19 * self::cases().len());
+    assert_eq!(cases.len(), 22 * self::cases().len());
 }
