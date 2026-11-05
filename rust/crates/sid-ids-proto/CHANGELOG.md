@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.1...rust-sid-ids-proto-v0.1.2) - 2026-11-05
+
+### Added
+
+- *(ids)* add OpaqueLoginId and TOTP enrollment helpers ([#48](https://github.com/structured-id/sdk/pull/48))
+
 ## [0.1.1](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.0...rust-sid-ids-proto-v0.1.1) - 2026-10-22
 
 ### Other
