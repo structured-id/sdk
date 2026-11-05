@@ -6,7 +6,10 @@ import {
   MachineUserId,
   MissingIdError,
   ResourceId,
+  checkV7,
+  formatUuid,
   optional,
+  parseUuidText,
   required,
   wire,
 } from "../src/index";
@@ -26,6 +29,27 @@ function reasonOf(f: () => unknown): unknown {
   }
   throw new Error("accepted");
 }
+
+// Kinds defined outside this package validate with the same rule, so a value
+// one accepts is never one another refuses.
+describe("shared shape check", () => {
+  it("is the rule every kind applies", () => {
+    expect(checkV7(V7)).toBeUndefined();
+    expect(checkV7(new Uint8Array(16))).toEqual({ type: "nil" });
+    expect(checkV7(V7.slice(0, 15))).toEqual({ type: "length", length: 15 });
+    const v4 = V7.slice();
+    v4[6] = 0x4d;
+    expect(checkV7(v4)).toEqual({ type: "version", version: 4 });
+    expect(reasonOf(() => BindingId.fromBytes(v4))).toEqual(checkV7(v4));
+  });
+
+  it("parses and formats the text forms the classes accept", () => {
+    const bytes = parseUuidText(TEXT.toUpperCase());
+    expect(bytes).toEqual(V7);
+    expect(formatUuid(V7)).toBe(TEXT);
+    expect(parseUuidText("not-a-uuid")).toBeUndefined();
+  });
+});
 
 describe("fromBytes", () => {
   it("accepts a UUIDv7 and keeps its bytes", () => {

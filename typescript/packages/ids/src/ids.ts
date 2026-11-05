@@ -1,7 +1,7 @@
 import type { IdKind } from "./errors";
 import { MissingIdError } from "./errors";
 import type * as wire from "./generated/sid/v1/ids/ids";
-import { formatText, parseText, validate } from "./validate";
+import { formatUuid, parseText, validate } from "./validate";
 
 /**
  * The common behaviour of every identifier. A value is always a valid UUIDv7:
@@ -27,7 +27,7 @@ abstract class Identifier {
 
   /** Lowercase hyphenated text, for display only; the wire carries bytes. */
   toString(): string {
-    return formatText(this.#bytes);
+    return formatUuid(this.#bytes);
   }
 
   /** The same text as `toString`, so JSON logs show a readable value. */
@@ -670,6 +670,105 @@ export class DeviceId extends Identifier {
 
   /** The wire message carrying this identifier's bytes. */
   toWire(): wire.DeviceId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * An organization, fixed at its creation: the authority its members, roles
+ * and applications belong to, and the key of its pairwise subjects.
+ */
+export class OrgId extends Identifier {
+  static readonly kind = "OrgId";
+  readonly kind = "OrgId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): OrgId {
+    return new OrgId(validate(bytes, OrgId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): OrgId {
+    return OrgId.fromBytes(parseText(text, OrgId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.OrgId): OrgId {
+    return OrgId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.OrgId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * A logical OIDC issuer: one issuing authority for one recipient
+ * organization. Internal; its public URL names it by an opaque handle.
+ */
+export class IssuerId extends Identifier {
+  static readonly kind = "IssuerId";
+  readonly kind = "IssuerId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): IssuerId {
+    return new IssuerId(validate(bytes, IssuerId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): IssuerId {
+    return IssuerId.fromBytes(parseText(text, IssuerId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.IssuerId): IssuerId {
+    return IssuerId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.IssuerId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * A managed application: the container of an OAuth client role, a protected
+ * resource role, or both. Not the OAuth `client_id`, which is its own text.
+ */
+export class ApplicationId extends Identifier {
+  static readonly kind = "ApplicationId";
+  readonly kind = "ApplicationId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ApplicationId {
+    return new ApplicationId(validate(bytes, ApplicationId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ApplicationId {
+    return ApplicationId.fromBytes(parseText(text, ApplicationId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ApplicationId): ApplicationId {
+    return ApplicationId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ApplicationId {
     return { value: this.toBytes() };
   }
 }

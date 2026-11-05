@@ -29,6 +29,37 @@ fn non_rfc_variant() -> Uuid {
         .into_uuid()
 }
 
+// --- the shared shape check ------------------------------------------------
+
+#[test]
+fn the_shape_check_is_the_one_every_kind_applies() {
+    // Kinds defined outside this crate validate with the same rule, so a
+    // value one accepts is never one another refuses.
+    let v7 = Uuid::parse_str(V7).unwrap();
+    assert_eq!(crate::check_v7(v7), Ok(v7));
+    assert_eq!(crate::check_v7_slice(v7.as_bytes()), Ok(v7));
+    assert_eq!(crate::check_v7(Uuid::nil()), Err(IdErrorCause::Nil));
+    assert_eq!(crate::check_v7(Uuid::max()), Err(IdErrorCause::Max));
+    assert_eq!(
+        crate::check_v7(Uuid::parse_str(V4).unwrap()),
+        Err(IdErrorCause::Version(4))
+    );
+    assert_eq!(
+        crate::check_v7(non_rfc_variant()),
+        Err(IdErrorCause::Variant)
+    );
+    assert_eq!(
+        crate::check_v7_slice(&v7.as_bytes()[..15]),
+        Err(IdErrorCause::Length(15))
+    );
+    for uuid in [Uuid::nil(), Uuid::parse_str(V4).unwrap(), v7] {
+        assert_eq!(
+            crate::check_v7(uuid).err(),
+            ProfileId::from_uuid(uuid).err().map(|e| e.cause())
+        );
+    }
+}
+
 // --- accepted values -------------------------------------------------------
 
 #[test]

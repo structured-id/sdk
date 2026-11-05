@@ -8,21 +8,35 @@ use uuid::{Uuid, Variant};
 
 use crate::error::{IdError, IdErrorCause, IdKind};
 
-/// The only accepted shape: a non-nil, non-max, RFC 4122 UUID of version 7.
-pub(crate) fn validate(uuid: Uuid, kind: IdKind) -> Result<Uuid, IdError> {
+/// The identifier shape on its own, for identifier kinds defined outside this
+/// crate: a non-nil, non-max, RFC 9562 variant UUID of version 7, or why not.
+pub fn check_v7(uuid: Uuid) -> Result<Uuid, IdErrorCause> {
     if uuid.is_nil() {
-        return Err(IdError::new(kind, IdErrorCause::Nil));
+        return Err(IdErrorCause::Nil);
     }
     if uuid.is_max() {
-        return Err(IdError::new(kind, IdErrorCause::Max));
+        return Err(IdErrorCause::Max);
     }
     if uuid.get_variant() != Variant::RFC4122 {
-        return Err(IdError::new(kind, IdErrorCause::Variant));
+        return Err(IdErrorCause::Variant);
     }
     match uuid.get_version_num() {
         7 => Ok(uuid),
-        other => Err(IdError::new(kind, IdErrorCause::Version(other))),
+        other => Err(IdErrorCause::Version(other)),
     }
+}
+
+/// [`check_v7`] of a binary wire value, which must be exactly 16 bytes.
+pub fn check_v7_slice(bytes: &[u8]) -> Result<Uuid, IdErrorCause> {
+    let bytes: [u8; 16] = bytes
+        .try_into()
+        .map_err(|_| IdErrorCause::Length(bytes.len()))?;
+    check_v7(Uuid::from_bytes(bytes))
+}
+
+/// The only accepted shape, reported for `kind`.
+pub(crate) fn validate(uuid: Uuid, kind: IdKind) -> Result<Uuid, IdError> {
+    check_v7(uuid).map_err(|cause| IdError::new(kind, cause))
 }
 
 pub(crate) fn parse(text: &str, kind: IdKind) -> Result<Uuid, IdError> {

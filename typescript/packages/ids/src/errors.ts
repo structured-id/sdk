@@ -1,12 +1,15 @@
 /** The identifier kinds this package delivers: one per `sid.v1.ids` message. */
 export type IdKind =
+  | "ApplicationId"
   | "BindingId"
   | "CredentialId"
   | "DeviceId"
   | "ImportedPasswordUpgradeId"
+  | "IssuerId"
   | "MachineUserId"
   | "MagicLinkId"
   | "OpaqueLoginId"
+  | "OrgId"
   | "OtpSessionId"
   | "PasswordOperationId"
   | "PrincipalId"

@@ -35,7 +35,8 @@ pub use ids::{
     ApplicationId, BindingId, CredentialId, DeviceId, ImportedPasswordUpgradeId, IssuerId,
     MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
     PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId, check_v7,
+    check_v7_slice,
 };
 pub use uuid::Uuid;
 
