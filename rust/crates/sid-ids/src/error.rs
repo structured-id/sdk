@@ -45,6 +45,12 @@ pub enum IdKind {
     ResetSession,
     /// One upgrade of an imported password to OPAQUE.
     ImportedPasswordUpgrade,
+    /// One login handle of a Profile.
+    Principal,
+    /// One email address recorded for a Profile.
+    ProfileEmail,
+    /// One phone number recorded for a Profile.
+    ProfilePhone,
 }
 
 impl IdKind {
@@ -70,6 +76,9 @@ impl IdKind {
             Self::StepUpChallenge => "StepUpChallengeId",
             Self::ResetSession => "ResetSessionId",
             Self::ImportedPasswordUpgrade => "ImportedPasswordUpgradeId",
+            Self::Principal => "PrincipalId",
+            Self::ProfileEmail => "ProfileEmailId",
+            Self::ProfilePhone => "ProfilePhoneId",
         }
     }
 }

@@ -508,6 +508,172 @@ export class ImportedPasswordUpgradeId extends Identifier {
   }
 }
 
+/**
+ * A user's Profile within one installation. Internal to that installation:
+ * an external service never receives it and sees a pairwise BindingId.
+ */
+export class ProfileId extends Identifier {
+  static readonly kind = "ProfileId";
+  readonly kind = "ProfileId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ProfileId {
+    return new ProfileId(validate(bytes, ProfileId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ProfileId {
+    return ProfileId.fromBytes(parseText(text, ProfileId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ProfileId): ProfileId {
+    return ProfileId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ProfileId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One login handle of a Profile (an email, phone or username it signs in
+ * with): the reference its management names. Not the handle's value.
+ */
+export class PrincipalId extends Identifier {
+  static readonly kind = "PrincipalId";
+  readonly kind = "PrincipalId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): PrincipalId {
+    return new PrincipalId(validate(bytes, PrincipalId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): PrincipalId {
+    return PrincipalId.fromBytes(parseText(text, PrincipalId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.PrincipalId): PrincipalId {
+    return PrincipalId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.PrincipalId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One email address recorded for a Profile, a contact that may or may not be
+ * a login handle: the reference its management names.
+ */
+export class ProfileEmailId extends Identifier {
+  static readonly kind = "ProfileEmailId";
+  readonly kind = "ProfileEmailId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ProfileEmailId {
+    return new ProfileEmailId(validate(bytes, ProfileEmailId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ProfileEmailId {
+    return ProfileEmailId.fromBytes(parseText(text, ProfileEmailId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ProfileEmailId): ProfileEmailId {
+    return ProfileEmailId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ProfileEmailId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One phone number recorded for a Profile, a contact that may or may not be
+ * a login handle: the reference its management names.
+ */
+export class ProfilePhoneId extends Identifier {
+  static readonly kind = "ProfilePhoneId";
+  readonly kind = "ProfilePhoneId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ProfilePhoneId {
+    return new ProfilePhoneId(validate(bytes, ProfilePhoneId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ProfilePhoneId {
+    return ProfilePhoneId.fromBytes(parseText(text, ProfilePhoneId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ProfilePhoneId): ProfilePhoneId {
+    return ProfilePhoneId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ProfilePhoneId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * A device registered in a Profile's scope: a descriptive record its
+ * management and sessions name. Knowing it grants no authority and proves no
+ * possession of a device key.
+ */
+export class DeviceId extends Identifier {
+  static readonly kind = "DeviceId";
+  readonly kind = "DeviceId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): DeviceId {
+    return new DeviceId(validate(bytes, DeviceId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): DeviceId {
+    return DeviceId.fromBytes(parseText(text, DeviceId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.DeviceId): DeviceId {
+    return DeviceId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.DeviceId {
+    return { value: this.toBytes() };
+  }
+}
+
 /** An identifier class: its kind and its checked wire conversion. */
 export interface IdType<T, W> {
   readonly kind: IdKind;

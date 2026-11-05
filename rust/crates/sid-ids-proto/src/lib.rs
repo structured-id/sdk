@@ -32,9 +32,10 @@ pub mod sid {
 }
 
 pub use sid::v1::ids::{
-    BindingId, CredentialId, ImportedPasswordUpgradeId, MachineUserId, MagicLinkId, OpaqueLoginId,
-    OtpSessionId, PasswordOperationId, ProvisioningConnectorId, ProvisioningCredentialId,
-    ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
+    BindingId, CredentialId, DeviceId, ImportedPasswordUpgradeId, MachineUserId, MagicLinkId,
+    OpaqueLoginId, OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId,
+    ProfilePhoneId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
+    SessionId, StepUpChallengeId,
 };
 
 /// The include-relative path of the identifier proto file.
@@ -144,6 +145,11 @@ wire_id!(
     ImportedPasswordUpgradeId,
     sid_ids::ImportedPasswordUpgradeId
 );
+wire_id!(ProfileId, sid_ids::ProfileId);
+wire_id!(PrincipalId, sid_ids::PrincipalId);
+wire_id!(ProfileEmailId, sid_ids::ProfileEmailId);
+wire_id!(ProfilePhoneId, sid_ids::ProfilePhoneId);
+wire_id!(DeviceId, sid_ids::DeviceId);
 
 /// The README's examples run as doctests, so they stay true.
 #[doc = include_str!("../README.md")]

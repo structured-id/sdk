@@ -33,9 +33,9 @@ mod sqlx_impl;
 pub use error::{IdError, IdErrorCause, IdKind};
 pub use ids::{
     ApplicationId, BindingId, CredentialId, DeviceId, ImportedPasswordUpgradeId, IssuerId,
-    MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, ProfileId,
-    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
-    StepUpChallengeId,
+    MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
+    PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
 };
 pub use uuid::Uuid;
 
