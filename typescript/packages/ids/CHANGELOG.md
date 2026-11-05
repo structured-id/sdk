@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.6.0...typescript-ids-v0.7.0) (2026-11-05)
+
+
+### Features
+
+* **ids:** export the identifier base for other packages' kinds ([#75](https://github.com/structured-id/sdk/issues/75)) ([91912fe](https://github.com/structured-id/sdk/commit/91912fe23a9c8588b876d0cee4d817b8d1248aed)), closes [#74](https://github.com/structured-id/sdk/issues/74)
+
 ## [0.6.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.5.0...typescript-ids-v0.6.0) (2026-11-05)
 
 
