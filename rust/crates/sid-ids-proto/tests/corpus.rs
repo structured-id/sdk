@@ -15,8 +15,9 @@ use prost_reflect::{DescriptorPool, DynamicMessage};
 use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
-    BindingId, FILE_DESCRIPTOR_SET, MachineUserId, OpaqueLoginId, PasswordOperationId,
-    ProvisioningConnectorId, ProvisioningCredentialId, ResourceId, WireId,
+    BindingId, CredentialId, FILE_DESCRIPTOR_SET, ImportedPasswordUpgradeId, MachineUserId,
+    MagicLinkId, OpaqueLoginId, OtpSessionId, PasswordOperationId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.
@@ -177,6 +178,37 @@ fn corpus() -> Value {
         |value| ResourceId { value },
         &pool,
     ));
+    cases.extend(kind_cases("SessionId", |value| SessionId { value }, &pool));
+    cases.extend(kind_cases(
+        "CredentialId",
+        |value| CredentialId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "OtpSessionId",
+        |value| OtpSessionId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "MagicLinkId",
+        |value| MagicLinkId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "StepUpChallengeId",
+        |value| StepUpChallengeId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "ResetSessionId",
+        |value| ResetSessionId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "ImportedPasswordUpgradeId",
+        |value| ImportedPasswordUpgradeId { value },
+        &pool,
+    ));
     // A consumer's own wrapper `message SidBinding { bytes binding_id = 1; }`
     // replaced at the same outer field by sid.v1.ids.BindingId: the inner
     // field is number 1 of type bytes in both, so the encoding is identical.
@@ -312,5 +344,5 @@ fn corpus_covers_every_refusal_and_kind() {
             "no case expects {expect}"
         );
     }
-    assert_eq!(cases.len(), 7 * self::cases().len());
+    assert_eq!(cases.len(), 14 * self::cases().len());
 }

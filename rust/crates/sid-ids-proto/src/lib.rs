@@ -32,8 +32,9 @@ pub mod sid {
 }
 
 pub use sid::v1::ids::{
-    BindingId, MachineUserId, OpaqueLoginId, PasswordOperationId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResourceId,
+    BindingId, CredentialId, ImportedPasswordUpgradeId, MachineUserId, MagicLinkId, OpaqueLoginId,
+    OtpSessionId, PasswordOperationId, ProvisioningConnectorId, ProvisioningCredentialId,
+    ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
 };
 
 /// The include-relative path of the identifier proto file.
@@ -133,6 +134,16 @@ wire_id!(PasswordOperationId, sid_ids::PasswordOperationId);
 wire_id!(ProvisioningConnectorId, sid_ids::ProvisioningConnectorId);
 wire_id!(ProvisioningCredentialId, sid_ids::ProvisioningCredentialId);
 wire_id!(ResourceId, sid_ids::ResourceId);
+wire_id!(SessionId, sid_ids::SessionId);
+wire_id!(CredentialId, sid_ids::CredentialId);
+wire_id!(OtpSessionId, sid_ids::OtpSessionId);
+wire_id!(MagicLinkId, sid_ids::MagicLinkId);
+wire_id!(StepUpChallengeId, sid_ids::StepUpChallengeId);
+wire_id!(ResetSessionId, sid_ids::ResetSessionId);
+wire_id!(
+    ImportedPasswordUpgradeId,
+    sid_ids::ImportedPasswordUpgradeId
+);
 
 /// The README's examples run as doctests, so they stay true.
 #[doc = include_str!("../README.md")]

@@ -7,9 +7,10 @@ use core::str::FromStr;
 use uuid::{Builder, Uuid, Variant, Version};
 
 use crate::{
-    ApplicationId, BindingId, DeviceId, IdErrorCause, IdKind, IssuerId, MachineUserId,
-    OpaqueLoginId, OrgId, PasswordOperationId, ProfileId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResourceId, SessionId,
+    ApplicationId, BindingId, CredentialId, DeviceId, IdErrorCause, IdKind,
+    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
+    OtpSessionId, PasswordOperationId, ProfileId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -189,6 +190,55 @@ fn error_kind_follows_the_type_that_validated() {
         IdKind::OpaqueLogin
     );
     assert_eq!(IdKind::OpaqueLogin.type_name(), "OpaqueLoginId");
+    assert_eq!(
+        CredentialId::parse(V4).unwrap_err().kind(),
+        IdKind::Credential
+    );
+    assert_eq!(IdKind::Credential.type_name(), "CredentialId");
+    assert_eq!(
+        OtpSessionId::parse(V4).unwrap_err().kind(),
+        IdKind::OtpSession
+    );
+    assert_eq!(IdKind::OtpSession.type_name(), "OtpSessionId");
+    assert_eq!(
+        MagicLinkId::parse(V4).unwrap_err().kind(),
+        IdKind::MagicLink
+    );
+    assert_eq!(IdKind::MagicLink.type_name(), "MagicLinkId");
+    assert_eq!(
+        StepUpChallengeId::parse(V4).unwrap_err().kind(),
+        IdKind::StepUpChallenge
+    );
+    assert_eq!(IdKind::StepUpChallenge.type_name(), "StepUpChallengeId");
+    assert_eq!(
+        ResetSessionId::parse(V4).unwrap_err().kind(),
+        IdKind::ResetSession
+    );
+    assert_eq!(IdKind::ResetSession.type_name(), "ResetSessionId");
+    assert_eq!(
+        ImportedPasswordUpgradeId::parse(V4).unwrap_err().kind(),
+        IdKind::ImportedPasswordUpgrade
+    );
+    assert_eq!(
+        IdKind::ImportedPasswordUpgrade.type_name(),
+        "ImportedPasswordUpgradeId"
+    );
+}
+
+#[test]
+fn sign_in_references_of_one_value_stay_distinct_types() {
+    // Bug prevented: a reference of one ceremony accepted as another's. The
+    // same bytes validate as each kind, and only the type the caller named
+    // tells them apart (a reset id is never a session id).
+    let reset = ResetSessionId::generate();
+    let same_bytes = SessionId::from_bytes(*reset.as_bytes()).unwrap();
+    assert_eq!(same_bytes.as_bytes(), reset.as_bytes());
+    assert_eq!(
+        CredentialId::from_slice(&reset.as_bytes()[..15])
+            .unwrap_err()
+            .cause(),
+        IdErrorCause::Length(15)
+    );
 }
 
 #[test]

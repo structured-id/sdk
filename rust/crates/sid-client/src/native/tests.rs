@@ -80,7 +80,8 @@ impl RefreshTransport for Issuer {
             .unwrap()
             .remove(0)
             .map(|generation| Renewed {
-                session_id: "session-1".into(),
+                session_id: sid_ids::SessionId::parse("0192f3a4-7c1e-7b2a-9d4e-3f5a6b7c8d9e")
+                    .unwrap(),
                 access_token: SecretString::from("access"),
                 expires_in: 900,
                 generation,

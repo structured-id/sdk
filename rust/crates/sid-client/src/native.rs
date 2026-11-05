@@ -179,7 +179,7 @@ impl FamilyStore for MemoryFamilyStore {
 
 /// What a refresh request received.
 pub struct Renewed {
-    pub session_id: String,
+    pub session_id: sid_ids::SessionId,
     pub access_token: SecretString,
     pub expires_in: i64,
     pub generation: Family,
@@ -216,7 +216,7 @@ pub trait RefreshTransport: Send + Sync {
 pub enum Refresh {
     /// Renewed: the access token and seconds until it expires.
     Refreshed {
-        session_id: String,
+        session_id: sid_ids::SessionId,
         access_token: SecretString,
         expires_in: i64,
     },
@@ -401,8 +401,10 @@ where
             .map_err(|e| unreadable(e.to_string()))?
             .ok_or_else(|| unreadable("no generation in the answer".into()))?;
         let body = response.into_inner();
+        let session_id = sid_ids_proto::required(body.session_id.as_ref())
+            .map_err(|e| unreadable(e.to_string()))?;
         Ok(Renewed {
-            session_id: body.session_id,
+            session_id,
             access_token,
             expires_in: body.expires_in,
             generation,

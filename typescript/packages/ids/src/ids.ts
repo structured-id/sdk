@@ -276,6 +276,238 @@ export class ResourceId extends Identifier {
   }
 }
 
+/**
+ * An authenticated session of a Profile: the reference session management
+ * names. Not a credential; holding it authorizes nothing.
+ */
+export class SessionId extends Identifier {
+  static readonly kind = "SessionId";
+  readonly kind = "SessionId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): SessionId {
+    return new SessionId(validate(bytes, SessionId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): SessionId {
+    return SessionId.fromBytes(parseText(text, SessionId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.SessionId): SessionId {
+    return SessionId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.SessionId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One authentication credential of a Profile (a password, passkey, TOTP or
+ * recovery code set). Never the secret, nor an authenticator's WebAuthn
+ * credential ID.
+ */
+export class CredentialId extends Identifier {
+  static readonly kind = "CredentialId";
+  readonly kind = "CredentialId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): CredentialId {
+    return new CredentialId(validate(bytes, CredentialId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): CredentialId {
+    return CredentialId.fromBytes(parseText(text, CredentialId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.CredentialId): CredentialId {
+    return CredentialId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.CredentialId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One emailed one-time code from its request to its verification: the
+ * reference verify and resend carry, never a part of the code.
+ */
+export class OtpSessionId extends Identifier {
+  static readonly kind = "OtpSessionId";
+  readonly kind = "OtpSessionId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): OtpSessionId {
+    return new OtpSessionId(validate(bytes, OtpSessionId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): OtpSessionId {
+    return OtpSessionId.fromBytes(parseText(text, OtpSessionId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.OtpSessionId): OtpSessionId {
+    return OtpSessionId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.OtpSessionId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One magic link from its request to its verification: the reference the
+ * link carries beside its secret token, which alone authorizes.
+ */
+export class MagicLinkId extends Identifier {
+  static readonly kind = "MagicLinkId";
+  readonly kind = "MagicLinkId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): MagicLinkId {
+    return new MagicLinkId(validate(bytes, MagicLinkId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): MagicLinkId {
+    return MagicLinkId.fromBytes(parseText(text, MagicLinkId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.MagicLinkId): MagicLinkId {
+    return MagicLinkId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.MagicLinkId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One two-phase step-up of a session from its challenge to its completion:
+ * the reference to the challenge kept for that session only.
+ */
+export class StepUpChallengeId extends Identifier {
+  static readonly kind = "StepUpChallengeId";
+  readonly kind = "StepUpChallengeId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): StepUpChallengeId {
+    return new StepUpChallengeId(validate(bytes, StepUpChallengeId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): StepUpChallengeId {
+    return StepUpChallengeId.fromBytes(parseText(text, StepUpChallengeId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.StepUpChallengeId): StepUpChallengeId {
+    return StepUpChallengeId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.StepUpChallengeId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One password reset from its emailed link to its completion: the reference
+ * the link carries beside its secret token, which alone authorizes.
+ */
+export class ResetSessionId extends Identifier {
+  static readonly kind = "ResetSessionId";
+  readonly kind = "ResetSessionId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ResetSessionId {
+    return new ResetSessionId(validate(bytes, ResetSessionId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ResetSessionId {
+    return ResetSessionId.fromBytes(parseText(text, ResetSessionId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ResetSessionId): ResetSessionId {
+    return ResetSessionId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ResetSessionId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One upgrade of an imported password to OPAQUE from its start to its
+ * finish: the reference to the upgrade state kept between the two steps.
+ */
+export class ImportedPasswordUpgradeId extends Identifier {
+  static readonly kind = "ImportedPasswordUpgradeId";
+  readonly kind = "ImportedPasswordUpgradeId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ImportedPasswordUpgradeId {
+    return new ImportedPasswordUpgradeId(validate(bytes, ImportedPasswordUpgradeId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ImportedPasswordUpgradeId {
+    return ImportedPasswordUpgradeId.fromBytes(parseText(text, ImportedPasswordUpgradeId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ImportedPasswordUpgradeId): ImportedPasswordUpgradeId {
+    return ImportedPasswordUpgradeId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ImportedPasswordUpgradeId {
+    return { value: this.toBytes() };
+  }
+}
+
 /** An identifier class: its kind and its checked wire conversion. */
 export interface IdType<T, W> {
   readonly kind: IdKind;

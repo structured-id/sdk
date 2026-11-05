@@ -1,8 +1,10 @@
 # @structured-id/ids
 
 StructuredID identifiers for TypeScript: one class per identifier kind
-(`BindingId`, `MachineUserId`, `OpaqueLoginId`, `PasswordOperationId`,
-`ProvisioningConnectorId`, `ProvisioningCredentialId`, `ResourceId`), the
+(`BindingId`, `CredentialId`, `ImportedPasswordUpgradeId`, `MachineUserId`,
+`MagicLinkId`, `OpaqueLoginId`, `OtpSessionId`, `PasswordOperationId`,
+`ProvisioningConnectorId`, `ProvisioningCredentialId`, `ResetSessionId`,
+`ResourceId`, `SessionId`, `StepUpChallengeId`), the
 `sid.v1.ids` wire messages and checked conversions between them.
 
 Each identifier is exactly 16 bytes of an RFC 9562 UUIDv7 in network byte
