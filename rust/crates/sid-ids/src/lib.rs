@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 //! Validated StructuredID identifiers.
 //!
-//! Every identifier here is a UUIDv7 wrapped in its own nominal type. The
-//! wrapped value is private: the only way to obtain a `ProfileId` is to
+//! Every identifier here is a UUIDv7 wrapped in its own nominal type; the
+//! system project and the built-in roles keep their fixed values beside it.
+//! The wrapped value is private: the only way to obtain a `ProfileId` is to
 //! generate one or to validate an existing UUID, so a value of the type is
 //! always well-formed. Malformed, nil, max, non-RFC-4122 and wrong-version
 //! values are rejected at every entry point, including database decoding;
@@ -32,11 +33,11 @@ mod sqlx_impl;
 
 pub use error::{IdError, IdErrorCause, IdKind};
 pub use ids::{
-    ApplicationId, BindingId, CredentialId, DeviceId, ImportedPasswordUpgradeId, IssuerId,
-    MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
-    PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId, check_v7,
-    check_v7_slice,
+    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
+    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
+    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
+    ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
+    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, check_v7, check_v7_slice,
 };
 pub use uuid::Uuid;
 

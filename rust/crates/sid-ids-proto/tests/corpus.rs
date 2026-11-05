@@ -15,11 +15,11 @@ use prost_reflect::{DescriptorPool, DynamicMessage};
 use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
-    ApplicationId, BindingId, CredentialId, DeviceId, FILE_DESCRIPTOR_SET,
-    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
-    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
-    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
-    StepUpChallengeId, WireId,
+    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId,
+    FILE_DESCRIPTOR_SET, GroupId, ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId,
+    OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId,
+    ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
+    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.
@@ -58,7 +58,20 @@ fn cases() -> Vec<(&'static str, &'static str, Option<Vec<u8>>)> {
         ),
         ("short", "15 bytes", Some(V7[..15].to_vec())),
         ("long", "17 bytes", Some([&V7[..], &[0x77]].concat())),
-        ("nil", "the nil UUID", Some(vec![0x00; 16])),
+        (
+            "nil",
+            "the nil UUID: the system project, refused as any other kind",
+            Some(vec![0x00; 16]),
+        ),
+        (
+            "builtin",
+            "15 zero bytes and 0x01: a built-in role, refused as any other kind",
+            Some({
+                let mut bytes = vec![0x00; 16];
+                bytes[15] = 0x01;
+                bytes
+            }),
+        ),
         ("max", "the max UUID", Some(vec![0xff; 16])),
         (
             "version_4",
@@ -235,6 +248,24 @@ fn corpus() -> Value {
         |value| ApplicationId { value },
         &pool,
     ));
+    cases.extend(kind_cases("ProjectId", |value| ProjectId { value }, &pool));
+    cases.extend(kind_cases("RoleId", |value| RoleId { value }, &pool));
+    cases.extend(kind_cases("GroupId", |value| GroupId { value }, &pool));
+    cases.extend(kind_cases(
+        "RoleAssignmentId",
+        |value| RoleAssignmentId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "CedarPolicyId",
+        |value| CedarPolicyId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "AccessRequestId",
+        |value| AccessRequestId { value },
+        &pool,
+    ));
     // A consumer's own wrapper `message SidBinding { bytes binding_id = 1; }`
     // replaced at the same outer field by sid.v1.ids.BindingId: the inner
     // field is number 1 of type bytes in both, so the encoding is identical.
@@ -370,5 +401,18 @@ fn corpus_covers_every_refusal_and_kind() {
             "no case expects {expect}"
         );
     }
-    assert_eq!(cases.len(), 22 * self::cases().len());
+    assert_eq!(cases.len(), 28 * self::cases().len());
+    // The fixed values are accepted by their own kind only.
+    let expect = |kind: &str, case: &str| {
+        cases
+            .iter()
+            .find(|c| c["kind"] == kind && c["case"] == case)
+            .unwrap()["expect"]
+            .clone()
+    };
+    assert_eq!(expect("ProjectId", "nil"), "valid");
+    assert_eq!(expect("RoleId", "nil"), "nil");
+    assert_eq!(expect("RoleId", "builtin"), "valid");
+    assert_eq!(expect("ProjectId", "builtin"), "variant");
+    assert_eq!(expect("ProfileId", "nil"), "nil");
 }

@@ -1,11 +1,12 @@
 import type { IdKind } from "./errors";
 import { MissingIdError } from "./errors";
 import type * as wire from "./generated/sid/v1/ids/ids";
-import { formatUuid, parseText, validate } from "./validate";
+import { checkProject, checkRole, formatUuid, parseText, validate } from "./validate";
 
 /**
- * The common behaviour of every identifier. A value is always a valid UUIDv7:
- * it is built only through validation and its bytes are private. Each kind is
+ * The common behaviour of every identifier. A value always has its kind's
+ * shape (a UUIDv7; the system project and the built-in roles keep their fixed
+ * values): it is built only through validation and its bytes are private. Each kind is
  * its own class with a literal `kind`, so values of different kinds are
  * different types even when their bytes are equal.
  *
@@ -769,6 +770,214 @@ export class ApplicationId extends Identifier {
 
   /** The wire message carrying this identifier's bytes. */
   toWire(): wire.ApplicationId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * A project of an installation: the scope its roles, groups and policies
+ * belong to. A UUIDv7, or the nil UUID of the system project.
+ */
+export class ProjectId extends Identifier {
+  static readonly kind = "ProjectId";
+  readonly kind = "ProjectId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): ProjectId {
+    return new ProjectId(validate(bytes, ProjectId.kind, checkProject));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): ProjectId {
+    return ProjectId.fromBytes(parseText(text, ProjectId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.ProjectId): ProjectId {
+    return ProjectId.fromBytes(message.value);
+  }
+
+  /** The installation's system project. */
+  static system(): ProjectId {
+    return new ProjectId(new Uint8Array(16));
+  }
+
+  /** Whether this is the system project. */
+  isSystem(): boolean {
+    return this.toBytes().every((byte) => byte === 0x00);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.ProjectId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * A role of a project: the named set of permissions an assignment grants.
+ * A UUIDv7, or a built-in role every installation has.
+ */
+export class RoleId extends Identifier {
+  static readonly kind = "RoleId";
+  readonly kind = "RoleId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): RoleId {
+    return new RoleId(validate(bytes, RoleId.kind, checkRole));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): RoleId {
+    return RoleId.fromBytes(parseText(text, RoleId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.RoleId): RoleId {
+    return RoleId.fromBytes(message.value);
+  }
+
+  /** Whether this is a built-in role. */
+  isBuiltin(): boolean {
+    const bytes = this.toBytes();
+    return bytes.subarray(0, 15).every((byte) => byte === 0x00);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.RoleId {
+    return { value: this.toBytes() };
+  }
+}
+
+/** A group of a project whose members hold the roles assigned to it. */
+export class GroupId extends Identifier {
+  static readonly kind = "GroupId";
+  readonly kind = "GroupId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): GroupId {
+    return new GroupId(validate(bytes, GroupId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): GroupId {
+    return GroupId.fromBytes(parseText(text, GroupId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.GroupId): GroupId {
+    return GroupId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.GroupId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One assignment of a role to a principal: the reference its revocation,
+ * administration and audit name.
+ */
+export class RoleAssignmentId extends Identifier {
+  static readonly kind = "RoleAssignmentId";
+  readonly kind = "RoleAssignmentId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): RoleAssignmentId {
+    return new RoleAssignmentId(validate(bytes, RoleAssignmentId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): RoleAssignmentId {
+    return RoleAssignmentId.fromBytes(parseText(text, RoleAssignmentId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.RoleAssignmentId): RoleAssignmentId {
+    return RoleAssignmentId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.RoleAssignmentId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One Cedar policy of a scope: the reference its management names. Not its
+ * name, which is unique within the scope only.
+ */
+export class CedarPolicyId extends Identifier {
+  static readonly kind = "CedarPolicyId";
+  readonly kind = "CedarPolicyId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): CedarPolicyId {
+    return new CedarPolicyId(validate(bytes, CedarPolicyId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): CedarPolicyId {
+    return CedarPolicyId.fromBytes(parseText(text, CedarPolicyId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.CedarPolicyId): CedarPolicyId {
+    return CedarPolicyId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.CedarPolicyId {
+    return { value: this.toBytes() };
+  }
+}
+
+/** One request for a role from its submission to its decision. */
+export class AccessRequestId extends Identifier {
+  static readonly kind = "AccessRequestId";
+  readonly kind = "AccessRequestId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): AccessRequestId {
+    return new AccessRequestId(validate(bytes, AccessRequestId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): AccessRequestId {
+    return AccessRequestId.fromBytes(parseText(text, AccessRequestId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.AccessRequestId): AccessRequestId {
+    return AccessRequestId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.AccessRequestId {
     return { value: this.toBytes() };
   }
 }

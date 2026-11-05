@@ -2,9 +2,10 @@
 //! StructuredID identifier messages (`sid.v1.ids`) and their conversions.
 //!
 //! The generated messages are wire DTOs: decoding one proves nothing about its
-//! bytes. Every conversion to a domain identifier goes through the one
-//! validation in `sid-ids` (exactly 16 bytes of an RFC 9562 UUIDv7, not nil
-//! or max). A `BindingId` and a `MachineUserId` with equal bytes stay two
+//! bytes. Every conversion to a domain identifier goes through the
+//! validation of its kind in `sid-ids` (exactly 16 bytes of an RFC 9562
+//! UUIDv7, not nil or max; the system project and the built-in roles keep
+//! their fixed values). A `BindingId` and a `MachineUserId` with equal bytes stay two
 //! types here as in `sid-ids`; there is no conversion between them.
 //!
 //! A consumer that references these messages from its own `.proto` files
@@ -32,10 +33,11 @@ pub mod sid {
 }
 
 pub use sid::v1::ids::{
-    ApplicationId, BindingId, CredentialId, DeviceId, ImportedPasswordUpgradeId, IssuerId,
-    MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
-    PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId, StepUpChallengeId,
+    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
+    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
+    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
+    ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
+    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
 };
 
 /// The include-relative path of the identifier proto file.
@@ -153,6 +155,12 @@ wire_id!(DeviceId, sid_ids::DeviceId);
 wire_id!(OrgId, sid_ids::OrgId);
 wire_id!(IssuerId, sid_ids::IssuerId);
 wire_id!(ApplicationId, sid_ids::ApplicationId);
+wire_id!(ProjectId, sid_ids::ProjectId);
+wire_id!(RoleId, sid_ids::RoleId);
+wire_id!(GroupId, sid_ids::GroupId);
+wire_id!(RoleAssignmentId, sid_ids::RoleAssignmentId);
+wire_id!(CedarPolicyId, sid_ids::CedarPolicyId);
+wire_id!(AccessRequestId, sid_ids::AccessRequestId);
 
 /// The README's examples run as doctests, so they stay true.
 #[doc = include_str!("../README.md")]

@@ -7,11 +7,11 @@ use core::str::FromStr;
 use uuid::{Builder, Uuid, Variant, Version};
 
 use crate::{
-    ApplicationId, BindingId, CredentialId, DeviceId, IdErrorCause, IdKind,
-    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
-    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
-    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId, SessionId,
-    StepUpChallengeId,
+    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
+    IdErrorCause, IdKind, ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId,
+    OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId,
+    ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
+    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -270,6 +270,103 @@ fn error_kind_follows_the_type_that_validated() {
         IdKind::ProfilePhone
     );
     assert_eq!(IdKind::ProfilePhone.type_name(), "ProfilePhoneId");
+    for (kind, name, refused) in [
+        (
+            IdKind::Project,
+            "ProjectId",
+            ProjectId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::Role,
+            "RoleId",
+            RoleId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::Group,
+            "GroupId",
+            GroupId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::RoleAssignment,
+            "RoleAssignmentId",
+            RoleAssignmentId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::CedarPolicy,
+            "CedarPolicyId",
+            CedarPolicyId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::AccessRequest,
+            "AccessRequestId",
+            AccessRequestId::parse(V4).unwrap_err().kind(),
+        ),
+    ] {
+        assert_eq!(refused, kind);
+        assert_eq!(kind.type_name(), name);
+    }
+}
+
+// --- kinds with fixed values beside UUIDv7 ----------------------------------
+
+#[test]
+fn the_system_project_is_the_one_nil_identifier() {
+    // Bug prevented: the system project every installation has, named by the
+    // nil UUID, refused as a project, or the nil UUID accepted as any other
+    // kind.
+    let system = ProjectId::from_uuid(Uuid::nil()).unwrap();
+    assert_eq!(system, ProjectId::SYSTEM);
+    assert!(system.is_system());
+    assert!(!ProjectId::parse(V7).unwrap().is_system());
+    assert_eq!(
+        ProjectId::from_uuid(Uuid::max()).unwrap_err().cause(),
+        IdErrorCause::Max
+    );
+    assert_eq!(
+        ProjectId::from_uuid(Uuid::from_u128(1))
+            .unwrap_err()
+            .cause(),
+        IdErrorCause::Variant
+    );
+    assert_eq!(
+        RoleId::from_uuid(Uuid::nil()).unwrap_err().cause(),
+        IdErrorCause::Nil
+    );
+    assert_eq!(
+        GroupId::from_uuid(Uuid::nil()).unwrap_err().cause(),
+        IdErrorCause::Nil
+    );
+}
+
+#[test]
+fn built_in_roles_keep_their_fixed_identifiers() {
+    // Bug prevented: a built-in role (the same id in every installation)
+    // refused as a role, or its id space accepted as another kind.
+    let first = RoleId::from_uuid(Uuid::from_u128(1)).unwrap();
+    assert_eq!(first, RoleId::builtin(core::num::NonZeroU8::MIN));
+    assert!(first.is_builtin());
+    assert!(
+        RoleId::from_uuid(Uuid::from_u128(0xff))
+            .unwrap()
+            .is_builtin()
+    );
+    assert!(!RoleId::parse(V7).unwrap().is_builtin());
+    assert_eq!(
+        RoleId::from_uuid(Uuid::from_u128(0x100))
+            .unwrap_err()
+            .cause(),
+        IdErrorCause::Variant
+    );
+    assert_eq!(
+        GroupId::from_uuid(Uuid::from_u128(1)).unwrap_err().cause(),
+        IdErrorCause::Variant
+    );
+    assert_eq!(
+        ProfileId::from_uuid(Uuid::from_u128(1))
+            .unwrap_err()
+            .cause(),
+        IdErrorCause::Variant
+    );
 }
 
 #[test]

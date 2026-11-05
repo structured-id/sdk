@@ -34,21 +34,66 @@ pub fn check_v7_slice(bytes: &[u8]) -> Result<Uuid, IdErrorCause> {
     check_v7(Uuid::from_bytes(bytes))
 }
 
-/// The only accepted shape, reported for `kind`.
-pub(crate) fn validate(uuid: Uuid, kind: IdKind) -> Result<Uuid, IdError> {
-    check_v7(uuid).map_err(|cause| IdError::new(kind, cause))
+/// The system project's identifier: the nil UUID, the one project id that
+/// is not a UUIDv7.
+const SYSTEM_PROJECT: Uuid = Uuid::nil();
+
+/// A project's shape: [`check_v7`], or the system project.
+fn check_project(uuid: Uuid) -> Result<Uuid, IdErrorCause> {
+    if uuid == SYSTEM_PROJECT {
+        return Ok(uuid);
+    }
+    check_v7(uuid)
 }
 
-pub(crate) fn parse(text: &str, kind: IdKind) -> Result<Uuid, IdError> {
+/// Whether `uuid` is in the space of built-in roles: the first 15 bytes zero,
+/// the last one not.
+const fn is_builtin_role(uuid: &Uuid) -> bool {
+    let bytes = uuid.as_bytes();
+    let mut i = 0;
+    while i < 15 {
+        if bytes[i] != 0 {
+            return false;
+        }
+        i += 1;
+    }
+    bytes[15] != 0
+}
+
+/// A role's shape: [`check_v7`], or a built-in role.
+fn check_role(uuid: Uuid) -> Result<Uuid, IdErrorCause> {
+    if is_builtin_role(&uuid) {
+        return Ok(uuid);
+    }
+    check_v7(uuid)
+}
+
+/// `check`'s verdict on `uuid`, reported for `kind`.
+pub(crate) fn validate_with(
+    uuid: Uuid,
+    kind: IdKind,
+    check: fn(Uuid) -> Result<Uuid, IdErrorCause>,
+) -> Result<Uuid, IdError> {
+    check(uuid).map_err(|cause| IdError::new(kind, cause))
+}
+
+pub(crate) fn parse(
+    text: &str,
+    kind: IdKind,
+    check: fn(Uuid) -> Result<Uuid, IdErrorCause>,
+) -> Result<Uuid, IdError> {
     let uuid = Uuid::try_parse(text).map_err(|_| IdError::new(kind, IdErrorCause::Malformed))?;
-    validate(uuid, kind)
+    validate_with(uuid, kind, check)
 }
 
 macro_rules! define_id {
     ($(#[$doc:meta])* $name:ident, $kind:expr) => {
+        define_id! { $(#[$doc])* $name, $kind, check_v7 }
+    };
+    ($(#[$doc:meta])* $name:ident, $kind:expr, $check:path) => {
         $(#[$doc])*
         ///
-        /// A value of this type is always a valid UUIDv7: construction goes
+        /// A value of this type always has its kind's shape: construction goes
         /// through validation and the wrapped value is private.
         #[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
         pub struct $name(Uuid);
@@ -66,7 +111,7 @@ macro_rules! define_id {
 
             /// Accept an existing UUID as this identifier, or say why not.
             pub fn from_uuid(uuid: Uuid) -> Result<Self, IdError> {
-                validate(uuid, Self::KIND).map(Self)
+                validate_with(uuid, Self::KIND, $check).map(Self)
             }
 
             /// Accept 16 big-endian bytes as this identifier, or say why not.
@@ -85,7 +130,7 @@ macro_rules! define_id {
 
             /// Parse the textual UUID forms `uuid` accepts (hyphenated, simple, braced, URN).
             pub fn parse(text: &str) -> Result<Self, IdError> {
-                parse(text, Self::KIND).map(Self)
+                parse(text, Self::KIND, $check).map(Self)
             }
 
             /// The wrapped UUID.
@@ -318,4 +363,65 @@ define_id! {
     /// One phone number recorded for a Profile, a contact that may or may
     /// not be a login handle: the reference its management names.
     ProfilePhoneId, IdKind::ProfilePhone
+}
+
+define_id! {
+    /// A project of an installation: the scope its roles, groups and
+    /// policies belong to. A UUIDv7, or the nil UUID of the system project
+    /// every installation has.
+    ProjectId, IdKind::Project, check_project
+}
+
+impl ProjectId {
+    /// The installation's system project.
+    pub const SYSTEM: Self = Self(SYSTEM_PROJECT);
+
+    /// Whether this is the system project.
+    #[must_use]
+    pub fn is_system(&self) -> bool {
+        self.0 == SYSTEM_PROJECT
+    }
+}
+
+define_id! {
+    /// A role of a project: the named set of permissions an assignment
+    /// grants. A UUIDv7, or a built-in role every installation has: 15 zero
+    /// bytes and a nonzero last one.
+    RoleId, IdKind::Role, check_role
+}
+
+impl RoleId {
+    /// The built-in role `number`, the same in every installation.
+    #[must_use]
+    pub const fn builtin(number: core::num::NonZeroU8) -> Self {
+        Self(Uuid::from_u128(number.get() as u128))
+    }
+
+    /// Whether this is a built-in role.
+    #[must_use]
+    pub const fn is_builtin(&self) -> bool {
+        is_builtin_role(&self.0)
+    }
+}
+
+define_id! {
+    /// A group of a project whose members hold the roles assigned to it.
+    GroupId, IdKind::Group
+}
+
+define_id! {
+    /// One assignment of a role to a principal: the reference its
+    /// revocation, administration and audit name.
+    RoleAssignmentId, IdKind::RoleAssignment
+}
+
+define_id! {
+    /// One Cedar policy of a scope: the reference its management names. Not
+    /// its name, which is unique within the scope only.
+    CedarPolicyId, IdKind::CedarPolicy
+}
+
+define_id! {
+    /// One request for a role from its submission to its decision.
+    AccessRequestId, IdKind::AccessRequest
 }

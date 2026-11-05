@@ -51,6 +51,18 @@ pub enum IdKind {
     ProfileEmail,
     /// One phone number recorded for a Profile.
     ProfilePhone,
+    /// A project of an installation.
+    Project,
+    /// A role of a project.
+    Role,
+    /// A group of a project.
+    Group,
+    /// One assignment of a role to a principal.
+    RoleAssignment,
+    /// One Cedar policy of a scope.
+    CedarPolicy,
+    /// One request for a role.
+    AccessRequest,
 }
 
 impl IdKind {
@@ -79,6 +91,12 @@ impl IdKind {
             Self::Principal => "PrincipalId",
             Self::ProfileEmail => "ProfileEmailId",
             Self::ProfilePhone => "ProfilePhoneId",
+            Self::Project => "ProjectId",
+            Self::Role => "RoleId",
+            Self::Group => "GroupId",
+            Self::RoleAssignment => "RoleAssignmentId",
+            Self::CedarPolicy => "CedarPolicyId",
+            Self::AccessRequest => "AccessRequestId",
         }
     }
 }

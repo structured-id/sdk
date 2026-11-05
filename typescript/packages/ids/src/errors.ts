@@ -1,9 +1,12 @@
 /** The identifier kinds this package delivers: one per `sid.v1.ids` message. */
 export type IdKind =
+  | "AccessRequestId"
   | "ApplicationId"
   | "BindingId"
+  | "CedarPolicyId"
   | "CredentialId"
   | "DeviceId"
+  | "GroupId"
   | "ImportedPasswordUpgradeId"
   | "IssuerId"
   | "MachineUserId"
@@ -16,10 +19,13 @@ export type IdKind =
   | "ProfileEmailId"
   | "ProfileId"
   | "ProfilePhoneId"
+  | "ProjectId"
   | "ProvisioningConnectorId"
   | "ProvisioningCredentialId"
   | "ResetSessionId"
   | "ResourceId"
+  | "RoleAssignmentId"
+  | "RoleId"
   | "SessionId"
   | "StepUpChallengeId";
 
