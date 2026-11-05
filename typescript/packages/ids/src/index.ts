@@ -7,6 +7,10 @@
  * values. `wire` holds the generated `sid.v1.ids` messages with their
  * binary and standard ProtoJSON codecs; decoding one proves nothing, and the
  * checked conversion (`fromWire`, `required`, `optional`) validates it.
+ *
+ * `Identifier`, `IdError`, `MissingIdError`, `validate` and `parseText` are
+ * the common mechanism for identifier kinds other packages own: they name
+ * their kinds themselves, and this package carries none of them.
  */
 export { IdError, MissingIdError, type IdErrorReason, type IdKind } from "./errors";
 export {
@@ -17,6 +21,7 @@ export {
   CredentialId,
   DeviceId,
   GroupId,
+  Identifier,
   ImportedPasswordUpgradeId,
   IssuerId,
   MachineUserId,
@@ -42,7 +47,15 @@ export {
   required,
   type IdType,
 } from "./ids";
-export { checkProject, checkRole, checkV7, formatUuid, parseUuidText } from "./validate";
+export {
+  checkProject,
+  checkRole,
+  checkV7,
+  formatUuid,
+  parseText,
+  parseUuidText,
+  validate,
+} from "./validate";
 export * as wire from "./generated/sid/v1/ids/ids";
 
 /** The include-relative path of the identifier schema this package carries. */
