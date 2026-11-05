@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.3...rust-sid-ids-proto-v0.1.4) - 2026-11-05
+
+### Added
+
+- *(ids)* identity and account reference identifiers ([#59](https://github.com/structured-id/sdk/pull/59))
+
 ## [0.1.3](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.2...rust-sid-ids-proto-v0.1.3) - 2026-11-05
 
 ### Added
