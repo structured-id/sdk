@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.5...rust-sid-ids-proto-v0.1.6) - 2026-11-05
+
+### Added
+
+- *(ids)* project, role, group, assignment, policy and request ids ([#70](https://github.com/structured-id/sdk/pull/70))
+
 ## [0.1.5](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.4...rust-sid-ids-proto-v0.1.5) - 2026-11-05
 
 ### Added
