@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.13.0...typescript-proto-v0.14.0) (2026-11-05)
+
+
+### Features
+
+* **ids:** project, role, group, assignment, policy and request ids ([#70](https://github.com/structured-id/sdk/issues/70)) ([d92269c](https://github.com/structured-id/sdk/commit/d92269c8ec702f648d3179befc1eb0cc2401388a)), closes [#69](https://github.com/structured-id/sdk/issues/69)
+
 ## [0.13.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.12.0...typescript-proto-v0.13.0) (2026-11-05)
 
 
