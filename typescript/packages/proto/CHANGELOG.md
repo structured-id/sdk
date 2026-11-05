@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.11.0...typescript-proto-v0.12.0) (2026-11-05)
+
+
+### Features
+
+* **ids:** identity and account reference identifiers ([c5c419b](https://github.com/structured-id/sdk/commit/c5c419bb353e9654b78e6b2eafe5eca947f237d6)), closes [#58](https://github.com/structured-id/sdk/issues/58)
+* **ids:** identity and account reference identifiers ([#59](https://github.com/structured-id/sdk/issues/59)) ([c5c419b](https://github.com/structured-id/sdk/commit/c5c419bb353e9654b78e6b2eafe5eca947f237d6))
+
 ## [0.11.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.10.0...typescript-proto-v0.11.0) (2026-11-05)
 
 
