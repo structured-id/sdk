@@ -1148,6 +1148,39 @@ export class InviteId extends Identifier {
 }
 
 /**
+ * One upstream identity provider configured for brokered sign-in. Not the
+ * client_id SID holds at that provider.
+ */
+export class UpstreamProviderId extends Identifier {
+  static readonly kind = "UpstreamProviderId";
+  readonly kind = "UpstreamProviderId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): UpstreamProviderId {
+    return new UpstreamProviderId(validate(bytes, UpstreamProviderId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): UpstreamProviderId {
+    return UpstreamProviderId.fromBytes(parseText(text, UpstreamProviderId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.UpstreamProviderId): UpstreamProviderId {
+    return UpstreamProviderId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.UpstreamProviderId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
  * An identifier class: its kind and its checked wire conversion. `K` is the
  * kind's name, as for `Identifier`.
  */

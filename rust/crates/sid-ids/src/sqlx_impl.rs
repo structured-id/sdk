@@ -12,7 +12,7 @@ use crate::{
     DeviceId, FlowActionId, GroupId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
     MagicLinkId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId,
     ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
-    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
+    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, UpstreamProviderId,
 };
 
 macro_rules! sqlx_id {
@@ -119,3 +119,4 @@ sqlx_id!(PatId);
 sqlx_id!(BrandingConfigId);
 sqlx_id!(FlowActionId);
 sqlx_id!(InviteId);
+sqlx_id!(UpstreamProviderId);

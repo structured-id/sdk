@@ -12,7 +12,7 @@ use crate::{
     InitialAccessTokenId, InviteId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
     OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId,
     ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId,
-    ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
+    ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -322,6 +322,11 @@ fn error_kind_follows_the_type_that_validated() {
             IdKind::Invite,
             "InviteId",
             InviteId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::UpstreamProvider,
+            "UpstreamProviderId",
+            UpstreamProviderId::parse(V4).unwrap_err().kind(),
         ),
     ] {
         assert_eq!(refused, kind);

@@ -48,6 +48,7 @@ export {
   RoleId,
   SessionId,
   StepUpChallengeId,
+  UpstreamProviderId,
   optional,
   required,
   type IdType,
