@@ -989,6 +989,72 @@ export class AccessRequestId extends Identifier {
 }
 
 /**
+ * One initial access token for dynamic client registration (RFC 7591 §3): the
+ * reference its listing and revocation name. Never the bearer value.
+ */
+export class InitialAccessTokenId extends Identifier {
+  static readonly kind = "InitialAccessTokenId";
+  readonly kind = "InitialAccessTokenId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): InitialAccessTokenId {
+    return new InitialAccessTokenId(validate(bytes, InitialAccessTokenId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): InitialAccessTokenId {
+    return InitialAccessTokenId.fromBytes(parseText(text, InitialAccessTokenId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.InitialAccessTokenId): InitialAccessTokenId {
+    return InitialAccessTokenId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.InitialAccessTokenId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One personal access token of a Profile: the reference its listing,
+ * revocation and audit name. Never the token itself.
+ */
+export class PatId extends Identifier {
+  static readonly kind = "PatId";
+  readonly kind = "PatId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): PatId {
+    return new PatId(validate(bytes, PatId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): PatId {
+    return PatId.fromBytes(parseText(text, PatId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.PatId): PatId {
+    return PatId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.PatId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
  * An identifier class: its kind and its checked wire conversion. `K` is the
  * kind's name, as for `Identifier`.
  */

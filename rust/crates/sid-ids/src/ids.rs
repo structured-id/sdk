@@ -425,3 +425,16 @@ define_id! {
     /// One request for a role from its submission to its decision.
     AccessRequestId, IdKind::AccessRequest
 }
+
+define_id! {
+    /// One initial access token for dynamic client registration (RFC 7591
+    /// §3): the reference its listing and revocation name. Never the bearer
+    /// value.
+    InitialAccessTokenId, IdKind::InitialAccessToken
+}
+
+define_id! {
+    /// One personal access token of a Profile: the reference its listing,
+    /// revocation and audit name. Never the token itself.
+    PatId, IdKind::Pat
+}

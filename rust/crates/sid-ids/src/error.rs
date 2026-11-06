@@ -63,6 +63,10 @@ pub enum IdKind {
     CedarPolicy,
     /// One request for a role.
     AccessRequest,
+    /// One initial access token for dynamic client registration.
+    InitialAccessToken,
+    /// One personal access token of a Profile.
+    Pat,
 }
 
 impl IdKind {
@@ -97,6 +101,8 @@ impl IdKind {
             Self::RoleAssignment => "RoleAssignmentId",
             Self::CedarPolicy => "CedarPolicyId",
             Self::AccessRequest => "AccessRequestId",
+            Self::InitialAccessToken => "InitialAccessTokenId",
+            Self::Pat => "PatId",
         }
     }
 }

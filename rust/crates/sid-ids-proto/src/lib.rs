@@ -34,10 +34,10 @@ pub mod sid {
 
 pub use sid::v1::ids::{
     AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
-    ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
-    OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId,
-    ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
-    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
+    ImportedPasswordUpgradeId, InitialAccessTokenId, IssuerId, MachineUserId, MagicLinkId,
+    OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId,
+    ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
+    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
 };
 
 /// The include-relative path of the identifier proto file.
@@ -161,6 +161,8 @@ wire_id!(GroupId, sid_ids::GroupId);
 wire_id!(RoleAssignmentId, sid_ids::RoleAssignmentId);
 wire_id!(CedarPolicyId, sid_ids::CedarPolicyId);
 wire_id!(AccessRequestId, sid_ids::AccessRequestId);
+wire_id!(InitialAccessTokenId, sid_ids::InitialAccessTokenId);
+wire_id!(PatId, sid_ids::PatId);
 
 /// The README's examples run as doctests, so they stay true.
 #[doc = include_str!("../README.md")]

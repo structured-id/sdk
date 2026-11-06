@@ -15,6 +15,7 @@ import {
   GroupId,
   IdError,
   ImportedPasswordUpgradeId,
+  InitialAccessTokenId,
   IssuerId,
   MachineUserId,
   MagicLinkId,
@@ -23,6 +24,7 @@ import {
   OrgId,
   OtpSessionId,
   PasswordOperationId,
+  PatId,
   PrincipalId,
   ProfileEmailId,
   ProfileId,
@@ -108,6 +110,8 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   RoleAssignmentId: { type: RoleAssignmentId, message: wire.RoleAssignmentId },
   CedarPolicyId: { type: CedarPolicyId, message: wire.CedarPolicyId },
   AccessRequestId: { type: AccessRequestId, message: wire.AccessRequestId },
+  InitialAccessTokenId: { type: InitialAccessTokenId, message: wire.InitialAccessTokenId },
+  PatId: { type: PatId, message: wire.PatId },
 };
 
 function fromHex(hex: string): Uint8Array {
