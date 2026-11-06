@@ -87,35 +87,38 @@ async fn pg_array_of_ids_round_trips() {
 // --- SQLite ----------------------------------------------------------------
 
 #[tokio::test]
-async fn sqlite_encodes_as_hyphenated_text_and_decodes_it_back() {
-    // Bug prevented: a change of the TEXT form existing SQLite rows use.
+async fn sqlite_encodes_as_the_sixteen_bytes_and_decodes_them_back() {
+    // Bug prevented: an id stored as its 36-character display text instead of
+    // the 16-byte BLOB the storage contract requires.
     let pool = sqlite().await;
     let id = ProfileId::parse(V7).unwrap();
-    let row = sqlx::query("SELECT ?1 AS id, typeof(?1) AS ty")
+    let row = sqlx::query("SELECT ?1 AS id, typeof(?1) AS ty, length(?1) AS len")
         .bind(id)
         .fetch_one(&pool)
         .await
         .unwrap();
     let ty: String = row.get("ty");
-    assert_eq!(ty, "text");
-    let raw: String = row.get("id");
-    assert_eq!(raw, V7);
+    assert_eq!(ty, "blob");
+    let len: i64 = row.get("len");
+    assert_eq!(len, 16);
+    let raw: Vec<u8> = row.get("id");
+    assert_eq!(raw, uuid::Uuid::parse_str(V7).unwrap().as_bytes());
     let back: ProfileId = row.get("id");
     assert_eq!(back, id);
 }
 
 #[tokio::test]
-async fn sqlite_decode_refuses_nil_wrong_version_and_garbage() {
-    // Bug prevented: `Uuid::parse_str(..).unwrap_or_default()` on read, which
-    // turned a corrupted row into the nil id.
+async fn sqlite_decode_refuses_nil_wrong_version_and_wrong_length() {
+    // Bug prevented: a corrupted row decoded into a default or "valid" id.
     let pool = sqlite().await;
-    for (text, expect) in [
-        (NIL, "the nil UUID"),
-        (V4, "expected version 7"),
-        ("garbage", "not a UUID"),
+    let bytes = |text: &str| uuid::Uuid::parse_str(text).unwrap().as_bytes().to_vec();
+    for (value, expect) in [
+        (bytes(NIL), "the nil UUID"),
+        (bytes(V4), "expected version 7"),
+        (vec![7; 15], "expected 16"),
     ] {
         let row = sqlx::query("SELECT ?1 AS id")
-            .bind(text)
+            .bind(value)
             .fetch_one(&pool)
             .await
             .unwrap();
@@ -124,6 +127,19 @@ async fn sqlite_decode_refuses_nil_wrong_version_and_garbage() {
         assert!(msg.contains("invalid DeviceId"), "{msg}");
         assert!(msg.contains(expect), "{msg}");
     }
+}
+
+#[tokio::test]
+async fn sqlite_decode_refuses_the_text_form() {
+    // Bug prevented: a text column silently accepted where the 16 bytes are
+    // stored, which would hide a schema still keeping display strings.
+    let pool = sqlite().await;
+    let row = sqlx::query("SELECT ?1 AS id")
+        .bind(V7)
+        .fetch_one(&pool)
+        .await
+        .unwrap();
+    assert!(row.try_get::<DeviceId, _>("id").is_err());
 }
 
 #[tokio::test]
