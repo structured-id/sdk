@@ -8,6 +8,10 @@
       "types": "./dist/totp.d.ts",
       "default": "./dist/totp.js"
     },
+    "./ip": {
+      "types": "./dist/ip.d.ts",
+      "default": "./dist/ip.js"
+    },
     "./sid/v1/*": {
       "types": "./dist/generated/sid/v1/*.d.ts",
       "default": "./dist/generated/sid/v1/*.js"
