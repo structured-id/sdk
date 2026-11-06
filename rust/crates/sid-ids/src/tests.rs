@@ -8,10 +8,11 @@ use uuid::{Builder, Uuid, Variant, Version};
 
 use crate::{
     AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
-    IdErrorCause, IdKind, ImportedPasswordUpgradeId, IssuerId, MachineUserId, MagicLinkId,
-    OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PrincipalId, ProfileEmailId,
-    ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
-    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
+    IdErrorCause, IdKind, ImportedPasswordUpgradeId, InitialAccessTokenId, IssuerId, MachineUserId,
+    MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
+    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
+    StepUpChallengeId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -301,6 +302,12 @@ fn error_kind_follows_the_type_that_validated() {
             "AccessRequestId",
             AccessRequestId::parse(V4).unwrap_err().kind(),
         ),
+        (
+            IdKind::InitialAccessToken,
+            "InitialAccessTokenId",
+            InitialAccessTokenId::parse(V4).unwrap_err().kind(),
+        ),
+        (IdKind::Pat, "PatId", PatId::parse(V4).unwrap_err().kind()),
     ] {
         assert_eq!(refused, kind);
         assert_eq!(kind.type_name(), name);
