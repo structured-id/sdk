@@ -2,7 +2,7 @@
 name = "sid-ids-proto"
 description = "StructuredID identifier protobuf messages (sid.v1.ids) with validated conversions to sid-ids types"
 readme = "README.md"
-version = "0.1.6"
+version = "0.1.7"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
@@ -18,7 +18,7 @@ std = ["prost/std", "sid-ids/std"]
 
 [dependencies]
 prost = { workspace = true, features = ["derive"] }
-sid-ids = { path = "../sid-ids", version = "0.5", default-features = false, features = ["alloc"] }
+sid-ids = { path = "../sid-ids", version = "0.6", default-features = false, features = ["alloc"] }
 
 [build-dependencies]
 prost = "0.14"

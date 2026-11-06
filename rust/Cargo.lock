@@ -1487,7 +1487,7 @@ dependencies = [
 
 [[package]]
 name = "sid-ids"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1498,7 +1498,7 @@ dependencies = [
 
 [[package]]
 name = "sid-ids-proto"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "prost",
  "prost-build",

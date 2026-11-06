@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.5.0...rust-sid-ids-v0.6.0) - 2026-11-06
+
+### Added
+
+- *(ids)* store identifiers as 16-byte BLOBs in SQLite ([#80](https://github.com/structured-id/sdk/pull/80))
+- *(ids)* initial access token and PAT ids ([#78](https://github.com/structured-id/sdk/pull/78))
+
 ## [0.5.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.4.1...rust-sid-ids-v0.5.0) - 2026-11-05
 
 ### Added
