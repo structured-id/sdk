@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.8](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.7...rust-sid-ids-proto-v0.1.8) - 2026-11-06
+
+### Added
+
+- *(ids)* upstream provider id ([#87](https://github.com/structured-id/sdk/pull/87))
+- *(ids)* branding configuration, flow action and invite ids ([#85](https://github.com/structured-id/sdk/pull/85))
+
 ## [0.1.7](https://github.com/structured-id/sdk/compare/rust-sid-ids-proto-v0.1.6...rust-sid-ids-proto-v0.1.7) - 2026-11-06
 
 ### Added
