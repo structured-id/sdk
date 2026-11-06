@@ -438,3 +438,20 @@ define_id! {
     /// revocation and audit name. Never the token itself.
     PatId, IdKind::Pat
 }
+
+define_id! {
+    /// One branding configuration of a project, from draft to archive.
+    BrandingConfigId, IdKind::BrandingConfig
+}
+
+define_id! {
+    /// One action a project runs at a hook point of a sign-in or
+    /// registration flow.
+    FlowActionId, IdKind::FlowAction
+}
+
+define_id! {
+    /// One invitation to register: the reference its listing and revocation
+    /// name. Never the invite code a registrant presents.
+    InviteId, IdKind::Invite
+}

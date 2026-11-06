@@ -67,6 +67,12 @@ pub enum IdKind {
     InitialAccessToken,
     /// One personal access token of a Profile.
     Pat,
+    /// One branding configuration of a project.
+    BrandingConfig,
+    /// One action of a project's sign-in or registration flow.
+    FlowAction,
+    /// One invitation to register.
+    Invite,
 }
 
 impl IdKind {
@@ -103,6 +109,9 @@ impl IdKind {
             Self::AccessRequest => "AccessRequestId",
             Self::InitialAccessToken => "InitialAccessTokenId",
             Self::Pat => "PatId",
+            Self::BrandingConfig => "BrandingConfigId",
+            Self::FlowAction => "FlowActionId",
+            Self::Invite => "InviteId",
         }
     }
 }

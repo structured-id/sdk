@@ -1054,6 +1054,99 @@ export class PatId extends Identifier {
   }
 }
 
+/** One branding configuration of a project, from draft to archive. */
+export class BrandingConfigId extends Identifier {
+  static readonly kind = "BrandingConfigId";
+  readonly kind = "BrandingConfigId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): BrandingConfigId {
+    return new BrandingConfigId(validate(bytes, BrandingConfigId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): BrandingConfigId {
+    return BrandingConfigId.fromBytes(parseText(text, BrandingConfigId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.BrandingConfigId): BrandingConfigId {
+    return BrandingConfigId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.BrandingConfigId {
+    return { value: this.toBytes() };
+  }
+}
+
+/** One action a project runs at a hook point of a sign-in or registration flow. */
+export class FlowActionId extends Identifier {
+  static readonly kind = "FlowActionId";
+  readonly kind = "FlowActionId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): FlowActionId {
+    return new FlowActionId(validate(bytes, FlowActionId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): FlowActionId {
+    return FlowActionId.fromBytes(parseText(text, FlowActionId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.FlowActionId): FlowActionId {
+    return FlowActionId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.FlowActionId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One invitation to register: the reference its listing and revocation name.
+ * Never the invite code a registrant presents.
+ */
+export class InviteId extends Identifier {
+  static readonly kind = "InviteId";
+  readonly kind = "InviteId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): InviteId {
+    return new InviteId(validate(bytes, InviteId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): InviteId {
+    return InviteId.fromBytes(parseText(text, InviteId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.InviteId): InviteId {
+    return InviteId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.InviteId {
+    return { value: this.toBytes() };
+  }
+}
+
 /**
  * An identifier class: its kind and its checked wire conversion. `K` is the
  * kind's name, as for `Identifier`.

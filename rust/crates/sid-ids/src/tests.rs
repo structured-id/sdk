@@ -7,12 +7,12 @@ use core::str::FromStr;
 use uuid::{Builder, Uuid, Variant, Version};
 
 use crate::{
-    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
-    IdErrorCause, IdKind, ImportedPasswordUpgradeId, InitialAccessTokenId, IssuerId, MachineUserId,
-    MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
-    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
-    StepUpChallengeId,
+    AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
+    DeviceId, FlowActionId, GroupId, IdErrorCause, IdKind, ImportedPasswordUpgradeId,
+    InitialAccessTokenId, InviteId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
+    OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId,
+    ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId,
+    ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -308,6 +308,21 @@ fn error_kind_follows_the_type_that_validated() {
             InitialAccessTokenId::parse(V4).unwrap_err().kind(),
         ),
         (IdKind::Pat, "PatId", PatId::parse(V4).unwrap_err().kind()),
+        (
+            IdKind::BrandingConfig,
+            "BrandingConfigId",
+            BrandingConfigId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::FlowAction,
+            "FlowActionId",
+            FlowActionId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::Invite,
+            "InviteId",
+            InviteId::parse(V4).unwrap_err().kind(),
+        ),
     ] {
         assert_eq!(refused, kind);
         assert_eq!(kind.type_name(), name);
