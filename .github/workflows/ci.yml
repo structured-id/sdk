@@ -46,8 +46,12 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
-      - name: Toolchain (rust-toolchain.toml) and the no_std target
-        run: rustup show && rustup target add thumbv7em-none-eabihf
+      # The runner image's stable may lag; `rustup update` brings the latest.
+      - name: Latest stable toolchain and the no_std target
+        run: rustup update stable --no-self-update && rustup target add thumbv7em-none-eabihf
+      # The end-to-end tests build the issuer, whose schemas need protoc.
+      - name: protoc with the well-known types
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq protobuf-compiler libprotobuf-dev
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-nextest

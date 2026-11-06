@@ -29,7 +29,8 @@ serde = { version = "1", features = ["derive"] }
 serde_json = { workspace = true }
 sha2 = "0.11"
 sid-ids = { path = "../sid-ids", version = "0.7", features = ["std"] }
-sid-ids-proto = { path = "../sid-ids-proto", version = "0.1" }
+# 0.1.8 is the first release on sid-ids 0.7, the identifiers this client uses.
+sid-ids-proto = { path = "../sid-ids-proto", version = "0.1.8" }
 thiserror = "2"
 tokio = { version = "1", default-features = false, features = ["sync"] }
 tonic = { version = "0.14", default-features = false, features = ["codegen"] }
@@ -43,3 +44,11 @@ tonic-prost-build = "0.14"
 
 [dev-dependencies]
 tokio = { workspace = true }
+# The end-to-end tests run this client against the SID issuer's own test
+# build over the network. Test-only: nothing of the issuer reaches the
+# published client.
+sid-test-issuer = { git = "https://github.com/structured-id/sid", branch = "main" }
+sid-proto = { git = "https://github.com/structured-id/sid", branch = "main" }
+sid-core = { git = "https://github.com/structured-id/sid", branch = "main" }
+tonic = { version = "0.14", features = ["transport"] }
+tempfile = "3"
