@@ -53,11 +53,10 @@ async fn sign_in(issuer: &TestIssuer, key: &SoftwareKey) -> Family {
     request
         .metadata_mut()
         .insert(PROOF_METADATA, proof.parse().unwrap());
-    let response =
-        sid_proto::sid::v1::auth_service_client::AuthServiceClient::new(channel(issuer))
-            .opaque_login_finish(request)
-            .await
-            .expect("signed in");
+    let response = sid_proto::sid::v1::auth_service_client::AuthServiceClient::new(channel(issuer))
+        .opaque_login_finish(request)
+        .await
+        .expect("signed in");
     native::generation(response.metadata())
         .expect("a readable generation")
         .expect("a sign-in that proved the key gets a generation")
@@ -207,7 +206,10 @@ async fn a_replayed_proof_renews_nothing_at_another_replica() {
         .refresh_native_session(replay)
         .await
         .expect_err("a replayed proof renews nothing");
-    assert_eq!(refused.code(), tonic::Code::Unauthenticated, "{refused:?}");
+    // Refused as a bad proof, not as an ended session: a replay must not let
+    // anyone end the victim's session.
+    assert_eq!(refused.code(), tonic::Code::InvalidArgument, "{refused:?}");
+    assert!(refused.message().contains("replay"), "{refused:?}");
 
     refreshed(session.refresh(&transport(&second)).await.unwrap());
 }
@@ -288,9 +290,17 @@ async fn a_refresh_racing_the_end_leaves_the_session_ended() {
         .unwrap()
         .expect("the session");
     let transport = transport(&issuer);
-    let (_raced, ()) = tokio::join!(session.refresh(&transport), issuer.end(&stored));
-    let after = session.refresh(&transport).await.unwrap();
-    assert!(matches!(after, Refresh::Ended), "{after:?}");
+    let (raced, ()) = tokio::join!(session.refresh(&transport), issuer.end(&stored));
+    let after = session.refresh(&transport).await;
+    // A raced refresh that already learned of the end has dropped the family,
+    // so the client holds no session; otherwise the issuer answers the end.
+    match raced.unwrap() {
+        Refresh::Ended => assert!(
+            matches!(after, Err(native::NativeError::NoSession)),
+            "{after:?}"
+        ),
+        _ => assert!(matches!(after, Ok(Refresh::Ended)), "{after:?}"),
+    }
 }
 
 /// An ended session renews no more, also with its live generation.

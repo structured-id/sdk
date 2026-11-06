@@ -4299,10 +4299,10 @@ dependencies = [
  "sha2 0.11.0",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids 0.5.0",
+ "sid-ids-proto 0.1.6",
  "sid-keys",
- "sid-opaque-ke 4.2.0 (git+https://github.com/structured-id/sid?branch=main)",
+ "sid-opaque-ke",
  "sid-pake-core",
  "sid-plugin",
  "sid-proto",
@@ -4336,7 +4336,7 @@ dependencies = [
  "serde_json",
  "sid-authn",
  "sid-core",
- "sid-ids-proto 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.6",
  "sid-plugin",
  "sid-proto",
  "thiserror",
@@ -4362,8 +4362,8 @@ dependencies = [
  "serde_json",
  "sha2 0.11.0",
  "sid-core",
- "sid-ids 0.5.0",
- "sid-ids-proto 0.1.6",
+ "sid-ids 0.7.0",
+ "sid-ids-proto 0.1.8",
  "sid-proto",
  "sid-test-issuer",
  "tempfile",
@@ -4396,7 +4396,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2 0.11.0",
- "sid-ids 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids 0.5.0",
  "sid-keys",
  "subtle",
  "thiserror",
@@ -4457,17 +4457,6 @@ dependencies = [
 
 [[package]]
 name = "sid-ids"
-version = "0.7.0"
-dependencies = [
- "serde",
- "serde_json",
- "sqlx",
- "tokio",
- "uuid",
-]
-
-[[package]]
-name = "sid-ids"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f0ec37e1629643f582b6ba41e2fa15a1c5a911076a8edb3e0dd6b25a72838430"
@@ -4478,15 +4467,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "sid-ids-proto"
-version = "0.1.8"
+name = "sid-ids"
+version = "0.7.0"
 dependencies = [
- "prost",
- "prost-build",
- "prost-reflect",
- "protox",
+ "serde",
  "serde_json",
- "sid-ids 0.5.0",
+ "sqlx",
+ "tokio",
  "uuid",
 ]
 
@@ -4499,7 +4486,20 @@ dependencies = [
  "prost",
  "prost-build",
  "protox",
- "sid-ids 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids 0.5.0",
+]
+
+[[package]]
+name = "sid-ids-proto"
+version = "0.1.8"
+dependencies = [
+ "prost",
+ "prost-build",
+ "prost-reflect",
+ "protox",
+ "serde_json",
+ "sid-ids 0.7.0",
+ "uuid",
 ]
 
 [[package]]
@@ -4570,8 +4570,8 @@ dependencies = [
  "sid-authn",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids 0.5.0",
+ "sid-ids-proto 0.1.6",
  "sid-infra",
  "sid-plugin",
  "sid-proto",
@@ -4585,31 +4585,6 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "uuid",
-]
-
-[[package]]
-name = "sid-opaque-ke"
-version = "4.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef9a3fbd1e7e61dcf90ef78b69b0d2b6cae400905bcd97f029e8120091cbb1d1"
-dependencies = [
- "argon2",
- "curve25519-dalek 5.0.0",
- "derive-where",
- "digest 0.11.3",
- "displaydoc",
- "ecdsa",
- "ed25519-dalek 3.0.0",
- "elliptic-curve",
- "generic-array 1.4.5",
- "hkdf",
- "hmac",
- "hybrid-array",
- "rand_core 0.10.1",
- "serde",
- "sid-voprf 0.6.0",
- "subtle",
- "zeroize",
 ]
 
 [[package]]
@@ -4631,7 +4606,7 @@ dependencies = [
  "hybrid-array",
  "rand_core 0.10.1",
  "serde",
- "sid-voprf 0.6.2",
+ "sid-voprf",
  "subtle",
  "zeroize",
 ]
@@ -4654,8 +4629,8 @@ dependencies = [
  "rand_core 0.10.1",
  "serde",
  "sha2 0.11.0",
- "sid-opaque-ke 4.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-voprf 0.6.0",
+ "sid-opaque-ke",
+ "sid-voprf",
  "subtle",
  "thiserror",
  "zeroize",
@@ -4693,7 +4668,7 @@ dependencies = [
  "prost",
  "prost-build",
  "prost-types",
- "sid-ids-proto 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.6",
  "sid-proto-build",
  "tonic",
  "tonic-build",
@@ -4754,8 +4729,8 @@ dependencies = [
  "sid-crypto",
  "sid-fed",
  "sid-i18n",
- "sid-ids 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids 0.5.0",
+ "sid-ids-proto 0.1.6",
  "sid-infra",
  "sid-keys",
  "sid-notify",
@@ -4793,7 +4768,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sid-core",
- "sid-ids 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids 0.5.0",
  "sid-keys",
  "sid-plugin",
  "sqlx",
@@ -4822,7 +4797,7 @@ dependencies = [
  "sid-crypto",
  "sid-infra",
  "sid-keys",
- "sid-opaque-ke 4.2.0 (git+https://github.com/structured-id/sid?branch=main)",
+ "sid-opaque-ke",
  "sid-pake-core",
  "sid-plugin",
  "sid-proto",
@@ -4833,27 +4808,6 @@ dependencies = [
  "tonic",
  "url",
  "uuid",
-]
-
-[[package]]
-name = "sid-voprf"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80d23dd2d74e53de521fa7ee8f695c2f9469be2fe789e043919f8b16d5ec279d"
-dependencies = [
- "curve25519-dalek 5.0.0",
- "derive-where",
- "digest 0.11.3",
- "displaydoc",
- "elliptic-curve",
- "generic-array 1.4.5",
- "hash2curve",
- "hybrid-array",
- "rand_core 0.10.1",
- "serde",
- "sha2 0.11.0",
- "subtle",
- "zeroize",
 ]
 
 [[package]]
