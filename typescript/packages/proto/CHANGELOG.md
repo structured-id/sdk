@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.14.0...typescript-proto-v0.15.0) (2026-11-06)
+
+
+### Features
+
+* **ids:** initial access token and PAT ids ([#78](https://github.com/structured-id/sdk/issues/78)) ([d86a949](https://github.com/structured-id/sdk/commit/d86a949632da8d593cdf1b43b94158f6633a4b86)), closes [#77](https://github.com/structured-id/sdk/issues/77)
+* **ids:** store identifiers as 16-byte BLOBs in SQLite ([#80](https://github.com/structured-id/sdk/issues/80)) ([07fd7de](https://github.com/structured-id/sdk/commit/07fd7de1274b02078013eb736375b4433b6bb290)), closes [#79](https://github.com/structured-id/sdk/issues/79)
+
 ## [0.14.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.13.0...typescript-proto-v0.14.0) (2026-11-05)
 
 
