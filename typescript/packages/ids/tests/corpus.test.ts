@@ -9,13 +9,16 @@ import {
   AccessRequestId,
   ApplicationId,
   BindingId,
+  BrandingConfigId,
   CedarPolicyId,
   CredentialId,
   DeviceId,
+  FlowActionId,
   GroupId,
   IdError,
   ImportedPasswordUpgradeId,
   InitialAccessTokenId,
+  InviteId,
   IssuerId,
   MachineUserId,
   MagicLinkId,
@@ -112,6 +115,9 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   AccessRequestId: { type: AccessRequestId, message: wire.AccessRequestId },
   InitialAccessTokenId: { type: InitialAccessTokenId, message: wire.InitialAccessTokenId },
   PatId: { type: PatId, message: wire.PatId },
+  BrandingConfigId: { type: BrandingConfigId, message: wire.BrandingConfigId },
+  FlowActionId: { type: FlowActionId, message: wire.FlowActionId },
+  InviteId: { type: InviteId, message: wire.InviteId },
 };
 
 function fromHex(hex: string): Uint8Array {

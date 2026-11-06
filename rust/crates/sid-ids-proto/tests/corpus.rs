@@ -15,12 +15,12 @@ use prost_reflect::{DescriptorPool, DynamicMessage};
 use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
-    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId,
-    FILE_DESCRIPTOR_SET, GroupId, ImportedPasswordUpgradeId, InitialAccessTokenId, IssuerId,
-    MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId,
-    PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
-    StepUpChallengeId, WireId,
+    AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
+    DeviceId, FILE_DESCRIPTOR_SET, FlowActionId, GroupId, ImportedPasswordUpgradeId,
+    InitialAccessTokenId, InviteId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
+    OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId,
+    ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId,
+    ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.
@@ -273,6 +273,17 @@ fn corpus() -> Value {
         &pool,
     ));
     cases.extend(kind_cases("PatId", |value| PatId { value }, &pool));
+    cases.extend(kind_cases(
+        "BrandingConfigId",
+        |value| BrandingConfigId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "FlowActionId",
+        |value| FlowActionId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases("InviteId", |value| InviteId { value }, &pool));
     // A consumer's own wrapper `message SidBinding { bytes binding_id = 1; }`
     // replaced at the same outer field by sid.v1.ids.BindingId: the inner
     // field is number 1 of type bytes in both, so the encoding is identical.
@@ -408,7 +419,7 @@ fn corpus_covers_every_refusal_and_kind() {
             "no case expects {expect}"
         );
     }
-    assert_eq!(cases.len(), 30 * self::cases().len());
+    assert_eq!(cases.len(), 33 * self::cases().len());
     // The fixed values are accepted by their own kind only.
     let expect = |kind: &str, case: &str| {
         cases

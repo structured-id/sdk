@@ -33,11 +33,12 @@ pub mod sid {
 }
 
 pub use sid::v1::ids::{
-    AccessRequestId, ApplicationId, BindingId, CedarPolicyId, CredentialId, DeviceId, GroupId,
-    ImportedPasswordUpgradeId, InitialAccessTokenId, IssuerId, MachineUserId, MagicLinkId,
-    OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId,
-    ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
-    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
+    AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
+    DeviceId, FlowActionId, GroupId, ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId,
+    IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
+    PatId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
+    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
 };
 
 /// The include-relative path of the identifier proto file.
@@ -163,6 +164,9 @@ wire_id!(CedarPolicyId, sid_ids::CedarPolicyId);
 wire_id!(AccessRequestId, sid_ids::AccessRequestId);
 wire_id!(InitialAccessTokenId, sid_ids::InitialAccessTokenId);
 wire_id!(PatId, sid_ids::PatId);
+wire_id!(BrandingConfigId, sid_ids::BrandingConfigId);
+wire_id!(FlowActionId, sid_ids::FlowActionId);
+wire_id!(InviteId, sid_ids::InviteId);
 
 /// The README's examples run as doctests, so they stay true.
 #[doc = include_str!("../README.md")]
