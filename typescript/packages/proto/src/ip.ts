@@ -27,8 +27,9 @@ export class IpAddressError extends Error {
 /** The address `message` carries, or `IpAddressError` for another length. */
 export function readIpAddress(message: IpAddress): CheckedIpAddress {
   const { length } = message.value;
-  if (length === 4) return { family: "ipv4", octets: message.value.slice() };
-  if (length === 16) return { family: "ipv6", octets: message.value.slice() };
+  // A copy into a plain Uint8Array: a Buffer's own slice would share memory.
+  if (length === 4) return { family: "ipv4", octets: Uint8Array.from(message.value) };
+  if (length === 16) return { family: "ipv6", octets: Uint8Array.from(message.value) };
   throw new IpAddressError(length);
 }
 
@@ -42,7 +43,7 @@ export function optionalIpAddress(message: IpAddress | undefined): CheckedIpAddr
 
 /** The message carrying `address`. */
 export function toIpAddress(address: CheckedIpAddress): IpAddress {
-  return { value: address.octets.slice() };
+  return { value: Uint8Array.from(address.octets) };
 }
 
 /** Dotted-decimal text of 4 octets. */

@@ -85,4 +85,18 @@ describe("an IP address", () => {
     message.value[0] = 10;
     expect(ipAddressText(address)).toBe("192.0.2.7");
   });
+
+  // Bug prevented: a Node Buffer's slice shares its memory, so the checked
+  // address followed later writes to the message, and the message written
+  // back shared the checked address's memory.
+  it("copies a Buffer's octets both ways", () => {
+    const message = { value: Buffer.from([192, 0, 2, 7]) };
+    const address = readIpAddress(message);
+    message.value[0] = 10;
+    expect(ipAddressText(address)).toBe("192.0.2.7");
+
+    const written = toIpAddress(address);
+    written.value[0] = 10;
+    expect(ipAddressText(address)).toBe("192.0.2.7");
+  });
 });
