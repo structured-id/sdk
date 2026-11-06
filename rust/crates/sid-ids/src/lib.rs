@@ -38,7 +38,8 @@ pub use ids::{
     IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
     PatId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId,
     ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
-    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, check_v7, check_v7_slice,
+    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId, check_v7,
+    check_v7_slice,
 };
 pub use uuid::Uuid;
 

@@ -455,3 +455,9 @@ define_id! {
     /// name. Never the invite code a registrant presents.
     InviteId, IdKind::Invite
 }
+
+define_id! {
+    /// One upstream identity provider configured for brokered sign-in. Not
+    /// the client_id SID holds at that provider.
+    UpstreamProviderId, IdKind::UpstreamProvider
+}

@@ -73,6 +73,8 @@ pub enum IdKind {
     FlowAction,
     /// One invitation to register.
     Invite,
+    /// One upstream identity provider for brokered sign-in.
+    UpstreamProvider,
 }
 
 impl IdKind {
@@ -112,6 +114,7 @@ impl IdKind {
             Self::BrandingConfig => "BrandingConfigId",
             Self::FlowAction => "FlowActionId",
             Self::Invite => "InviteId",
+            Self::UpstreamProvider => "UpstreamProviderId",
         }
     }
 }

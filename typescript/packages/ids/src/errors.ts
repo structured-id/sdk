@@ -32,7 +32,8 @@ export type IdKind =
   | "RoleAssignmentId"
   | "RoleId"
   | "SessionId"
-  | "StepUpChallengeId";
+  | "StepUpChallengeId"
+  | "UpstreamProviderId";
 
 /** Why a value is not a valid identifier. */
 export type IdErrorReason =

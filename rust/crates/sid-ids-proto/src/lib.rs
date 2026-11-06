@@ -38,7 +38,7 @@ pub use sid::v1::ids::{
     IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
     PatId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId,
     ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
-    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId,
+    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId,
 };
 
 /// The include-relative path of the identifier proto file.
@@ -167,6 +167,7 @@ wire_id!(PatId, sid_ids::PatId);
 wire_id!(BrandingConfigId, sid_ids::BrandingConfigId);
 wire_id!(FlowActionId, sid_ids::FlowActionId);
 wire_id!(InviteId, sid_ids::InviteId);
+wire_id!(UpstreamProviderId, sid_ids::UpstreamProviderId);
 
 /// The README's examples run as doctests, so they stay true.
 #[doc = include_str!("../README.md")]
