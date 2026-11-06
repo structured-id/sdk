@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.7.0...typescript-ids-v0.8.0) (2026-11-06)
+
+
+### Features
+
+* **ids:** initial access token and PAT ids ([#78](https://github.com/structured-id/sdk/issues/78)) ([d86a949](https://github.com/structured-id/sdk/commit/d86a949632da8d593cdf1b43b94158f6633a4b86)), closes [#77](https://github.com/structured-id/sdk/issues/77)
+
 ## [0.7.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.6.0...typescript-ids-v0.7.0) (2026-11-05)
 
 
