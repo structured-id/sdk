@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.16.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.15.0...typescript-proto-v0.16.0) (2026-11-06)
+
+
+### Features
+
+* **ids:** branding configuration, flow action and invite ids ([#85](https://github.com/structured-id/sdk/issues/85)) ([9760e6c](https://github.com/structured-id/sdk/commit/9760e6c9230e54fa6519b653242c51778252a174)), closes [#84](https://github.com/structured-id/sdk/issues/84)
+* **ids:** upstream provider id ([#87](https://github.com/structured-id/sdk/issues/87)) ([a0cbdf3](https://github.com/structured-id/sdk/commit/a0cbdf3ffbe1b1c4d03c91b40620ca7739d4c070)), closes [#86](https://github.com/structured-id/sdk/issues/86)
+* **proto:** read and show the binary IP address ([#92](https://github.com/structured-id/sdk/issues/92)) ([e59ecab](https://github.com/structured-id/sdk/commit/e59ecab910cba766fe4c4431c2362a0af9c11477)), closes [#91](https://github.com/structured-id/sdk/issues/91)
+
 ## [0.15.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.14.0...typescript-proto-v0.15.0) (2026-11-06)
 
 
