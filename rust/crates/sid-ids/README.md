@@ -44,7 +44,7 @@ The binary wire messages and their checked conversions are in
 | `alloc`         | via std | `TryFrom<String>`; the minimum for a `no_std` consumer |
 | `serde`         | yes     | (De)serialization as the plain UUID string, validated on read |
 | `sqlx-postgres` | no      | Encode/decode as PostgreSQL `uuid`, validated on read |
-| `sqlx-sqlite`   | no      | Encode/decode as SQLite text, validated on read |
+| `sqlx-sqlite`   | no      | Encode/decode as a 16-byte SQLite `BLOB`, validated on read |
 
 `--no-default-features --features alloc` builds for `no_std` targets; CI
 builds it for `thumbv7em-none-eabihf`.

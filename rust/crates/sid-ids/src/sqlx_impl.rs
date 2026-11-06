@@ -2,8 +2,8 @@
 //! Database encoding and decoding. Decoding validates: a stored value without
 //! the expected kind's shape is a decode error, never a default.
 //!
-//! PostgreSQL stores identifiers as native `uuid`. SQLite stores them as the
-//! hyphenated text the schema already uses.
+//! PostgreSQL stores identifiers as native `uuid`, SQLite as a 16-byte `BLOB`;
+//! neither keeps the display text.
 
 use sqlx::error::BoxDynError;
 
@@ -56,31 +56,34 @@ macro_rules! sqlx_id {
         #[cfg(feature = "sqlx-sqlite")]
         impl sqlx::Type<sqlx::Sqlite> for $name {
             fn type_info() -> sqlx::sqlite::SqliteTypeInfo {
-                <str as sqlx::Type<sqlx::Sqlite>>::type_info()
+                <[u8] as sqlx::Type<sqlx::Sqlite>>::type_info()
             }
 
             fn compatible(ty: &sqlx::sqlite::SqliteTypeInfo) -> bool {
-                <str as sqlx::Type<sqlx::Sqlite>>::compatible(ty)
+                <[u8] as sqlx::Type<sqlx::Sqlite>>::compatible(ty)
             }
         }
 
         #[cfg(feature = "sqlx-sqlite")]
         impl<'r> sqlx::Decode<'r, sqlx::Sqlite> for $name {
             fn decode(value: sqlx::sqlite::SqliteValueRef<'r>) -> Result<Self, BoxDynError> {
-                let text = <&str as sqlx::Decode<'r, sqlx::Sqlite>>::decode(value)?;
-                Ok(Self::parse(text)?)
+                let bytes = <&[u8] as sqlx::Decode<'r, sqlx::Sqlite>>::decode(value)?;
+                Ok(Self::from_slice(bytes)?)
             }
         }
 
-        // The argument buffer admits no outside writes, so the text form is
-        // handed to the `String` encoder rather than pushed directly.
+        // The argument buffer admits no outside writes, so the bytes are
+        // handed to the `Vec<u8>` encoder rather than pushed directly.
         #[cfg(feature = "sqlx-sqlite")]
         impl<'q> sqlx::Encode<'q, sqlx::Sqlite> for $name {
             fn encode_by_ref(
                 &self,
                 args: &mut <sqlx::Sqlite as sqlx::Database>::ArgumentBuffer,
             ) -> Result<sqlx::encode::IsNull, BoxDynError> {
-                <String as sqlx::Encode<'q, sqlx::Sqlite>>::encode(self.to_string(), args)
+                <Vec<u8> as sqlx::Encode<'q, sqlx::Sqlite>>::encode(
+                    self.as_uuid().as_bytes().to_vec(),
+                    args,
+                )
             }
         }
     };
