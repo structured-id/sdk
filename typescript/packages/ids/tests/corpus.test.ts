@@ -43,6 +43,8 @@ import {
   SessionId,
   StepUpChallengeId,
   UpstreamProviderId,
+  DeviceEnrollmentId,
+  DeviceAttestationId,
   required,
   wire,
   type IdErrorReason,
@@ -120,6 +122,8 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   FlowActionId: { type: FlowActionId, message: wire.FlowActionId },
   InviteId: { type: InviteId, message: wire.InviteId },
   UpstreamProviderId: { type: UpstreamProviderId, message: wire.UpstreamProviderId },
+  DeviceEnrollmentId: { type: DeviceEnrollmentId, message: wire.DeviceEnrollmentId },
+  DeviceAttestationId: { type: DeviceAttestationId, message: wire.DeviceAttestationId },
 };
 
 function fromHex(hex: string): Uint8Array {

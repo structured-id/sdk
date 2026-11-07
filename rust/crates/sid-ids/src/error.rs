@@ -75,6 +75,10 @@ pub enum IdKind {
     Invite,
     /// One upstream identity provider for brokered sign-in.
     UpstreamProvider,
+    /// One device-key ceremony from its start to its finish.
+    DeviceEnrollment,
+    /// One key binding of a device.
+    DeviceAttestation,
 }
 
 impl IdKind {
@@ -115,6 +119,8 @@ impl IdKind {
             Self::FlowAction => "FlowActionId",
             Self::Invite => "InviteId",
             Self::UpstreamProvider => "UpstreamProviderId",
+            Self::DeviceEnrollment => "DeviceEnrollmentId",
+            Self::DeviceAttestation => "DeviceAttestationId",
         }
     }
 }

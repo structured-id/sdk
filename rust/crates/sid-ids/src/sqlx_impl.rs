@@ -9,7 +9,7 @@ use sqlx::error::BoxDynError;
 
 use crate::{
     AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceId, FlowActionId, GroupId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
+    DeviceAttestationId, DeviceId, FlowActionId, GroupId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
     MagicLinkId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId,
     ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
     ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, UpstreamProviderId,
@@ -120,3 +120,4 @@ sqlx_id!(BrandingConfigId);
 sqlx_id!(FlowActionId);
 sqlx_id!(InviteId);
 sqlx_id!(UpstreamProviderId);
+sqlx_id!(DeviceAttestationId);

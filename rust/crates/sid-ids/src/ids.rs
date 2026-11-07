@@ -461,3 +461,16 @@ define_id! {
     /// the client_id SID holds at that provider.
     UpstreamProviderId, IdKind::UpstreamProvider
 }
+
+define_id! {
+    /// One device-key ceremony (an enrollment or a key rotation) from its
+    /// start to its finish: the reference to the challenge the server keeps
+    /// for it. It authorizes nothing without the proofs the ceremony asks for.
+    DeviceEnrollmentId, IdKind::DeviceEnrollment
+}
+
+define_id! {
+    /// One key binding of a device: the reference its listing and audit
+    /// name. Not the key itself and not the device.
+    DeviceAttestationId, IdKind::DeviceAttestation
+}

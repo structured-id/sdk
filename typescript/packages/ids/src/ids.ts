@@ -1181,6 +1181,73 @@ export class UpstreamProviderId extends Identifier {
 }
 
 /**
+ * One device-key ceremony (an enrollment or a key rotation) from its start to
+ * its finish: the reference to the challenge the server keeps for it. It
+ * authorizes nothing without the proofs the ceremony asks for.
+ */
+export class DeviceEnrollmentId extends Identifier {
+  static readonly kind = "DeviceEnrollmentId";
+  readonly kind = "DeviceEnrollmentId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): DeviceEnrollmentId {
+    return new DeviceEnrollmentId(validate(bytes, DeviceEnrollmentId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): DeviceEnrollmentId {
+    return DeviceEnrollmentId.fromBytes(parseText(text, DeviceEnrollmentId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.DeviceEnrollmentId): DeviceEnrollmentId {
+    return DeviceEnrollmentId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.DeviceEnrollmentId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
+ * One key binding of a device: the reference its listing and audit name. Not
+ * the key itself and not the device.
+ */
+export class DeviceAttestationId extends Identifier {
+  static readonly kind = "DeviceAttestationId";
+  readonly kind = "DeviceAttestationId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): DeviceAttestationId {
+    return new DeviceAttestationId(validate(bytes, DeviceAttestationId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): DeviceAttestationId {
+    return DeviceAttestationId.fromBytes(parseText(text, DeviceAttestationId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.DeviceAttestationId): DeviceAttestationId {
+    return DeviceAttestationId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.DeviceAttestationId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
  * An identifier class: its kind and its checked wire conversion. `K` is the
  * kind's name, as for `Identifier`.
  */
