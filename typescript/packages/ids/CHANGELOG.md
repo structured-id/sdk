@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.9.0...typescript-ids-v0.10.0) (2026-11-07)
+
+
+### Features
+
+* **ids:** device enrollment and device attestation ids ([#96](https://github.com/structured-id/sdk/issues/96)) ([6470fe2](https://github.com/structured-id/sdk/commit/6470fe2de95f127c41fd4953b74906870910dd4b)), closes [#95](https://github.com/structured-id/sdk/issues/95)
+
 ## [0.9.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.8.0...typescript-ids-v0.9.0) (2026-11-06)
 
 
