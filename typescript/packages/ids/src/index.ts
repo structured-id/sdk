@@ -49,6 +49,8 @@ export {
   SessionId,
   StepUpChallengeId,
   UpstreamProviderId,
+  DeviceEnrollmentId,
+  DeviceAttestationId,
   optional,
   required,
   type IdType,

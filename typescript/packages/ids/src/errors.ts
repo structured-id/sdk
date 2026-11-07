@@ -6,6 +6,8 @@ export type IdKind =
   | "BrandingConfigId"
   | "CedarPolicyId"
   | "CredentialId"
+  | "DeviceAttestationId"
+  | "DeviceEnrollmentId"
   | "DeviceId"
   | "FlowActionId"
   | "GroupId"

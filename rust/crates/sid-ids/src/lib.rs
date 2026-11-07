@@ -34,12 +34,12 @@ mod sqlx_impl;
 pub use error::{IdError, IdErrorCause, IdKind};
 pub use ids::{
     AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceId, FlowActionId, GroupId, ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId,
-    IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId,
-    PatId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId,
-    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
-    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId, check_v7,
-    check_v7_slice,
+    DeviceAttestationId, DeviceEnrollmentId, DeviceId, FlowActionId, GroupId,
+    ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
+    MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
+    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
+    StepUpChallengeId, UpstreamProviderId, check_v7, check_v7_slice,
 };
 pub use uuid::Uuid;
 

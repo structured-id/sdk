@@ -8,11 +8,12 @@ use uuid::{Builder, Uuid, Variant, Version};
 
 use crate::{
     AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceId, FlowActionId, GroupId, IdErrorCause, IdKind, ImportedPasswordUpgradeId,
-    InitialAccessTokenId, InviteId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
-    OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId,
-    ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId,
-    ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId,
+    DeviceAttestationId, DeviceEnrollmentId, DeviceId, FlowActionId, GroupId, IdErrorCause, IdKind,
+    ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
+    MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
+    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
+    StepUpChallengeId, UpstreamProviderId,
 };
 
 /// A fixed, valid UUIDv7 (RFC 4122 variant, version 7), for deterministic tests.
@@ -327,6 +328,16 @@ fn error_kind_follows_the_type_that_validated() {
             IdKind::UpstreamProvider,
             "UpstreamProviderId",
             UpstreamProviderId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::DeviceEnrollment,
+            "DeviceEnrollmentId",
+            DeviceEnrollmentId::parse(V4).unwrap_err().kind(),
+        ),
+        (
+            IdKind::DeviceAttestation,
+            "DeviceAttestationId",
+            DeviceAttestationId::parse(V4).unwrap_err().kind(),
         ),
     ] {
         assert_eq!(refused, kind);
