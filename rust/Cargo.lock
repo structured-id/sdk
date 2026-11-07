@@ -4362,8 +4362,8 @@ dependencies = [
  "serde_json",
  "sha2 0.11.0",
  "sid-core",
- "sid-ids 0.7.0",
- "sid-ids-proto 0.1.8",
+ "sid-ids 0.8.0",
+ "sid-ids-proto 0.1.9",
  "sid-proto",
  "sid-test-issuer",
  "tempfile",
@@ -4468,7 +4468,7 @@ dependencies = [
 
 [[package]]
 name = "sid-ids"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -4491,14 +4491,14 @@ dependencies = [
 
 [[package]]
 name = "sid-ids-proto"
-version = "0.1.8"
+version = "0.1.9"
 dependencies = [
  "prost",
  "prost-build",
  "prost-reflect",
  "protox",
  "serde_json",
- "sid-ids 0.7.0",
+ "sid-ids 0.8.0",
  "uuid",
 ]
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.7.0...rust-sid-ids-v0.8.0) - 2026-11-07
+
+### Added
+
+- *(ids)* device enrollment and device attestation ids ([#96](https://github.com/structured-id/sdk/pull/96))
+
 ## [0.7.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.6.0...rust-sid-ids-v0.7.0) - 2026-11-06
 
 ### Added
