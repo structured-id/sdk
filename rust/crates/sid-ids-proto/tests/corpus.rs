@@ -16,11 +16,12 @@ use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
     AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceAttestationId, DeviceEnrollmentId, DeviceId, FILE_DESCRIPTOR_SET, FlowActionId, GroupId, ImportedPasswordUpgradeId,
-    InitialAccessTokenId, InviteId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId,
-    OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId,
-    ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId,
-    ResourceId, RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId, WireId,
+    DeviceAttestationId, DeviceEnrollmentId, DeviceId, FILE_DESCRIPTOR_SET, FlowActionId, GroupId,
+    ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
+    MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
+    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
+    StepUpChallengeId, UpstreamProviderId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.

@@ -9,10 +9,11 @@ use sqlx::error::BoxDynError;
 
 use crate::{
     AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceAttestationId, DeviceId, FlowActionId, GroupId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
-    MagicLinkId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId, ProfileEmailId,
-    ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId, ProvisioningCredentialId,
-    ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId, UpstreamProviderId,
+    DeviceAttestationId, DeviceId, FlowActionId, GroupId, InitialAccessTokenId, InviteId, IssuerId,
+    MachineUserId, MagicLinkId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
+    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
+    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
+    UpstreamProviderId,
 };
 
 macro_rules! sqlx_id {
