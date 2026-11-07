@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.16.0...typescript-proto-v0.17.0) (2026-11-07)
+
+
+### Features
+
+* **ids:** device enrollment and device attestation ids ([#96](https://github.com/structured-id/sdk/issues/96)) ([6470fe2](https://github.com/structured-id/sdk/commit/6470fe2de95f127c41fd4953b74906870910dd4b)), closes [#95](https://github.com/structured-id/sdk/issues/95)
+
 ## [0.16.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.15.0...typescript-proto-v0.16.0) (2026-11-06)
 
 
