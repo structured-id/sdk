@@ -339,8 +339,8 @@ impl<T> GrpcRefresh<T> {
     }
 }
 
-/// Whether a gRPC failure leaves the refresh's outcome unknown.
-fn unresolved(code: tonic::Code) -> bool {
+/// Whether a gRPC failure leaves the call's outcome unknown.
+pub(crate) fn unresolved(code: tonic::Code) -> bool {
     matches!(
         code,
         tonic::Code::Unavailable
