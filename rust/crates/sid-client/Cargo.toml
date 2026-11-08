@@ -2,7 +2,7 @@
 name = "sid-client"
 description = "StructuredID native client: renewable sessions bound to the application key, without an identity provider runtime"
 readme = "README.md"
-version = "0.1.0"
+version = "0.1.1"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
