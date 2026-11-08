@@ -23,3 +23,8 @@ uuid = { version = "1", default-features = false }
 [patch.crates-io]
 sid-opaque-ke = { git = "https://github.com/structured-id/sid", branch = "main" }
 sid-voprf = { git = "https://github.com/structured-id/sid", branch = "main" }
+# The issuer takes the identifier crates of this workspace, not their
+# published copies: one sid-ids and one sid-ids-proto in the graph, so
+# packaging them beside it finds no second source of the same version.
+sid-ids = { path = "crates/sid-ids" }
+sid-ids-proto = { path = "crates/sid-ids-proto" }

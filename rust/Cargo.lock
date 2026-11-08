@@ -4298,8 +4298,8 @@ dependencies = [
  "sha2 0.11.0",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
+ "sid-ids-proto",
  "sid-keys",
  "sid-opaque-ke",
  "sid-pake-core",
@@ -4352,8 +4352,8 @@ dependencies = [
  "serde_json",
  "sha2 0.11.0",
  "sid-core",
- "sid-ids 0.8.0",
- "sid-ids-proto 0.1.9",
+ "sid-ids",
+ "sid-ids-proto",
  "sid-proto",
  "sid-test-issuer",
  "tempfile",
@@ -4384,7 +4384,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2 0.11.0",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
  "sid-keys",
  "subtle",
  "thiserror",
@@ -4452,17 +4452,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sid-ids"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98175ee8b0cc4e58600f084db3817906fe03913a0dd8e563f668c6d2081c092f"
-dependencies = [
- "serde",
- "sqlx",
- "uuid",
-]
-
-[[package]]
 name = "sid-ids-proto"
 version = "0.1.9"
 dependencies = [
@@ -4471,20 +4460,8 @@ dependencies = [
  "prost-reflect",
  "protox",
  "serde_json",
- "sid-ids 0.8.0",
+ "sid-ids",
  "uuid",
-]
-
-[[package]]
-name = "sid-ids-proto"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49e06fa7d772e10f8927293c2cbfab2117d814c11de4d64b59b0ccd87f98d833"
-dependencies = [
- "prost",
- "prost-build",
- "protox",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -4508,8 +4485,8 @@ dependencies = [
  "serde_json",
  "sid-authn",
  "sid-core",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
+ "sid-ids-proto",
  "sid-plugin",
  "sid-proto",
  "thiserror",
@@ -4561,8 +4538,8 @@ dependencies = [
  "sid-authn",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
+ "sid-ids-proto",
  "sid-infra",
  "sid-plugin",
  "sid-proto",
@@ -4659,7 +4636,7 @@ dependencies = [
  "prost",
  "prost-build",
  "prost-types",
- "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto",
  "sid-proto-build",
  "tonic",
  "tonic-build",
@@ -4721,8 +4698,8 @@ dependencies = [
  "sid-crypto",
  "sid-fed",
  "sid-i18n",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
+ "sid-ids-proto",
  "sid-infra",
  "sid-keys",
  "sid-notify",
@@ -4763,7 +4740,7 @@ dependencies = [
  "serde_json",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
  "sid-keys",
  "sid-plugin",
  "sqlx",
@@ -5283,8 +5260,8 @@ dependencies = [
  "sid-authz",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids",
+ "sid-ids-proto",
  "sid-keys",
  "sid-plugin",
  "sid-proto",
