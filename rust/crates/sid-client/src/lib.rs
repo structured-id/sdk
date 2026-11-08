@@ -10,10 +10,14 @@
 //! answer with a fresh proof each time, and stores each generation whole.
 //! The key ([`key::ApplicationKey`]) and the store ([`native::FamilyStore`])
 //! are the application's, typically a platform key store and secure storage.
+//! A sign-in that owes its second factor is completed by
+//! [`second_factor::complete`], which delivers the session's first
+//! generation the same way.
 
 pub mod key;
 pub mod native;
 pub mod proof;
+pub mod second_factor;
 pub mod totp;
 
 /// The generated AuthService client and messages (client only: no server
