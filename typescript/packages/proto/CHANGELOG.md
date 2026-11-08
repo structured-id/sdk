@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.17.0...typescript-proto-v0.18.0) (2026-11-08)
+
+
+### Features
+
+* **proto:** pending second factor of an upstream sign-in ([#101](https://github.com/structured-id/sdk/issues/101)) ([5e92be1](https://github.com/structured-id/sdk/commit/5e92be13752eba96c03f53463e16fec1f16b1ee2)), closes [#100](https://github.com/structured-id/sdk/issues/100)
+
 ## [0.17.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.16.0...typescript-proto-v0.17.0) (2026-11-07)
 
 
