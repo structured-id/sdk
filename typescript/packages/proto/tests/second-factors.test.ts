@@ -8,6 +8,7 @@ import {
   StepUpMethod,
   WebAuthnAuthenticationFinishResponse,
 } from "../src/generated/sid/v1/authn/auth.js";
+import { UpstreamAuthSuccess } from "../src/generated/sid/v1/federation/upstream.js";
 
 // 0192f3a4-7c1e-7b2a-9d4e-3f5a6b7c8d9e: a UUIDv7 session id in its wire bytes.
 const session = {
@@ -32,6 +33,21 @@ describe("first-factor finish responses", () => {
       const response = message.create(fields);
       expect(message.fromBinary(message.toBinary(response))).toEqual(response);
     }
+  });
+
+  // An upstream sign-in owes its second factor as a password sign-in does:
+  // the callback answer names the factors, the enrollable ones and the CSRF
+  // token the browser completes the pending context with.
+  it("round-trip the pending factors of an upstream sign-in", () => {
+    const success = UpstreamAuthSuccess.create({
+      sessionId: session,
+      expiresIn: 300n,
+      newProfileCreated: false,
+      secondFactors: [StepUpMethod.TOTP],
+      browserCsrf: "csrf-token",
+      enrollableFactors: [StepUpMethod.WEBAUTHN],
+    });
+    expect(UpstreamAuthSuccess.fromBinary(UpstreamAuthSuccess.toBinary(success))).toEqual(success);
   });
 
   it("is empty when the session is complete", () => {
