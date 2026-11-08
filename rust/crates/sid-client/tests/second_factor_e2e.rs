@@ -111,9 +111,14 @@ async fn a_protected_native_sign_in_completes_and_renews() {
 
     let code = totp_code(&seed);
     let done = completed(
-        second_factor::complete(key.as_ref(), &completion(&issuer), &pending, Factor::Totp(&code))
-            .await
-            .unwrap(),
+        second_factor::complete(
+            key.as_ref(),
+            &completion(&issuer),
+            &pending,
+            Factor::Totp(&code),
+        )
+        .await
+        .unwrap(),
     );
     let generation = done
         .generation
@@ -165,8 +170,7 @@ async fn a_wrong_code_completes_nothing() {
     let key = SoftwareKey::generate();
     let pending = pending_sign_in(&issuer, &key).await;
     let refused =
-        second_factor::complete(&key, &completion(&issuer), &pending, Factor::Totp("000000"))
-            .await;
+        second_factor::complete(&key, &completion(&issuer), &pending, Factor::Totp("000000")).await;
     assert!(
         matches!(refused, Err(second_factor::CompletionError::Refused(_))),
         "{refused:?}"

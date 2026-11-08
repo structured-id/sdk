@@ -229,13 +229,16 @@ where
         let mut client = self.client.clone();
         let answer = match factor {
             Factor::Totp(code) => {
-                let mut request = tonic::Request::new(VerifyTotpRequest { code: code.to_owned() });
+                let mut request = tonic::Request::new(VerifyTotpRequest {
+                    code: code.to_owned(),
+                });
                 *request.metadata_mut() = metadata;
                 client.verify_totp(request).await
             }
             Factor::RecoveryCode(code) => {
-                let mut request =
-                    tonic::Request::new(VerifyRecoveryCodeRequest { code: code.to_owned() });
+                let mut request = tonic::Request::new(VerifyRecoveryCodeRequest {
+                    code: code.to_owned(),
+                });
                 *request.metadata_mut() = metadata;
                 client.verify_recovery_code(request).await
             }
