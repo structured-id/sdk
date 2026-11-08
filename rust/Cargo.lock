@@ -4000,7 +4000,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d43fb82d550b07e6f929a58d7d0935182602f48ddead875f5ee313c41c8f07fe"
 dependencies = [
  "annotate-snippets",
- "base64 0.22.1",
+ "base64 0.23.1",
  "encoding_rs_io",
  "granit-parser",
  "nohash-hasher",
@@ -4205,8 +4205,8 @@ checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
 
 [[package]]
 name = "sid-admin"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "chrono",
  "hex",
@@ -4224,8 +4224,8 @@ dependencies = [
 
 [[package]]
 name = "sid-auth"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4258,8 +4258,8 @@ dependencies = [
 
 [[package]]
 name = "sid-authn"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "arc-swap",
  "argon2",
@@ -4270,11 +4270,9 @@ dependencies = [
  "dashmap",
  "ed25519-dalek 3.0.0",
  "ff",
- "futures",
  "group",
  "hex",
  "hmac",
- "http",
  "hybrid-array",
  "idna",
  "ipnet",
@@ -4283,6 +4281,7 @@ dependencies = [
  "p256",
  "p384",
  "p521",
+ "parking_lot",
  "pasta_curves",
  "pbkdf2",
  "phonenumber",
@@ -4299,8 +4298,8 @@ dependencies = [
  "sha2 0.11.0",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.5.0",
- "sid-ids-proto 0.1.6",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-keys",
  "sid-opaque-ke",
  "sid-pake-core",
@@ -4311,8 +4310,6 @@ dependencies = [
  "subtle",
  "thiserror",
  "tokio",
- "tonic",
- "tower",
  "tracing",
  "unicode-normalization",
  "unicode-security",
@@ -4323,25 +4320,18 @@ dependencies = [
 
 [[package]]
 name = "sid-authz"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "async-trait",
  "cedar-policy",
  "chrono",
  "dashmap",
- "prost",
- "prost-types",
  "serde",
  "serde_json",
- "sid-authn",
  "sid-core",
- "sid-ids-proto 0.1.6",
  "sid-plugin",
- "sid-proto",
  "thiserror",
- "tonic",
- "tonic-types",
  "tracing",
  "uuid",
 ]
@@ -4377,8 +4367,8 @@ dependencies = [
 
 [[package]]
 name = "sid-core"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "aes-gcm",
  "chrono",
@@ -4389,20 +4379,15 @@ dependencies = [
  "hmac",
  "pasta_curves",
  "pbkdf2",
- "prost",
- "prost-types",
  "rand 0.10.3",
  "secrecy",
  "serde",
  "serde_json",
  "sha2 0.11.0",
- "sid-ids 0.5.0",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-keys",
  "subtle",
  "thiserror",
- "tonic",
- "tonic-types",
- "tracing",
  "url",
  "uuid",
  "zeroize",
@@ -4411,7 +4396,7 @@ dependencies = [
 [[package]]
 name = "sid-crypto"
 version = "0.1.1"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "aead",
  "aes-gcm",
@@ -4430,8 +4415,8 @@ dependencies = [
 
 [[package]]
 name = "sid-fed"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "async-trait",
  "chrono",
@@ -4448,22 +4433,11 @@ dependencies = [
 
 [[package]]
 name = "sid-i18n"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "sid-ids"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f0ec37e1629643f582b6ba41e2fa15a1c5a911076a8edb3e0dd6b25a72838430"
-dependencies = [
- "serde",
- "sqlx",
- "uuid",
 ]
 
 [[package]]
@@ -4478,15 +4452,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "sid-ids-proto"
-version = "0.1.6"
+name = "sid-ids"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fcb12a4553c55fda2e1e75e4d271aaac6f97bf389953406dbc1cf822ed87360"
+checksum = "98175ee8b0cc4e58600f084db3817906fe03913a0dd8e563f668c6d2081c092f"
 dependencies = [
- "prost",
- "prost-build",
- "protox",
- "sid-ids 0.5.0",
+ "serde",
+ "sqlx",
+ "uuid",
 ]
 
 [[package]]
@@ -4503,9 +4476,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "sid-ids-proto"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49e06fa7d772e10f8927293c2cbfab2117d814c11de4d64b59b0ccd87f98d833"
+dependencies = [
+ "prost",
+ "prost-build",
+ "protox",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "sid-infra"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "async-nats",
  "async-trait",
@@ -4516,25 +4501,31 @@ dependencies = [
  "futures",
  "http",
  "http-body",
+ "prost",
+ "prost-types",
  "secrecy",
  "serde",
  "serde_json",
  "sid-authn",
  "sid-core",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-plugin",
  "sid-proto",
  "thiserror",
  "time",
  "tokio",
  "tonic",
+ "tonic-types",
  "tower",
  "tracing",
+ "url",
 ]
 
 [[package]]
 name = "sid-keys"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "async-trait",
  "secrecy",
@@ -4546,8 +4537,8 @@ dependencies = [
 
 [[package]]
 name = "sid-notify"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "anyhow",
  "async-nats",
@@ -4570,8 +4561,8 @@ dependencies = [
  "sid-authn",
  "sid-core",
  "sid-crypto",
- "sid-ids 0.5.0",
- "sid-ids-proto 0.1.6",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-infra",
  "sid-plugin",
  "sid-proto",
@@ -4589,8 +4580,8 @@ dependencies = [
 
 [[package]]
 name = "sid-opaque-ke"
-version = "4.2.0"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "4.2.1"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "argon2",
  "curve25519-dalek 5.0.0",
@@ -4614,7 +4605,7 @@ dependencies = [
 [[package]]
 name = "sid-pake-core"
 version = "0.1.0"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "argon2",
  "digest 0.11.3",
@@ -4638,8 +4629,8 @@ dependencies = [
 
 [[package]]
 name = "sid-plugin"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "async-trait",
  "chrono",
@@ -4661,14 +4652,14 @@ dependencies = [
 
 [[package]]
 name = "sid-proto"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "glob",
  "prost",
  "prost-build",
  "prost-types",
- "sid-ids-proto 0.1.6",
+ "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-proto-build",
  "tonic",
  "tonic-build",
@@ -4678,8 +4669,8 @@ dependencies = [
 
 [[package]]
 name = "sid-proto-build"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "heck",
  "prost-reflect",
@@ -4687,8 +4678,8 @@ dependencies = [
 
 [[package]]
 name = "sid-serve"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "tokio",
  "tokio-stream",
@@ -4699,8 +4690,8 @@ dependencies = [
 
 [[package]]
 name = "sid-server"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "anyhow",
  "arc-swap",
@@ -4720,6 +4711,7 @@ dependencies = [
  "reqwest",
  "secrecy",
  "serde",
+ "serde-saphyr",
  "serde_json",
  "sha2 0.11.0",
  "sid-admin",
@@ -4729,8 +4721,8 @@ dependencies = [
  "sid-crypto",
  "sid-fed",
  "sid-i18n",
- "sid-ids 0.5.0",
- "sid-ids-proto 0.1.6",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-infra",
  "sid-keys",
  "sid-notify",
@@ -4739,6 +4731,7 @@ dependencies = [
  "sid-proto",
  "sid-serve",
  "sid-storage",
+ "structured-id",
  "subtle",
  "thiserror",
  "tokio",
@@ -4746,6 +4739,7 @@ dependencies = [
  "tonic",
  "tonic-health",
  "tonic-reflection",
+ "tonic-types",
  "tonic-web",
  "tower",
  "tracing",
@@ -4757,8 +4751,8 @@ dependencies = [
 
 [[package]]
 name = "sid-storage"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4768,7 +4762,8 @@ dependencies = [
  "serde",
  "serde_json",
  "sid-core",
- "sid-ids 0.5.0",
+ "sid-crypto",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sid-keys",
  "sid-plugin",
  "sqlx",
@@ -4780,8 +4775,8 @@ dependencies = [
 
 [[package]]
 name = "sid-test-issuer"
-version = "0.2.19"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "arc-swap",
  "chrono",
@@ -4813,7 +4808,7 @@ dependencies = [
 [[package]]
 name = "sid-voprf"
 version = "0.6.2"
-source = "git+https://github.com/structured-id/sid?branch=main#0966bf187b301a9f39d12e363d8b7087ebd13497"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
 dependencies = [
  "curve25519-dalek 5.0.0",
  "derive-where",
@@ -5264,6 +5259,42 @@ dependencies = [
  "structured-public-domains",
  "unicode-normalization",
  "unicode-security",
+]
+
+[[package]]
+name = "structured-id"
+version = "0.2.23"
+source = "git+https://github.com/structured-id/sid?branch=main#d9b7335ced815e16215e632ae62d11aa66088641"
+dependencies = [
+ "argon2",
+ "async-trait",
+ "base64 0.23.1",
+ "chrono",
+ "hex",
+ "ipnet",
+ "prost",
+ "prost-types",
+ "rand 0.10.3",
+ "secrecy",
+ "serde",
+ "serde_json",
+ "sha2 0.11.0",
+ "sid-authn",
+ "sid-authz",
+ "sid-core",
+ "sid-crypto",
+ "sid-ids 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-ids-proto 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sid-keys",
+ "sid-plugin",
+ "sid-proto",
+ "sid-storage",
+ "subtle",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "url",
+ "uuid",
 ]
 
 [[package]]
