@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1](https://github.com/structured-id/sdk/compare/rust-sid-client-v0.1.0...rust-sid-client-v0.1.1) - 2026-11-08
+
+### Added
+
+- *(client)* complete a native sign-in owing a second factor ([#104](https://github.com/structured-id/sdk/pull/104))
+
 ## [0.1.0](https://github.com/structured-id/sdk/releases/tag/rust-sid-client-v0.1.0) - 2026-11-05
 
 ### Added
