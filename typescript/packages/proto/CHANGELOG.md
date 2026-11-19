@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.18.0...typescript-proto-v0.19.0) (2026-11-19)
+
+
+### Features
+
+* **proto:** passwordless registration and access declarations ([#108](https://github.com/structured-id/sdk/issues/108)) ([70860c1](https://github.com/structured-id/sdk/commit/70860c1076678d25cab8e780c62f9ff5df880f3c)), closes [#107](https://github.com/structured-id/sdk/issues/107)
+
 ## [0.18.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.17.0...typescript-proto-v0.18.0) (2026-11-08)
 
 
