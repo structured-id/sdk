@@ -16,6 +16,7 @@ export { IdError, MissingIdError, type IdErrorReason, type IdKind } from "./erro
 export {
   AccessRequestId,
   ApplicationId,
+  AuthorizationOperationId,
   BindingId,
   BrandingConfigId,
   CedarPolicyId,

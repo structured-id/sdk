@@ -8,6 +8,7 @@ import type { IMessageType, JsonValue } from "@protobuf-ts/runtime";
 import {
   AccessRequestId,
   ApplicationId,
+  AuthorizationOperationId,
   BindingId,
   BrandingConfigId,
   CedarPolicyId,
@@ -83,6 +84,10 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   MachineUserId: { type: MachineUserId, message: wire.MachineUserId },
   OpaqueLoginId: { type: OpaqueLoginId, message: wire.OpaqueLoginId },
   PasswordOperationId: { type: PasswordOperationId, message: wire.PasswordOperationId },
+  AuthorizationOperationId: {
+    type: AuthorizationOperationId,
+    message: wire.AuthorizationOperationId,
+  },
   ProvisioningConnectorId: {
     type: ProvisioningConnectorId,
     message: wire.ProvisioningConnectorId,
