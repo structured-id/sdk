@@ -3,8 +3,10 @@
 
 use core::fmt;
 
-/// Which identifier type a value was validated as.
+/// Which identifier type a value was validated as. New kinds are added
+/// without a breaking release; a match on it keeps a wildcard arm.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
 pub enum IdKind {
     /// A user's Profile within an instance.
     Profile,
