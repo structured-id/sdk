@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.8.0...rust-sid-ids-v0.9.0) - 2026-11-20
+
+### Added
+
+- *(ids)* make IdKind non-exhaustive ([#121](https://github.com/structured-id/sdk/pull/121))
+- *(ids)* add AuthorizationOperationId ([#116](https://github.com/structured-id/sdk/pull/116))
+
 ## [0.8.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.7.0...rust-sid-ids-v0.8.0) - 2026-11-07
 
 ### Added
