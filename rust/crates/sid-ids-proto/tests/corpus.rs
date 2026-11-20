@@ -15,13 +15,13 @@ use prost_reflect::{DescriptorPool, DynamicMessage};
 use serde_json::{Value, json};
 use sid_ids::IdErrorCause;
 use sid_ids_proto::{
-    AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceAttestationId, DeviceEnrollmentId, DeviceId, FILE_DESCRIPTOR_SET, FlowActionId, GroupId,
-    ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
-    MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
-    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
-    StepUpChallengeId, UpstreamProviderId, WireId,
+    AccessRequestId, ApplicationId, AuthorizationOperationId, BindingId, BrandingConfigId,
+    CedarPolicyId, CredentialId, DeviceAttestationId, DeviceEnrollmentId, DeviceId,
+    FILE_DESCRIPTOR_SET, FlowActionId, GroupId, ImportedPasswordUpgradeId, InitialAccessTokenId,
+    InviteId, IssuerId, MachineUserId, MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId,
+    PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
+    RoleAssignmentId, RoleId, SessionId, StepUpChallengeId, UpstreamProviderId, WireId,
 };
 
 /// The corpus in the repository's `proto` checkout.
@@ -178,6 +178,11 @@ fn corpus() -> Value {
     cases.extend(kind_cases(
         "PasswordOperationId",
         |value| PasswordOperationId { value },
+        &pool,
+    ));
+    cases.extend(kind_cases(
+        "AuthorizationOperationId",
+        |value| AuthorizationOperationId { value },
         &pool,
     ));
     cases.extend(kind_cases(
@@ -435,7 +440,7 @@ fn corpus_covers_every_refusal_and_kind() {
             "no case expects {expect}"
         );
     }
-    assert_eq!(cases.len(), 36 * self::cases().len());
+    assert_eq!(cases.len(), 37 * self::cases().len());
     // The fixed values are accepted by their own kind only.
     let expect = |kind: &str, case: &str| {
         cases

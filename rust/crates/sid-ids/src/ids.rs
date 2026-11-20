@@ -289,6 +289,14 @@ define_id! {
 }
 
 define_id! {
+    /// One browser authorization operation, from the review the user is shown
+    /// to the issuer's one code issuance: the reference the consent review,
+    /// decision and flow-state reads carry. It authorizes nothing by itself;
+    /// the owning IdP session and the operation's CSRF value do.
+    AuthorizationOperationId, IdKind::AuthorizationOperation
+}
+
+define_id! {
     /// A provisioning connector: one directory source (an HR system or IdP
     /// sending SCIM to this installation) or one downstream target, acting as
     /// its own non-human actor with its own credentials and grants. Neither a

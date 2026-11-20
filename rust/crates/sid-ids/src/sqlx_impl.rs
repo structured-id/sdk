@@ -8,12 +8,12 @@
 use sqlx::error::BoxDynError;
 
 use crate::{
-    AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceAttestationId, DeviceId, FlowActionId, GroupId, InitialAccessTokenId, InviteId, IssuerId,
-    MachineUserId, MagicLinkId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
-    ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
-    ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
-    UpstreamProviderId,
+    AccessRequestId, ApplicationId, AuthorizationOperationId, BindingId, BrandingConfigId,
+    CedarPolicyId, CredentialId, DeviceAttestationId, DeviceId, FlowActionId, GroupId,
+    InitialAccessTokenId, InviteId, IssuerId, MachineUserId, MagicLinkId, OrgId, OtpSessionId,
+    PasswordOperationId, PatId, PrincipalId, ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId,
+    ProvisioningConnectorId, ProvisioningCredentialId, ResetSessionId, ResourceId,
+    RoleAssignmentId, RoleId, SessionId, UpstreamProviderId,
 };
 
 macro_rules! sqlx_id {
@@ -100,6 +100,7 @@ sqlx_id!(IssuerId);
 sqlx_id!(ApplicationId);
 sqlx_id!(ResourceId);
 sqlx_id!(PasswordOperationId);
+sqlx_id!(AuthorizationOperationId);
 sqlx_id!(ProvisioningConnectorId);
 sqlx_id!(ProvisioningCredentialId);
 sqlx_id!(CredentialId);

@@ -33,9 +33,9 @@ pub mod sid {
 }
 
 pub use sid::v1::ids::{
-    AccessRequestId, ApplicationId, BindingId, BrandingConfigId, CedarPolicyId, CredentialId,
-    DeviceAttestationId, DeviceEnrollmentId, DeviceId, FlowActionId, GroupId,
-    ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
+    AccessRequestId, ApplicationId, AuthorizationOperationId, BindingId, BrandingConfigId,
+    CedarPolicyId, CredentialId, DeviceAttestationId, DeviceEnrollmentId, DeviceId, FlowActionId,
+    GroupId, ImportedPasswordUpgradeId, InitialAccessTokenId, InviteId, IssuerId, MachineUserId,
     MagicLinkId, OpaqueLoginId, OrgId, OtpSessionId, PasswordOperationId, PatId, PrincipalId,
     ProfileEmailId, ProfileId, ProfilePhoneId, ProjectId, ProvisioningConnectorId,
     ProvisioningCredentialId, ResetSessionId, ResourceId, RoleAssignmentId, RoleId, SessionId,
@@ -136,6 +136,7 @@ wire_id!(BindingId, sid_ids::BindingId);
 wire_id!(MachineUserId, sid_ids::MachineUserId);
 wire_id!(OpaqueLoginId, sid_ids::OpaqueLoginId);
 wire_id!(PasswordOperationId, sid_ids::PasswordOperationId);
+wire_id!(AuthorizationOperationId, sid_ids::AuthorizationOperationId);
 wire_id!(ProvisioningConnectorId, sid_ids::ProvisioningConnectorId);
 wire_id!(ProvisioningCredentialId, sid_ids::ProvisioningCredentialId);
 wire_id!(ResourceId, sid_ids::ResourceId);

@@ -185,6 +185,40 @@ export class PasswordOperationId extends Identifier {
 }
 
 /**
+ * One browser authorization operation, from the consent review to the
+ * issuer's one code issuance: the reference the review, decision and
+ * flow-state reads carry. It authorizes nothing by itself.
+ */
+export class AuthorizationOperationId extends Identifier {
+  static readonly kind = "AuthorizationOperationId";
+  readonly kind = "AuthorizationOperationId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): AuthorizationOperationId {
+    return new AuthorizationOperationId(validate(bytes, AuthorizationOperationId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): AuthorizationOperationId {
+    return AuthorizationOperationId.fromBytes(parseText(text, AuthorizationOperationId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.AuthorizationOperationId): AuthorizationOperationId {
+    return AuthorizationOperationId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.AuthorizationOperationId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
  * A provisioning connector: one directory source or target acting as its own
  * actor with its own credentials and grants. Not a machine user or a Profile.
  */

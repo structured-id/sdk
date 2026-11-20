@@ -79,6 +79,8 @@ pub enum IdKind {
     DeviceEnrollment,
     /// One key binding of a device.
     DeviceAttestation,
+    /// One browser authorization operation from its review to its code.
+    AuthorizationOperation,
 }
 
 impl IdKind {
@@ -121,6 +123,7 @@ impl IdKind {
             Self::UpstreamProvider => "UpstreamProviderId",
             Self::DeviceEnrollment => "DeviceEnrollmentId",
             Self::DeviceAttestation => "DeviceAttestationId",
+            Self::AuthorizationOperation => "AuthorizationOperationId",
         }
     }
 }

@@ -2,6 +2,7 @@
 export type IdKind =
   | "AccessRequestId"
   | "ApplicationId"
+  | "AuthorizationOperationId"
   | "BindingId"
   | "BrandingConfigId"
   | "CedarPolicyId"
