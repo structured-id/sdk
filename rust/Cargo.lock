@@ -4335,7 +4335,7 @@ checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
 [[package]]
 name = "sid-admin"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "hex",
  "jiff",
@@ -4354,7 +4354,7 @@ dependencies = [
 [[package]]
 name = "sid-auth"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4388,7 +4388,7 @@ dependencies = [
 [[package]]
 name = "sid-authn"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "arc-swap",
  "argon2",
@@ -4449,7 +4449,7 @@ dependencies = [
 [[package]]
 name = "sid-authz"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "async-trait",
  "cedar-policy",
@@ -4496,7 +4496,7 @@ dependencies = [
 [[package]]
 name = "sid-core"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "aes-gcm",
  "group",
@@ -4523,7 +4523,7 @@ dependencies = [
 [[package]]
 name = "sid-crypto"
 version = "0.1.2"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "aead",
  "aes-gcm",
@@ -4543,7 +4543,7 @@ dependencies = [
 [[package]]
 name = "sid-fed"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "async-trait",
  "base64 0.23.1",
@@ -4596,7 +4596,7 @@ dependencies = [
 [[package]]
 name = "sid-infra"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "async-nats",
  "async-trait",
@@ -4636,7 +4636,7 @@ dependencies = [
 [[package]]
 name = "sid-keys"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "async-trait",
  "secrecy",
@@ -4649,7 +4649,7 @@ dependencies = [
 [[package]]
 name = "sid-notify"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "anyhow",
  "async-nats",
@@ -4693,7 +4693,7 @@ dependencies = [
 [[package]]
 name = "sid-opaque-ke"
 version = "4.2.1"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "argon2",
  "curve25519-dalek 5.0.0",
@@ -4717,7 +4717,7 @@ dependencies = [
 [[package]]
 name = "sid-pake-core"
 version = "0.1.0"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "argon2",
  "digest 0.11.3",
@@ -4742,7 +4742,7 @@ dependencies = [
 [[package]]
 name = "sid-plugin"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "async-trait",
  "jiff",
@@ -4765,7 +4765,7 @@ dependencies = [
 [[package]]
 name = "sid-proto"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "glob",
  "jiff",
@@ -4783,7 +4783,7 @@ dependencies = [
 [[package]]
 name = "sid-proto-build"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "heck",
  "prost-reflect",
@@ -4792,7 +4792,7 @@ dependencies = [
 [[package]]
 name = "sid-serve"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "tokio",
  "tokio-stream",
@@ -4804,7 +4804,7 @@ dependencies = [
 [[package]]
 name = "sid-server"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "anyhow",
  "arc-swap",
@@ -4864,7 +4864,7 @@ dependencies = [
 [[package]]
 name = "sid-storage"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "async-trait",
  "jiff",
@@ -4888,7 +4888,7 @@ dependencies = [
 [[package]]
 name = "sid-test-issuer"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "arc-swap",
  "ff",
@@ -4921,7 +4921,7 @@ dependencies = [
 [[package]]
 name = "sid-voprf"
 version = "0.6.2"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "curve25519-dalek 5.0.0",
  "derive-where",
@@ -5365,7 +5365,7 @@ dependencies = [
 [[package]]
 name = "structured-id"
 version = "0.2.32"
-source = "git+https://github.com/structured-id/sid?branch=main#f1ff07671604538a157057519b4cb1bcbaf96935"
+source = "git+https://github.com/structured-id/sid?branch=main#a1c4436368c570181ca63385f0b75f4c13a3a38e"
 dependencies = [
  "argon2",
  "async-trait",
