@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.10.0...typescript-ids-v0.11.0) (2026-11-21)
+
+
+### Features
+
+* **ids:** add AuthorizationOperationId ([#116](https://github.com/structured-id/sdk/issues/116)) ([3541e6f](https://github.com/structured-id/sdk/commit/3541e6f78ad2328601f332b910293b558aca6a99)), closes [#115](https://github.com/structured-id/sdk/issues/115)
+
 ## [0.10.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.9.0...typescript-ids-v0.10.0) (2026-11-07)
 
 
