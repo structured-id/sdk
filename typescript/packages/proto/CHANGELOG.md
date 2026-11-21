@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.20.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.19.0...typescript-proto-v0.20.0) (2026-11-21)
+
+
+### Features
+
+* **ids:** add AuthorizationOperationId ([#116](https://github.com/structured-id/sdk/issues/116)) ([3541e6f](https://github.com/structured-id/sdk/commit/3541e6f78ad2328601f332b910293b558aca6a99)), closes [#115](https://github.com/structured-id/sdk/issues/115)
+* **proto:** carry the authorization consent interaction ([#125](https://github.com/structured-id/sdk/issues/125)) ([997b814](https://github.com/structured-id/sdk/commit/997b81476e6ad9b07a72490b20b115b922e33cec)), closes [#124](https://github.com/structured-id/sdk/issues/124)
+
 ## [0.19.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.18.0...typescript-proto-v0.19.0) (2026-11-19)
 
 
