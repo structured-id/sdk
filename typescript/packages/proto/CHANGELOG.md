@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.21.0...typescript-proto-v0.22.0) (2026-11-22)
+
+
+### Features
+
+* **proto:** carry the browser session end ([#130](https://github.com/structured-id/sdk/issues/130)) ([89e29f6](https://github.com/structured-id/sdk/commit/89e29f685c086ed97325e6880c674c847ac8b288)), closes [#129](https://github.com/structured-id/sdk/issues/129)
+
 ## [0.21.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.20.0...typescript-proto-v0.21.0) (2026-11-22)
 
 
