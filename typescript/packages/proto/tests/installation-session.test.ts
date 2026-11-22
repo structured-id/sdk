@@ -14,6 +14,8 @@ import {
 describe("installation session and settings", () => {
   it("has the browser session read and the settings calls", () => {
     expect(typeof AuthServiceClient.prototype.getBrowserSession).toBe("function");
+    // The console signs out of the installation with it.
+    expect(typeof AuthServiceClient.prototype.endBrowserSession).toBe("function");
     const realm = RealmServiceClient.prototype;
     expect(typeof realm.getInstallationAddresses).toBe("function");
     expect(typeof realm.updateInstallationAddresses).toBe("function");
