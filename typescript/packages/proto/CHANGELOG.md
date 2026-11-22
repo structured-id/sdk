@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.21.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.20.0...typescript-proto-v0.21.0) (2026-11-22)
+
+
+### Features
+
+* **proto:** carry the installation addresses and browser session read ([#127](https://github.com/structured-id/sdk/issues/127)) ([a6ac3a4](https://github.com/structured-id/sdk/commit/a6ac3a44fdcac1046b58f718e490a63daf9728d3)), closes [#126](https://github.com/structured-id/sdk/issues/126)
+
 ## [0.20.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.19.0...typescript-proto-v0.20.0) (2026-11-21)
 
 
