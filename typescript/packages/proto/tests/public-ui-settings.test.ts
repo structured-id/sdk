@@ -8,9 +8,7 @@ import { SignInEntry } from "../src/generated/sid/v1/authn/sign_in_entry.js";
 
 describe("public UI settings", () => {
   it("has the read a page calls", () => {
-    expect(typeof PublicUiSettingsServiceClient.prototype.getPublicUiSettings).toBe(
-      "function",
-    );
+    expect(typeof PublicUiSettingsServiceClient.prototype.getPublicUiSettings).toBe("function");
   });
 
   it("carries the offered sign-in methods and the reset switch", () => {
