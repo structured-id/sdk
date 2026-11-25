@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.22.0...typescript-proto-v0.23.0) (2026-11-25)
+
+
+### Features
+
+* **proto:** carry the public sign-in choices ([#133](https://github.com/structured-id/sdk/issues/133)) ([db027d9](https://github.com/structured-id/sdk/commit/db027d9f6727dd40eeca6e57b0152809176c7fdc)), closes [#132](https://github.com/structured-id/sdk/issues/132)
+
 ## [0.22.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.21.0...typescript-proto-v0.22.0) (2026-11-22)
 
 
