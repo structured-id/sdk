@@ -11,10 +11,11 @@
 use std::path::{Path, PathBuf};
 
 /// The schema files the AuthService closure reads, below `schema/`.
-const SCHEMA: [&str; 9] = [
+const SCHEMA: [&str; 10] = [
     "sid/v1/authn/auth.proto",
     "sid/v1/authn/native_session.proto",
     "sid/v1/authn/password_history.proto",
+    "sid/v1/authn/sign_in_entry.proto",
     "sid/v1/common/access.proto",
     "sid/v1/common/maintenance.proto",
     "sid/v1/common/operation.proto",
