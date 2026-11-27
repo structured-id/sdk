@@ -3,6 +3,9 @@
 // - sid/v1/ids/ids.ts is replaced by a module that re-exports the message
 //   objects of @structured-id/ids, so the identifier messages have one owner
 //   and one identity in every consumer.
+// - sid/v1/admin/admin_roles.ts keeps exporting AssuranceLevel, which the
+//   schema declares in login_policy_types.proto: the module re-exports the
+//   enum of that file, so both paths name one object.
 // - Relative imports get their `.js` extension, which ES modules in Node
 //   resolve and bundlers accept.
 import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
@@ -35,6 +38,15 @@ writeFileSync(
     "",
   ].join("\n"),
 );
+
+const adminRoles = join(generated, "sid", "v1", "admin", "admin_roles.ts");
+const reexport = 'export { AssuranceLevel } from "./login_policy_types";';
+const roles = readFileSync(adminRoles, "utf8");
+if (/^export enum AssuranceLevel\b/m.test(roles)) {
+  console.error(`${adminRoles}: declares AssuranceLevel itself; the re-export is obsolete`);
+  process.exit(1);
+}
+if (!roles.includes(reexport)) writeFileSync(adminRoles, `${roles}${reexport}\n`);
 
 function* files(dir) {
   for (const entry of readdirSync(dir)) {
