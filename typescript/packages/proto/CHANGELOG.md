@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.24.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.23.0...typescript-proto-v0.24.0) (2026-11-27)
+
+
+### Features
+
+* **proto:** keep AssuranceLevel on the admin roles module ([#139](https://github.com/structured-id/sdk/issues/139)) ([feda094](https://github.com/structured-id/sdk/commit/feda0944121b68406153a7723e5c43c82ea9ec15)), closes [#138](https://github.com/structured-id/sdk/issues/138)
+
 ## [0.23.0](https://github.com/structured-id/sdk/compare/typescript-proto-v0.22.0...typescript-proto-v0.23.0) (2026-11-25)
 
 
