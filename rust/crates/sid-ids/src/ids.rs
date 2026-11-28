@@ -297,6 +297,14 @@ define_id! {
 }
 
 define_id! {
+    /// A user resource of the provisioning directory: the SCIM `id` a
+    /// directory client knows the user by. It is the resource's own, never
+    /// the identifier of the account the resource stands for, and a deleted
+    /// resource's identifier is not given to another.
+    DirectoryUserId, IdKind::DirectoryUser
+}
+
+define_id! {
     /// A provisioning connector: one directory source (an HR system or IdP
     /// sending SCIM to this installation) or one downstream target, acting as
     /// its own non-human actor with its own credentials and grants. Neither a

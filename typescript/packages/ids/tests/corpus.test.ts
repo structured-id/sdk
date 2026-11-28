@@ -14,6 +14,7 @@ import {
   CedarPolicyId,
   CredentialId,
   DeviceId,
+  DirectoryUserId,
   FlowActionId,
   GroupId,
   IdError,
@@ -129,6 +130,7 @@ const kinds: Record<string, { type: IdType<unknown, Message>; message: IMessageT
   UpstreamProviderId: { type: UpstreamProviderId, message: wire.UpstreamProviderId },
   DeviceEnrollmentId: { type: DeviceEnrollmentId, message: wire.DeviceEnrollmentId },
   DeviceAttestationId: { type: DeviceAttestationId, message: wire.DeviceAttestationId },
+  DirectoryUserId: { type: DirectoryUserId, message: wire.DirectoryUserId },
 };
 
 function fromHex(hex: string): Uint8Array {

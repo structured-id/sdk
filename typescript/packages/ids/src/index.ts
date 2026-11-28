@@ -22,6 +22,7 @@ export {
   CedarPolicyId,
   CredentialId,
   DeviceId,
+  DirectoryUserId,
   FlowActionId,
   GroupId,
   Identifier,

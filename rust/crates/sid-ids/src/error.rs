@@ -83,6 +83,8 @@ pub enum IdKind {
     DeviceAttestation,
     /// One browser authorization operation from its review to its code.
     AuthorizationOperation,
+    /// A user resource of the provisioning directory.
+    DirectoryUser,
 }
 
 impl IdKind {
@@ -126,6 +128,7 @@ impl IdKind {
             Self::DeviceEnrollment => "DeviceEnrollmentId",
             Self::DeviceAttestation => "DeviceAttestationId",
             Self::AuthorizationOperation => "AuthorizationOperationId",
+            Self::DirectoryUser => "DirectoryUserId",
         }
     }
 }

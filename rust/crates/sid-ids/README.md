@@ -4,7 +4,7 @@ StructuredID validated identifiers: one type per identifier kind
 (`ProfileId`, `DeviceId`, `SessionId`, `MachineUserId`, `BindingId`, `OrgId`,
 `IssuerId`, `ApplicationId`, `ResourceId`, `PasswordOperationId`,
 `AuthorizationOperationId`, `ProvisioningConnectorId`,
-`ProvisioningCredentialId`), each an
+`ProvisioningCredentialId`, `DirectoryUserId`), each an
 RFC 9562 UUIDv7. A value of one kind never converts to another, whatever its
 bytes; every way in (bytes, text, serde, database) runs the same validation:
 exactly 16 bytes, not nil or max, the RFC 9562 variant, version 7.

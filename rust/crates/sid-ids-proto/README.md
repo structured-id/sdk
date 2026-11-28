@@ -5,7 +5,8 @@ to the validated [`sid-ids`](https://crates.io/crates/sid-ids) types.
 
 Each identifier kind is its own message (`BindingId`, `MachineUserId`,
 `PasswordOperationId`, `AuthorizationOperationId`, `ProvisioningConnectorId`,
-`ProvisioningCredentialId`, `ResourceId`), carrying exactly 16 bytes of an RFC 9562 UUIDv7 in
+`ProvisioningCredentialId`, `DirectoryUserId`, `ResourceId`), carrying exactly 16 bytes of an
+RFC 9562 UUIDv7 in
 network byte order. A decoded message is an untrusted DTO: converting it to
 the domain type validates the bytes (length, nil, max, variant, version), and
 a required message that is absent is an error, never a default. A

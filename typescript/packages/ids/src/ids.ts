@@ -219,6 +219,40 @@ export class AuthorizationOperationId extends Identifier {
 }
 
 /**
+ * A user resource of the provisioning directory: the SCIM `id` a directory
+ * client knows the user by. It is the resource's own, never the identifier
+ * of the account the resource stands for.
+ */
+export class DirectoryUserId extends Identifier {
+  static readonly kind = "DirectoryUserId";
+  readonly kind = "DirectoryUserId";
+
+  private constructor(bytes: Uint8Array) {
+    super(bytes);
+  }
+
+  /** Accept 16 bytes as this identifier, or throw `IdError` saying why not. */
+  static fromBytes(bytes: Uint8Array): DirectoryUserId {
+    return new DirectoryUserId(validate(bytes, DirectoryUserId.kind));
+  }
+
+  /** Accept a textual UUID as this identifier, or throw `IdError`. */
+  static parse(text: string): DirectoryUserId {
+    return DirectoryUserId.fromBytes(parseText(text, DirectoryUserId.kind));
+  }
+
+  /** Validate a decoded wire message; throws `IdError`. */
+  static fromWire(message: wire.DirectoryUserId): DirectoryUserId {
+    return DirectoryUserId.fromBytes(message.value);
+  }
+
+  /** The wire message carrying this identifier's bytes. */
+  toWire(): wire.DirectoryUserId {
+    return { value: this.toBytes() };
+  }
+}
+
+/**
  * A provisioning connector: one directory source or target acting as its own
  * actor with its own credentials and grants. Not a machine user or a Profile.
  */
