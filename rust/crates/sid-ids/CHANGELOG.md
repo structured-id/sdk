@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.9.0...rust-sid-ids-v0.9.1) - 2026-11-28
+
+### Added
+
+- *(ids)* add DirectoryUserId ([#142](https://github.com/structured-id/sdk/pull/142))
+
 ## [0.9.0](https://github.com/structured-id/sdk/compare/rust-sid-ids-v0.8.0...rust-sid-ids-v0.9.0) - 2026-11-20
 
 ### Added
