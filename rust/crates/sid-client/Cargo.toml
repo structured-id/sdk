@@ -2,7 +2,7 @@
 name = "sid-client"
 description = "StructuredID native client: renewable sessions bound to the application key, without an identity provider runtime"
 readme = "README.md"
-version = "0.3.0"
+version = "0.3.1"
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
@@ -30,7 +30,7 @@ serde_json = { workspace = true }
 sha2 = "0.11"
 sid-ids = { path = "../sid-ids", version = "0.9", features = ["std"] }
 # 0.1.8 is the first release on sid-ids 0.7, the identifiers this client uses.
-sid-ids-proto = { path = "../sid-ids-proto", version = "0.1.10" }
+sid-ids-proto = { path = "../sid-ids-proto", version = "0.1.11" }
 thiserror = "2"
 tokio = { version = "1", default-features = false, features = ["sync"] }
 tonic = { version = "0.14", default-features = false, features = ["codegen"] }
