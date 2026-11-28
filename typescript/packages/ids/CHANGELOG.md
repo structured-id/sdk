@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.11.0...typescript-ids-v0.12.0) (2026-11-28)
+
+
+### Features
+
+* **ids:** add DirectoryUserId ([#142](https://github.com/structured-id/sdk/issues/142)) ([b27e4da](https://github.com/structured-id/sdk/commit/b27e4da0a5347ca21f06390e548e10c5cfbc6bc2)), closes [#141](https://github.com/structured-id/sdk/issues/141)
+
 ## [0.11.0](https://github.com/structured-id/sdk/compare/typescript-ids-v0.10.0...typescript-ids-v0.11.0) (2026-11-21)
 
 
